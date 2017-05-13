@@ -25,36 +25,53 @@ Melihat adanya kebutuhan akan korpus relasi kata, dilakukanlah penelitian \texti
 Berdasarkan latar belakang yang telah dipaparkan, pertanyaan yang menjadi rumusan penelitian adalah sebagai berikut.
 \begin{enumerate}
 	\item Bagaimana cara membangun korpus relasi secara cepat dan berkualitas baik secara otomatis?
-	\item Apakah metode \textit{pattern matching} baik dilakukan untuk ekstraksi relasi Bahasa Indonesia?
-	\item Bagaimana cara mengevaluasi \textit{pattern} dan korpus relasi dari hasil eksperimen?
+	\item Apakah metode \textit{pattern extraction} dan \textit{matching} baik dilakukan untuk ekstraksi relasi kata Bahasa Indonesia?
+	\item Bagaimana cara mengevaluasi \textit{pattern} dan korpus relasi kata dari hasil eksperimen?
 \end{enumerate}
 
 %-----------------------------------------------------------------------------%
 \section{Tujuan dan Manfaat Penelitian}
 %-----------------------------------------------------------------------------%
-
-
-%-----------------------------------------------------------------------------%
-\section{Tahapan Penelitian}
-%-----------------------------------------------------------------------------%
-
+Tujuan dari penelitian \textit{word relation extraction} ini adalah membangun korpus relasi kata Bahasa Indonesia berukuran besar dan berkualitas baik secara otomatis. Selain itu, ingin diketahui pula apakah metode \textit{pattern extraction} dan \textit{matching} baik digunakan untuk mengekstrak relasi kata Bahasa Indonesia. Diharapkan korpus relasi kata yang dihasilkan dapat menunjang berbagai penelitian selanjutnya.
+ 
+Penelitian ini juga diharapkan dapat memotivasi adanya penelitian selanjutnya di bidang \textit{Language Resource Development}, terutama pembangunan WordNet Bahasa Indonesia. Penelitian mengenai ekstraksi relasi kata berikutnya dengan berbagai metode lain diharapkan terus dilaksanakan sehingga Bahasa Indonesia memiliki \textit{resource} yang semakin baik.
 
 %-----------------------------------------------------------------------------%
 \section{Ruang Lingkup Penelitian}
 %-----------------------------------------------------------------------------%
+Penelitian ini hanya fokus pada pembuatan korpus pasangan kata dengan relasi \textit{hypernym} dan \textit{hyponym} Bahasa Indonesia. Kelas kata yang menjadi fokusi penelitan adalah kata benda (\textit{noun}). Pengembangan korpus dilakukan secara \textit{semi-supervised} dengan metode \textit{pattern matching}. \textit{Pattern} yang dibuat masih terbatas hanya merupakan \textit{pattern} leksikal. Evaluasi akan dilakukan pada \textit{pattern} dan korpus pasangan kata yang dihasilkan. Proses evaluasi korpus pasangan kata dilakukan menggunakan teknik \textit{random sampling}. Data yang digunakan untuk pembuatan \textit{pattern} maupun untuk ekstraksi korpus pasangan kata baru adalah Wikipedia Bahasa Indonesia. 
+Pemilihan relasi \textit{hypernym-hyponym} dalam penelitian karena memiliki berbagai manfaat. Relasi tersebut dapat mengidentifikasi \textit{Proper Noun} baru yang belum diketahui maknanya.
+
+%-----------------------------------------------------------------------------%
+\section{Tahapan Penelitian}
+%-----------------------------------------------------------------------------%
+Proses penelitian dilakukan dalam beberapa tahapan sebagai berikut.
+\begin{enumerate}
+	\item Studi Literatur \\
+	Pada tahap ini, dilakukan pembelajaran mengenai penelitian-penelitian sebelumnya yang telah dilakukan di bidang \textit{word relation extraction} sehingga diketahui langkah yang perlu diambil selanjutnya.
+	\item Perumusan Masalah \\
+	Perumusan masalah dilakukan untuk mendefinisikan masalah yang ingin diselesaikan, tujuan penelitian, dan hasil yang diharapkan sehingga proses penelitian dapat berjalan dengan baik.
+	\item Perancangan Penelitian \\
+	Setelah diketahui hasil yang ingin dicapai, dirancang tahap-tahap eksperimen secara terstruktur. Hal-hal yang diperhatikan mulai dari pengumpulan korpus awal (\textit{seed}), \textit{pre-processing} dokumen, perancangan implementasi \textit{pattern extraction} \textit{matching}, hingga proses evaluasi.
+	\item Implementasi \\
+	Implementasi dilaksanakan sesuai dengan rancangan penelitian untuk menjawab rumusan masalah. Segala hasil yang ditemukan digunakan untuk terus memperbaiki metode dan teknik penelitan sehingga didapatkan hasil yang semakin baik.
+	\item Analisis dan Kesimpulan \\
+	Tahap terakhir dari penelitian ini adalah menganalisis korpus pasangan kata relasi yang dihasilkan. Pertanyaan dari perumusan masalah dijawab, kemudian ditarik kesimpulan.
+	
+\end{enumerate}
 
 
 %-----------------------------------------------------------------------------%
-\section{Sistematika Penulisan}
+%\section{Sistematika Penulisan}
 %-----------------------------------------------------------------------------%
-Sistematika penulisan laporan adalah sebagai berikut:
-\begin{itemize}
-	\item Bab 1 \babSatu \\
-	\item Bab 2 \babDua \\
-	\item Bab 3 \babTiga \\
-	\item Bab 4 \babEmpat \\
-	\item Bab 5 \babLima \\
-	\item Bab 6 \babEnam \\
-	\item Bab 7 \babTujuh \\
-\end{itemize}
+% Sistematika penulisan laporan adalah sebagai berikut:
+% \begin{itemize}
+% 	\item Bab 1 \babSatu \\
+% 	\item Bab 2 \babDua \\
+% 	\item Bab 3 \babTiga \\
+% 	\item Bab 4 \babEmpat \\
+% 	\item Bab 5 \babLima \\
+% 	\item Bab 6 \babEnam \\
+% 	\item Bab 7 \babTujuh \\
+% \end{itemize}
 
