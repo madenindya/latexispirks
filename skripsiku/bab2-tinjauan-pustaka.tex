@@ -78,7 +78,7 @@ Penelitian yang dilakukan Arnold dan Rahm juga memanfaatkan korpus Wikipedia dan
 Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki fungsi spesifik (Atkins et al., 1991).
 
 %-----------------------------------------------------------------------------%
-\subsection{Semantic Relation Extraction}
+\subsection{Korpus Pasangan Kata Relasi Semantik}
 %-----------------------------------------------------------------------------%
 Saat ini, belum ada korpus independen yang menggambarkan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
 
@@ -100,13 +100,65 @@ Wikipedia Bahasa Indonesia saat ini telah memuat lebih dari 400.000 artikel dari
 %-----------------------------------------------------------------------------%
 Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai \textit{noun} umum. Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Selain itu, sudah banyak penelitian ekstraksi relasi semantik dengan metode pattern yang menggunakan artikel Wikipedia seperti [8], [7]. 
 
+%-----------------------------------------------------------------------------%
+%-----------------------------------------------------------------------------%
+\section{Pattern}
+%-----------------------------------------------------------------------------%
+\textit{Pattern} adalah suatu bentuk yang dapat merepresentasikan kumpulan data berukuran besar. Pada teks dokumen, \textit{pattern} dapat terbentuk secara eksplisit ataupun implisit. Secara eksplisit seperti \textit{lexico-syntactic pattern} yang terbentuk dari kata-kata di dalam dokumen tersebut. Sementara \textit{pattern} terbentuk secara implisit jika dilhat dari kemiripan vektor yang merepresentasika dokumen atau kata-kata di dalam dokumen tersebut.
+
+%-----------------------------------------------------------------------------%
+\subsection{Lexico-syntactic Pattern}
+%-----------------------------------------------------------------------------% 
+\textit{Lexico-syntactic pattern} adalah \textit{pattern} yang hanya memanfatkan kata-kata dalam korpus dokumen dan dimanfaatkan untuk proses \textit{string matching}. Salah satu pattern leksikal yang terkenal adalah Hearst Pattern yang merepresentasikan pola-pola untuk mendapatkan relasi \textit{hyponymy} dari dokumen (Hearst, 1992). Menurut Hearst, beberapa syarat yang harus dipenuhi suatu \textit{lexico-syntactic pattern} yang baik adalah sebagai berikut.
+\begin{itemize}
+  \item Kemunculannya sering pada teks dalam berbagai domain sehingga dapat mengekstrak banyak entitas.
+  \item Merepresentasikan relasi yang diinginkan sehingga hasil ekstraksi juga benar.
+  \item Dapat dikenali tanpa membutuhkan pengetahuan sebelumnya sehingga dapat dibentuk dalam situasi apapun.
+\end{itemize}
+
+%-----------------------------------------------------------------------------%
+%-----------------------------------------------------------------------------%
+\section{Pattern Extraction dan Matching}
+%-----------------------------------------------------------------------------%
+\textit{Pattern extraction} atau \textit{pattern recognition} adalah salah satu cabang dalam \textit{machine learning} yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. \textit{Pattern matching} adalah proses untuk mencocokkan suatu \textit{pattern} dengan kumpulan data yang belum dianotasi. Penelitian ekstraksi relsasi semantik menggunakan metode pattern matching telah dilakukan oleh (Hearst, 1992), (Ruiz-Casado dkk, 2005), (Arnold dan Rahm, 2014), dan (Sumida dan Torisawa, [9]).
+
+Banyaknya penelitian menggunakan metode \textit{pattern matching} dan \textit{extraction} menjadi salah satu alasan penggunaan metode tersebut untuk mengekstrak relasi kata dalam Bahasa Indonesia. Pada penelitian ini, relasi semantik yang diekstrak dibatasi hanya untuk relasi \textit{hypernym-hyponym}. 
+
+
+%-----------------------------------------------------------------------------%
+%-----------------------------------------------------------------------------%
+\section{Sequence Analyisis}
+%-----------------------------------------------------------------------------%
+Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung \textit{sequnce} tertentu. Pada penelitian ini, \textit{pattern} yang dihasilkan adalah \textit{pattern} leksikal yang merupakan deretan kata-kata. Algoritma seperti \textit{standard trie} dan \textit{suffix tree} dimanfaatkan secara berurut untuk proses \textit{pattern extraction} dan \textit{matching}.
+
+%-----------------------------------------------------------------------------%
+\subsection{Standard Trie}
+%-----------------------------------------------------------------------------% 
+\textit{Standard Trie} untuk suatu himpunan \textit{string} $S$ adalah \textit{ordered tree} dengan ketentuan berikut.
+\begin{itemize}
+  \item Setiap \textit{node}, selain \textit{root}, diberi label sebuah \textit{character}
+  \item \textit{Children} dari sebuah \textit{node} terurut sesuai alphabet
+  \item \textit{Path} dari eksternal \textit{node} hingga \textit{root} membentuk suatu \textit{string} dalam $S$.
+\end{itemize}
+\textit{Standard Trie} membutuhkan memori sebesar $O(n)$ dimana $n$ adalah total ukuran \textit{string} dalam $S$. Operasi \textit{insert} membutuh waktu $O(dm)$ dimana $m$ adalah ukuran \textit{string} yang baru dan $d$ adalah ukuran alphabet.
+
+Sebagai contoh berikut adalah \textit{standard trie} yang dibangun dari himpunan \textit{string} {apel, ayam, baju, baja, bara}.
+
+%-----------------------------------------------------------------------------%
+\subsection{Suffix Tree}
+%-----------------------------------------------------------------------------% 
+\textit{Suffix tree} sering digunakan untuk pencarian sequence yang panjang seperti \textit{genomes} untuk bidang bioinformatik. Pembentukan \textit{suffix tree} mirip seperti \textit{Standard Trie}, namun untuk seluruh \textit{suffix} dalam \textit{string}. Jika diberikan \textit{string} dengan panjang $n$, dibentuk cabang dengan $n(n-1)/2$ \textit{suffix}.  Metode ini banyak dimanfaatkan untuk mempercepat proses pencarian jika diberikan sebuah masukan \textit{query}. Jika terdapat sebuah \textit{pattern} dengan panjang \textit{string} $m$, maka waktu yang dibutuhkan untuk menjalankan proses \textit{pattern matching} adalah $O(dm)$ dengan $d$ adalah ukuran alfabet. Proses pencarian dilakukan dengan menelusuri \textit{path} dari \textit{root} sesuai dengan \textit{sequence query}. Jika seluruh karakter dalam \textit{query} selesai dijalankan, maka proses pencarian berhasil. 
+
+Sebagai contoh \textot{string} 'babaa' menghasilkan \textit{suffix tree} berikut. Jika diberi \textit{query} 'ba' maka akan berhasil terhadap \textot{path} 'babaa' dan 'baa'.
+
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
 \section{Semi Supervised}
 %-----------------------------------------------------------------------------%
-Dalam machine learning terdapat dua tipe pendekatan yang umum digunakan yaitu supervised dan unsupervised learning. Supervised menggunakan data berlabel sebagai data training maupun testing. Dari kedua data tersebut, dibentuk suatu classifier yang dapat memenuhi segala kasus yang mungkin terjadi. Data testing digunakan untuk menguji kebaikan classifier yang terbentuk. Unsupervised menggunakan data yang tidak diberi label sama sekali dan berusaha untuk menemukan pola yang sama untuk suatu kumpulan data tertentu (10). Pendekatan lain yang merupakan kombinasi antara supervised dan unsupervised learning adalah semi supervised learning. 
-Semi supervised adalah pendekatan machine learning dimana informasi supervised data diberikan tidak untuk seluruh data. Sebagian data merupakan data berlabel sementara sebagian lainnya belum memiliki label. Beberapa metode penerapan semi supervised adalah bootstrapping (self training), mixture models, graph based methods, co-training, dan multiview learning.
+Dalam \textit{machine learning} terdapat dua tipe pendekatan yang umum digunakan yaitu \textit{supervised} dan \textit{unsupervised learning}. Supervised menggunakan data berlabel sebagai data \textit{training} maupun \textit{testing}. Dari kedua data tersebut, dibentuk suatu \textit{classifier} yang dapat memenuhi segala kasus yang mungkin terjadi. Data \textit{testing} digunakan untuk menguji kebaikan \textit{classifier} yang terbentuk. \textit{Unsupervised} menggunakan data yang tidak diberi label sama sekali dan berusaha untuk menemukan pola yang sama untuk suatu kumpulan data tertentu (10). Pendekatan lain yang merupakan kombinasi antara \textit{supervised} dan \textit{unsupervised learning} adalah \textit{semi supervised learning}. 
+
+\textit{Semi supervised} adalah pendekatan \textit{machine learning} dimana informasi \textit{supervised} data diberikan tidak untuk seluruh data. Sebagian data merupakan data berlabel sementara sebagian lainnya belum memiliki label. Beberapa metode penerapan semi supervised adalah \textit{bootstrapping} (\textit{self training}), \textit{mixture models}, \textit{graph based methods}, \textit{co-training,} dan \textit{multiview learning}.
 (10) A Survey on Semi-Supervised Learning Techniques. V. Jothi Prakash, Dr. L.M. Nithya. International Journal of Computer Trends and Technology. 2014 (http://www.ijcttjournal.org/Volume8/
 number-1/IJCTT-V8P105.pdf)
 (12) MITPress - Semi Supervised Learning
@@ -114,138 +166,139 @@ number-1/IJCTT-V8P105.pdf)
 %-----------------------------------------------------------------------------%
 \subsection{Bootstrapping}
 %-----------------------------------------------------------------------------% 
-Model bootstrapping merupakan salah satu model semi supervised learning yang paling umum digunakan. Bootstrapping menggunakan data berlabel berukuran kecil dan data tidak berlabel berukuran jauh lebih besar. Proses anotasi data tidak berlabel dilakukan secara bertahap melalui sejumlah iterasi. Dari data training berlabel, dibentuk suatu classifier yang kemudian digunakan untuk menganotasi data tidak berlabel. Sejumlah k data baru yang merupakan hasil pelabelan, dimasukkan ke dalam kelompok data berlabel. Proses tersebut dilakukan secara berulang, sehingga semakin lama iterasi jumlah data berlabel akan bertambah. 
-Terdapat dua algoritma bootstrapping yang pernah digunakan untuk proses pattern extraction dan matching yaitu Meta-Bootstrapping dan Basilisk (Rillof dkk, 2003). Keduanya digunakan untuk mengelompokan kata ke dalam suatu kategori semantik jika diberikan korpus teks yang belum dianotasi dan suatu seed. Seed didefinisikan sebagai korpus kata yang sudah diketahui kategori semantiknya. Secara umum, proses ini akan mencari pattern berdasarkan seed yang diberikan. Dari pattern yang dihasilkan dan teks yang belum dianotasi, diekstrak entitas baru dan dikelompokan berdasarkan kategori semantiknya. Kata-kata tersebut akan digabungkan ke dalam korpus kata berelas.
+Model \textit{bootstrapping} merupakan salah satu model \textit{semi supervised learning} yang paling umum digunakan. \textit{Bootstrapping} menggunakan data berlabel berukuran kecil dan data tidak berlabel berukuran jauh lebih besar. Proses anotasi data tidak berlabel dilakukan secara bertahap melalui sejumlah iterasi. Dari data \textit{training} berlabel, dibentuk suatu \textit{classifier} yang kemudian digunakan untuk menganotasi data tidak berlabel. Sejumlah $k$ data baru yang merupakan hasil pelabelan, dimasukkan ke dalam kelompok data berlabel. Proses tersebut dilakukan secara berulang, sehingga semakin lama iterasi jumlah data berlabel akan bertambah. 
+
+Terdapat dua algoritma \textit{bootstrapping} yang pernah digunakan untuk proses \textit{pattern extraction} dan \textit{matching} yaitu \textit{Meta-Bootstrapping} dan \textit{Basilisk} (Rillof dkk, 2003). Keduanya digunakan untuk mengelompokan kata ke dalam suatu kategori semantik jika diberikan korpus teks yang belum dianotasi dan suatu \textit{seed}. \textit{Seed} didefinisikan sebagai korpus kata yang sudah diketahui kategori semantiknya. Secara umum, proses ini akan mencari \textit{pattern} berdasarkan seed yang diberikan. Dari \textit{pattern} yang dihasilkan dan teks yang belum dianotasi, diekstrak entitas baru dan dikelompokan berdasarkan kategori semantiknya. Kata-kata tersebut akan digabungkan ke dalam korpus pasangan kata berelasi.
 
 %-----------------------------------------------------------------------------%
 \subsection{Meta Bootstrapping}
 %-----------------------------------------------------------------------------% 
-Berikut adalah beberapa proses (Riloff dan Jones, 1999) yang dijalankan algoritma meta bootstrapping jika diberikan seed berukuran kecil yang berasal dari suatu kategori semantik dan korpus yang belum dianotasi.
-Mengekstraksi pattern secara otomatis dengan menerapkan syntactic template.
-Untuk setiap pattern akan diberi bobot berdasarkan jumlah seed yang menghasilkan pattern.
-Diambil pattern terbaik dan seluruh seed lama yang merepresentasikan pattern maupun seed baru yang berhasil diekstrak disimpan.
-Dilakukan pembobotan ulang untuk setiap pattern menggunakan seed lama dan baru.
-Proses diatas dinamakan mutual bootstrapping dan setelah proses tersebut selesai, semua entitas baru hasil ekstraksi dievaluasi. Pembobotan entitas baru diberikan berdasarkan jumlah pattern yang mengekstrak kata tersebut. Lima kata terbaik diterima dan dimasukkan ke kamus (korpus) kata berelasi untuk selanjutnya diproses ulang.
+Berikut adalah beberapa proses (Riloff dan Jones, 1999) yang dijalankan algoritma \textit{meta bootstrapping} jika diberikan \textit{seed} berukuran kecil yang berasal dari suatu kategori semantik dan korpus yang belum dianotasi.
+\begin{enumerate}
+  \item Mengekstraksi \textit{pattern} secara otomatis dengan menerapkan syntactic template.
+  \item Untuk setiap \textit{pattern} akan diberi bobot berdasarkan jumlah seed yang menghasilkan \textit{pattern}.
+  \item Diambil \textit{pattern} terbaik dan seluruh seed lama yang merepresentasikan \textit{pattern} maupun \textit{seed} baru yang berhasil diekstrak disimpan.
+  \item Dilakukan pembobotan ulang untuk setiap \textit{pattern} menggunakan \textit{seed} lama dan baru.
+\end{enumerate}
+Proses diatas dinamakan \textit{mutual bootstrapping} dan setelah proses tersebut selesai, semua entitas baru hasil ekstraksi dievaluasi. Pembobotan entitas baru diberikan berdasarkan jumlah \textit{pattern} yang mengekstrak kata tersebut. Lima kata terbaik diterima dan dimasukkan ke kamus (korpus) kata berelasi untuk selanjutnya diproses ulang.
 
 %-----------------------------------------------------------------------------%
 \subsection{Basilisk}
 %-----------------------------------------------------------------------------% 
-Algoritma Basilisk (Thelen dan Riloff, 2002) juga memanfaatkan pattern dan seed dalam membangun korpus untuk suatu kategori semantik tertentu. Beberapa tahapan yang dijalankan adalah:
-Secara otomatis membentuk pattern dan memberi bobot berdasarkan jumlah seed yang menghasilkan pattern. Pattern terbaik dimasukan ke dalam Pattern Pool.
-Untuk setiap entitas baru yang terekstraksi dari pattern, dimasukan ke dalam Candidate Word Pool. Pemberian bobot dilakukan berdasarkan jumlah pattern yang mengekstraksi dan asosiasi kumulatif kata dengan seed.
-Sepuluh kata terbaik diambil dan dimasukan ke dalam kamus (korpus) yang kemudian digunakan untuk iterasi selanjutnya. 
-Kateogori semantik untuk proses ini bisa lebih dari satu. Basilisk memberi bobot berdasarkan informasi kolektif dari kumpulan pattern yang mengekstrak kata tersebut. Sementara Meta-Bootstrapping hanya mengambil satu pattern terbaik dan mengelompokkan seluruh kata yang terekstrak dari pattern ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan (Rillof dkk, 2003), didapatkan Basilisk mengungguli performa Meta-Bootstrapping. 
+Algoritma \textit{Basilisk} (Thelen dan Riloff, 2002) juga memanfaatkan \textit{pattern} dan \textit{seed} dalam membangun korpus untuk suatu kategori semantik tertentu. Beberapa tahapan yang dijalankan adalah sebagai berikut.
+\begin{enumerate}
+  \item Secara otomatis membentuk \textit{pattern} dan memberi bobot berdasarkan jumlah seed yang menghasilkan \textit{pattern}. Pattern terbaik dimasukan ke dalam \textit{Pattern Pool}.
+  \item Untuk setiap entitas baru yang terekstraksi dari \textit{pattern}, dimasukan ke dalam \textit{Candidate Word Pool}. Pemberian bobot dilakukan berdasarkan jumlah \textit{pattern} yang mengekstraksi dan asosiasi kumulatif kata dengan \textit{seed}.
+  \item Sepuluh kata terbaik diambil dan dimasukan ke dalam kamus (korpus) yang kemudian digunakan untuk iterasi selanjutnya. 
+\end{enumerate}
+
+Kateogori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} memberi bobot berdasarkan informasi kolektif dari kumpulan \textit{pattern} yang mengekstrak kata tersebut. Sementara \textit{Meta-Bootstrapping} hanya mengambil satu \textit{pattern} terbaik dan mengelompokkan seluruh kata yang terekstrak dari \textit{pattern} ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan (Rillof dkk, 2003), didapatkan \textit{Basilisk} mengungguli performa \textit{Meta-Bootstrapping}. 
 (11) Learning Subjective Noun using Extraction Pattern Bootstrapping. Rillof, Ellen, etc. Seventh Conference on Natural Language Learing.  (https://www.cs.utah.edu/~riloff/pdfs/conll03.pdf)
 [19] A Bootstrapping Method for Learning Semantic Lexicons using Extraction Pattern Context (https://www.cs.utah.edu/~riloff/pdfs/emnlp02-thelen.pdf)
 
+%-----------------------------------------------------------------------------%
+%-----------------------------------------------------------------------------%
+\section{Word Embedding}
+%-----------------------------------------------------------------------------%
+\textit{Word Embedding} digunakan untuk menentukan similarity antar kata relasi yang dihasilkan dari proses \textit{Pattern Matching}.
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
-\section{Pattern}
+\section{Pointwise Mutual Information}
 %-----------------------------------------------------------------------------%
-Pattern adalah suatu bentuk yang dapat merepresentasikan kumpulan data berukuran besar. Pada text dokumen, pattern dapat terbentuk secara eksplisit ataupun implisit. Secara eksplisit seperti lexico-syntactic pattern yang terbentuk dari kata-kata di dalam dokumen tersebut. Sementara pattern terbentuk secara implisit jika dilhat dari kemiripan vektor yang merepresentasika dokumen atau kata-kata di dalam dokumen tersebut.
+\textit{Pointwise Mutual Information} (PMI) adalah pengukuran nilai asosiasi antar variabel. Dalam bidang \textit{information theory}, PMI dapat dimanfaatkan untuk menghitung asosiasi kemunculan dua buah kata. Jika diberikan dua buah kata $x$ dan $y$, maka nilai PMI kata tersebut dalam suatu dokumen dapat dihitung menggunakan rumus berikut. 
+\[ pmi(x;y)=log\frac{p(x,y)}{(x)p(y)}=log\frac{p(x|y)}{p(x)}=log\frac{p(y|x)}{p(y)} \] dengan $p(x)=\frac{f(x)}{N}$
+\[ pmi(x;y)=log\frac{f(x)N}{f(x)f(y)} \]
+\begin{itemize}
+  \item $p(x)$ adalah probabilitas kemunculan kata $x$ dalam korpus
+  \item $f(x)$ adalah frekuensi kemunculan kata $x$ dalam korpus
+  \item $N$ adalah toatal seluruh kata dalam korpus
+\end{itemize}
+Pengukuran ini bersifat simetris, sehingga $p(x;y)=p(y;x)$. Nilai PMI dapat merupakan bilangan positif maupun negatif. Jika nilai PMI adalah nol (0), berarti kedua variabel saling \textit{independent}.
 
 %-----------------------------------------------------------------------------%
-\subsection{Lexico-syntactic Pattern}
+\subsection{Skip PMI}
 %-----------------------------------------------------------------------------% 
-Lexico-syntactic pattern adalah pattern yang hanya memanfatkan kata-kata dalam korpus dokumen dan dimanfaatkan untuk proses string matching. Salah satu pattern leksikal yang terkenal adalah Hearst Pattern yang merepresentasikan pola-pola untuk mendapatkan relasi hyponymy dari dokumen (Hearst, 1992). Menurut Hearst, beberapa syarat yang harus dipenuhi suatu lexico-syntactic pattern yang baik adalah sebagai berikut.
-Kemunculannya sering pada teks dalam berbagai domain sehingga dapat mengekstrak banyak entitas.
-Merepresentasikan relasi yang diinginkan sehingga hasil ekstraksi juga benar.
-Dapat dikenali tanpa membutuhkan pengetahuan sebelumnya sehingga dapat dibentuk dalam situasi apapun.
-
+PMI umumnya hanya menggunakan model \textit{bigram} atau \textit{trigram}. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk \textit{bigram} 'hong kong', 'sepak bola', dan 'amerika serikat'. Pada penelitian ini dilakukan modifikasi yaitu membuat model \textit{skip-gram} PMI. Kita menghitung nilai PMI antar dua kata yang dipisahkan dengan $n$ diantaranya. 
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
-\section{Pattern Extraction dan Matching}
+\section{Evaluasi}
 %-----------------------------------------------------------------------------%
-Pattern extraction atau pattern recognition adalah salah satu cabang dalam machine learning yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. Pattern matching adalah proses untuk mencocokkan suatu pattern dengan kumpulan data yang belum dianotasi. Penelitian ekstraksi relsasi semantik menggunakan metode pattern matching telah dilakukan oleh (Hearst, 1992), (Ruiz-Casado dkk, 2005), (Arnold dan Rahm, 2014), dan (Sumida dan Torisawa, [9]).
-Banyaknya penelitian menggunakan metode pattern matching dan extraction menjadi salah satu alasan penggunaan metode tersebut untuk mengekstrak relasi kata dalam Bahasa Indonesia. Pada penelitian ini, relasi semantik yang diekstrak dibatasi hanya untuk relasi hypernym-hyponym. 
+Evaluasi dilakukan untuk mengetahui kebaikan hasil penelitian. Evaluasi dapat dilakukan dengan mengukur akurasi data yang dihasilkan. Akurasi adalah nilai perbandingan antara jumlah data yang benar dengan jumlah seluruh data (Manning). 
+\[ akurasi=\frac{jumlah\,\,data\,\,benar}{jumlah\,\,seluruh\,\,data} \]
+Selain menghitung akurasi, proses evaluasi juga menghitung nilai-nilai lainnya. Berikut ada beberapa metode dan teknik evaluasi lain yang digunakan dalam penelitian.
 
-
-2.9 Sequence Analysis
-Dalam bidang bioinformatik, suquence analysis digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung sequnce tertentu. Pada penelitian ini, pattern yang dihasilkan adalah pattern leksikal yang merupakan deretan kata-kata. Algoritma seperti standard trie dan suffix tree dimanfaatkan secara berurut untuk proses pattern extraction dan matching.
-
-2.9.1 Standard Trie
-Standard Trie untuk suatu himpunan string S adalah ordered tree dengan ketentuan berikut.
-Setiap node, selain root, diberi label sebuah character
-Children dari sebuah node terurut sesuai alphabet
-Path dari eksternal node hingga root membentuk suatu string dalam S.
-Standard Trie membutuhkan memori sebesar O(n) dimana n adalah total ukuran string dalam S. Operasi insert membutuh waktu O(dm) dimana m adalah ukuran string yang baru dan d adalah ukuran alphabet.
-Sebagai contoh berikut adalah standard trie yang dibangun dari himpunan string {apel, ayam, baju, baja, bara}.
-
-2.9.2 Suffix Tree
-Suffix tree sering digunakan untuk pencarian sequence yang panjang seperti genomes untuk bidang bioinformatik. Pembentukan suffix tree mirip seperti Standard Trie, namun untuk seluruh suffix dalam string. Jika diberikan string dengan panjang n, dibentuk cabang dengan n(n-1)/2 suffix.  Metode ini banyak dimanfaatkan untuk mempercepat proses pencarian jika diberikan sebuah masukan query. Jika terdapat sebuah pattern dengan panjang string m, maka waktu yang dibutuhkan untuk menjalankan proses pattern matching adalah O(dm) dengan d adalah ukuran alfabet. Proses pencarian dilakukan dengan menelusuri path dari root sesuai dengan sequence query. Jika seluruh karakter dalam query selesai dijalankan, maka proses pencarian berhasil. 
-Sebagai contoh string ‘babaa’ menghasilkan suffix tree berikut. Jika diberi query ‘ba’ maka akan berhasil terhadap path ‘babaa’ dan ‘baa’.
-
-2.10 Word Embedding
-Untuk menentukan similarity antar kata relasi yang dihasilkan dari proses Pattern Matching.
-
-2.11 Pointwise Mutual Information 
-Pointwise Mutual Information (PMI) adalah pengukuran asosiasi antar variabel. Dalam bidang information theory, PMI dapat dimanfaatkan untuk menghitung asosiasi kemunculan dua buah kata. Jika diberikan dua buah kata x dan y, maka nilai PMI dapat dihitung menggunakan rumus berikut. 
-pmi(x;y)=logp(x,y)p(x)p(y)=logp(x|y)p(x)=logp(y|x)p(y) dengan p(x)=f(x)N
-pmi(x;y)=logf(x,y)Nf(x)f(y)
-p(x) adalah probabilitas kemunculan kata x dalam korpus
-f(x) adalah frekuensi kemunculan kata x dalam korpus
-N adalah total seluruh kata dalam korpus
-Pengukuran ini bersifat simetris, sehingga p(x;y)=p(y;x). Nilai PMI dapat merupakan bilangan negatif. Jika nilai PMI adalah nol (0) berarti kedua variabel saling independent.
-
-2.11.1 Skip PMI 
-PMI umumnya hanya menggunakan model bigram atau trigram. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk bigram ‘hong kong’, ‘sepak bola’, dan ‘amerika serikat’. Pada penelitian ini dilakukan modifikasi yaitu membuat model skip-gram PMI. Kita menghitung jarak nilai PMI yang berjarak n antar kata. 
-
-2.12 Evaluasi
-Evaluasi dilakukan untuk mengetahui kebaikan hasil penelitian. Evaluasi dapat dilakukan dengan mengukur akurasi data yang dihasilkan. Akurasi adalah nilai perbandingan antara jumlah data yang benar dengan jumlah seluruh data. Berikut ada beberapa metode dan teknik evaluasi lain yang digunakan dalam penelitian.
-
-2.12.1 Sampling
-Terdapat dua kategori utama dalam sampling yaitu probability dan non-probability sampling. Perbedaan utama keduanya adalah pada probability sampling, diambil data secara acak (random). Dalam probability sampling, terdapat beberapa metode yang dapat digunakan seperti simple random sampling, systematic sampling, stratified random sampling, dan cluster sampling.
-Simple random sampling perlu mengetahui seluruh data yang ada dan dari data tersebut dipilih secara acak. Hal ini membuat seluruh data memiliki nilai probabilitas terpilih yang sama. 
-Systematic sampling memilih setiap data ke-n untuk dijadikan sample. 
-Stratified random sampling akan mengelompokan data ke dalam kategori berdasarkan karakteristik tertentu (strata), kemudian data diambil secara acak dari kategori yang ada. Hal ini menyebabkan hasil lebih representatif. 
-Cluster sampling mirip seperti stratified sampling namun dilakukan jika data kelompok yang ingin di-sampling sulit berada di lokasi yang terpisah jauh.
-Proses sampling bermanfaat untuk merepresentasikan data tanpa perlu mengevaluasi seluruh data yang ada. Jika jumlah data yang ingin dievaluasi berukuran besar, proses sampling mempercepat pengukuran. Jumlah data yang direpresentasikan oleh satu sample berdasarkan jumlah data asli. Sebagai contoh jika total data adalah 1000 dan jumlah data sample adalah 50, maka satu data sample merepresentasikan 20 data asli.
+%-----------------------------------------------------------------------------%
+\subsection{Sampling}
+%-----------------------------------------------------------------------------% 
+Terdapat dua kategori utama dalam \textit{sampling} yaitu \textit{probability} dan \textit{non-probability sampling}. Perbedaan utama keduanya adalah pada \textit{probability sampling}, diambil data secara acak (\textit{random}). Dalam \textit{probability sampling}, terdapat beberapa metode yang dapat digunakan seperti \textit{simple random sampling}, \textit{systematic sampling}, \textit{stratified random sampling}, dan \textit{cluster sampling}.
+\begin{itemize}
+  \item \textit{Simple random sampling} perlu mengetahui seluruh data yang ada dan dari data tersebut dipilih secara acak. Hal ini membuat seluruh data memiliki nilai probabilitas terpilih yang sama. 
+  \item \textit{Systematic sampling} memilih setiap data ke-n untuk dijadikan \textit{sample}. 
+  \item \textit{Stratified random sampling} akan mengelompokan data ke dalam kategori berdasarkan karakteristik tertentu (strata), kemudian data diambil secara acak dari kategori yang ada. Hal ini menyebabkan hasil lebih representatif. 
+  \item \textit{Cluster} sampling mirip seperti stratified sampling namun dilakukan jika data kelompok yang ingin di-\textit{sampling} sulit berada di lokasi yang terpisah jauh.
+\end{itemize}
+Proses \textit{sampling} bermanfaat untuk merepresentasikan data tanpa perlu mengevaluasi seluruh data yang ada. Jika jumlah data yang ingin dievaluasi berukuran besar, proses \textit{sampling} mempercepat pengukuran. Jumlah data yang direpresentasikan oleh satu sample berdasarkan jumlah data asli. Sebagai contoh jika total data adalah 1000 dan jumlah data sample adalah 50, maka satu data \textit{sample} merepresentasikan 20 data asli.
 (Sumber: https://ecduganda.files.wordpress.com/2014/08/how-to-choose-sampling-techniques-for-
 evaluations.pdf)
 (http://optimierung.mathematik.uni-kl.de/mamaeusch/veroeffentlichungen/ver_texte/sampling_en.pdf)
 
-2.12.2 Precision dan Recall
-Teknik yang umum digunakan untuk mengevaluasi suatu ekstraksi adalah precision dan recall. Precision adalah nilai yang menyatakan jumlah dokumen benar dan berhasil diambil dibandingkan dengan seluruh jumlah dokumen yang terambil. Recall adalah nilai yang menyatakan jumlah dokumen benar dan berhasil diambil dibandingkan dengan jumlah seluruh dokumen yang benar. Semakin banyak dokumen yang diambil maka nilai recall akan meningkat sementara nilai precision cenderung menurun. 
+%-----------------------------------------------------------------------------%
+\subsection{Precision dan Recall}
+%-----------------------------------------------------------------------------% 
+Teknik yang umum digunakan untuk mengevaluasi suatu ekstraksi adalah \textit{precision} dan \textit{recall}. \textit{Precision} adalah nilai yang menyatakan jumlah dokumen benar dan berhasil diambil dibandingkan dengan seluruh jumlah dokumen yang terambil. \textit{Recall} adalah nilai yang menyatakan jumlah dokumen benar dan berhasil diambil dibandingkan dengan jumlah seluruh dokumen yang benar. Semakin banyak dokumen yang diambil maka nilai \textit{recall} akan meningkat sementara nilai \textit{precision} cenderung menurun. 
 
-2.12.3 Kappa 
-Nilai kappa () merepresentasikan tingkat persetujuan antar anotator. Kappa digunakan pada penelitian yang menggunakan bantuan anotator untuk memberi penilaian secara manual. Peniliaian didapatkan menggunakan rumus berikut.
-=P(A)-P(E)1-P(E)
-P(A) adalah proporsi penilaian yang setuju (agreement)
-P(E) adalah proporsi penilaian yang kebetulan
+%-----------------------------------------------------------------------------%
+\subsection{Kappa}
+%-----------------------------------------------------------------------------%  
+Nilai kappa ($\kappa$) merepresentasikan tingkat persetujuan antar anotator. Kappa digunakan pada penelitian yang menggunakan bantuan anotator untuk memberi penilaian secara manual. Peniliaian didapatkan menggunakan rumus berikut.
+\[ \kappa=\frac{P(A)-P(E)}{1-P(E)} \]
+\begin{itemize}
+  \item $P(A)$ adalah proporsi penilaian yang setuju (\textit{agreement})
+  \item $P(E)$ adalah proporsi penilaian yang kebetulan
+\end{itemize}
 Landis dan Koch [18] mendefiniskan tingkat persetujuan berdasarkan nilai Kappa yang diperoleh. 
-Nilai 
-Tingkat persetujuan
-< 0.00
-Poor
-0.00 - 0.20
-Slight
-0.21 - 0.40
-Fair
-0.41 - 0.60
-Moderate
-0.61 - 0.80
-Substantial
-0.81 - 1.00
-Almost Perfect
-Beberapa variasi perhitungan untuk Kappa adalah Cohen’s Kappa dan Fleiss’ Kappa. Cohen’s Kappa digunakan untuk mengukur tingkat persetujuan antar dua anotator. Jika diberikan data dengan n label dan mij merepresentasikan jumlah data yang diberi label i oleh anotator pertama dan label j oleh anotator kedua, maka proses perhitungan P(A) dan P(E)  untuk Cohen’s Kappa adalah sebagai berikut.
-P(A) = k=1nmkktotal data
-P(E) =k=1n(j=1nmkj . i = 1nmik)total data 
-Fleiss’ Kappa mengukur tingkat persetujuan antar sekelompok anotator berjumlah lebih dari dua. Jika diberikan N data dengan n anotator dimana setiap data diantosi ke dalam salah satu dari k kategori dan nij merepresentasikan total anotator yang memberi data i ke label j, proses perhitungan P(A) dan P(E)  untuk Fleiss’ Kappa adalah sebagai berikut.
-P(A) = 1Ni=1NPi dengan Pi=1n(n-1)[(j=1knij2)-(n)]
-P(E)=i=1kPi 
+\begin{table}
+  \centering
+    \caption{Skala pengukuran Kappa}
+    \label{table:skalaKappa}
+    \begin{tabular}{|c|c|}
+      \hline
+      Statistik Kappa & Tingkat persetujuan \\ \hline
+      < 0.00 & \textit{Poor} \\ \hline
+      0.00 - 0.20 & \textit{Slight} \\ \hline
+      0.21 - 0.40 & \textit{Fair} \\ \hline
+      0.41 - 0.60 & \textit{Moderate} \\ \hline
+      0.61 - 0.80 & \textit{Substantial} \\ \hline
+      0.81 - 1.00 & \textit{Almost Perfect} \\ \hline
+    \end{tabular}
+\end{table}
+
+Beberapa variasi perhitungan untuk Kappa adalah Cohen's Kappa dan Fleiss' Kappa. Cohen's Kappa digunakan untuk mengukur tingkat persetujuan antar dua anotator. Jika diberikan data dengan $n$ label dan $m_ij$ merepresentasikan jumlah data yang diberi label $i$ oleh anotator pertama dan label $j$ oleh anotator kedua, maka proses perhitungan $P(A)$ dan $P(E)$ untuk Cohen's Kappa adalah sebagai berikut.
+\[ P(A)=\frac{\sum_{k=1}^{n} m_kk}{total\,\,data} \]
+\[ P(E)=\frac{\sum_{k=1}^{n} ( \sum_{j=1}^{n} m_kj . \sum_{i=1}^{n} m_ik ) }{total\,\,data} \]
+
+Fleiss' Kappa mengukur tingkat persetujuan antar sekelompok anotator berjumlah lebih dari dua. Jika diberikan $N$ data dengan $n$ anotator dimana setiap data diantosi ke dalam salah satu dari $k$ kategori dan $n_ij$ merepresentasikan total anotator yang memberi data $i$ ke label $j$, proses perhitungan $P(A)$ dan $P(E)$ untuk Fleiss' Kappa adalah sebagai berikut.
+\[ P(A)=\frac{1}{N}\sum_{i=1}^{N}P_i \:\:\:\:\:dengan\:\:\:\:\: P_i=\frac{1}{n(n-1)}[(\sum_{j=1}^{k}n^2_ij)-(n)] \]
 [18] (MLA: Landis, J. Richard, and Gary G. Koch. “The Measurement of Observer Agreement for Categorical Data.” Biometrics, vol. 33, no. 1, 1977, pp. 159–174., www.jstor.org/stable/2529310.
 APA: Landis, J., & Koch, G. (1977). The Measurement of Observer Agreement for Categorical Data. Biometrics, 33(1), 159-174. doi:10.2307/2529310)
 
-2.12.4 Spearman’s Rho
-Spearman’s rank correlation coefficient adalah nilai koefisien korelasi antar ranking dua parameter. Nilai Spearman correlation sama dengan nilai Pearson correlation antar dua paramter yang telah di-ranking. Pearson correlation  menggambarkan nilai linear antara dua parameter. Spearman correlation berkisar antara -1 hingga +1.
-Spearman’s rho adalah nilai Pearson correlation coefficient antar dua variabel yang telah di-ranking. Untuk mendapatkan nilai koefisien (rs), menggunakan rumus berikut.
+%-----------------------------------------------------------------------------%
+\subsection{Spearman's Rho}
+%-----------------------------------------------------------------------------% 
+\textit{Spearman's rank correlation coefficient} adalah nilai koefisien korelasi antar \textit{ranking} dua parameter. Nilai \textit{Spearman correlation} sama dengan nilai \textit{Pearson correlation} antar dua paramter yang telah di-\textit{ranking}. \textit{Pearson correlation}  menggambarkan nilai linear antara dua parameter. \textit{Spearman correlation} berkisar antara $-1$ hingga $+1$.
 
-adalah Pearson correlation coefficent yang diaplikasikan pada variabel ranking
-cov(rgX,rgY) adalah nilai covariance antar variable ranking
-rgXdan rgYadalah nilai standard deviasi variable ranking
-Jika seluruh ranking berbeda, proses komputasi dapat dilakukan menggunakan rumus berikut.
-
-di=rg(Xi)-rg(Yi)adalah selisih antara dua ranking
-nadalah jumlah observasi
+Spearman's rho adalah nilai Pearson correlation coefficient antar dua variabel yang telah di-ranking. Untuk mendapatkan nilai koefisien ($r_s$), menggunakan rumus berikut.
+\[ r_s = \rho_{rg_X,rg_Y} = \frac{cov(rg_X,rg_Y)}{\sigma_{rg_X}\sigma_{rg_Y}} \]
+\begin{itemize}
+  \item \rho adalah \textit{Pearson correlation coefficent} yang diaplikasikan pada variabel \textit{ranking}
+  \item $cov(rg_X,rg_Y)$ adalah nilai \textit{covariance} antar variabel \textit{ranking}
+  \item $\sigma_{rg_X}$ dan $\sigma_{rg_Y}$ adalah nilai standard deviasi variabel \textit{ranking}
+\end{itemize}
+Jika seluruh \textit{ranking} berbeda, proses komputasi dapat dilakukan menggunakan rumus berikut.
+\[ r_s = 1-\frac{6 \Sigma d_i^2}{n(n^2-1)} \]
+\begin{itemize}
+  \item $d_i = rg(X_i)-rg(Y_i)$ adalah selisih antara dua \textit{ranking}
+  \item $n$ adalah jumlah observasi
+\end{itemize}
