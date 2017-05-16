@@ -48,3 +48,38 @@ Artikel-artikel Wikipedia dibentuk ke dalam format yang telah didefinisikan deng
 Pasangan kata relasi \textit{hypernym-hyponym} diambil dari data yang dimilki oleh WordNet Bahasa yang dikembangkan oleh NTU. Pemanfaatan WordNet Bahasa dilatarbelakangi jumlahnya yang lebih besar dibanding Indonesian WordNet (IWN). Relasi semantik antar kata pada WordNet Bahasa memanfaatkan WordNet Princeton versi 3.0. Synset pada WordNet Bahasa dipetakan ke \textit{synset} WordNet Princeton, sehingga relasi kata yang dimiliki oleh WordNet Princeton ikut diwarisi. Alasan lain penggunaan WordNet Bahasa karena telah terintegrasi dengan \textit{tools} nltk sehingga dapat langsung digunakan untuk membentuk \textit{seed} secara mudah.
 
 Seluruh lema Bahasa Indonesia yang dimiliki oleh WordNet tersebut akan dipasangkan dengan lema \textit{hypernym}-nya, sehingga terbentuk relasi biner antara kata yang merupakan \textit{hyponym} dan kata yang merupakan \textit{hypernym}. Format untuk korpus ini mengikut format korpus pasangan kata relasi yang akan digunakan.
+
+
+%-----------------------------------------------------------------------------%
+\section{Pembentukan Pattern}
+%-----------------------------------------------------------------------------%
+\textit{Pattern} leksikal yang akan digunakan perlu dibentuk secara otomatis oleh sistem. Terdapat dua masukan utama untuk proses ini yaitu pasangan kata relasi \textit{hypernym-hyponym} yang telah diketahui dan korpus dokumen. Pada tahap awal, pasangan kata relasi menggunakan \textit{seed} yang dibentuk menggunakan WordNet Bahasa. Untuk tahap selanjutnya, pasangan kata relasi menggunakan \textit{pair} hasil proses ekstraksi. Terdapat dua proses utama dalam pembentukan \textit{pattern} yaitu \textit{sentence tagging} dan p\textit{attern extraction}.
+
+%-----------------------------------------------------------------------------%
+\subsection{Sentence Tagging}
+%-----------------------------------------------------------------------------%
+\textit{Sentence tagging} adalah proses \textit{intermediate} sebelum dapat membentuk sebuah \textit{pattern} leksikal. Proses ini akan memberi \textit{tag hypernym} dan \textit{hyponym} terhadap suatu kata di dalam dokumen. Masukan untuk proses ini adalah pasangan kata relasi dan korpus Wikipedia tanpa \textit{pos tag}. Untuk setiap kalimat dalam korpus Wikipedia, dicek apakah kalimat tersebut mengandung pasangan kata relasi. Jika mengandung, maka kata dalam kalimat yang merupakan pasangan kata akan di \textit{tag hypernym} dan \textit{hyponym}. Satu kalimat dicocokan dengan seluruh pasangan kata relasi karena terdapat kasus dimana satu kalimat mengandung lebih dari satu pasangan kata relasi. Proses ini menghasilkan kalimat-kalimat Wikipedia yang telah diberi \textit{tag hypernym} atau \textit{hyponym}.
+
+%-----------------------------------------------------------------------------%
+\subsection{Pattern Extraction}
+%-----------------------------------------------------------------------------%
+Setelah didapatkan kumpulan kalimat yang sudah diberi \textit{tag hypernym} dan \textit{hyponym}, proses selanjutnya adalah \textit{pattern extraction}. \textit{Pattern extraction} adalah proses untuk mendapatkan \textit{pattern} leksikal yang kemunculannya sering dalam korpus. Masukan dari proses ini adalah kalimat-kalimat Wikipedia yang telah diberi \textit{tag hypernym} dan \textit{hyponym}. Proses ini akan menghasilkan kumpulan \textit{pattern} unik yang telah terurut berdasarkan bobotnya. Dari \textit{pattern} unik tersebut, akan diambil sejumlah \textit{pattern} terbaik untuk kemudian digunakan sebagai dasar pembentukan \textit{pair} baru.
+
+
+%-----------------------------------------------------------------------------%
+\section{Ekstraksi Pair}
+%-----------------------------------------------------------------------------%
+
+
+
+%-----------------------------------------------------------------------------%
+\section{Cycle Semi-Supervised}
+%-----------------------------------------------------------------------------%
+Pembelajaran menggunakan pendekatan \textit{semi supervised learning} dilatarbelakangi ketersediaan pasangan kata relasi (seed) berukuran terbatas dan korpus yang belum dianotasi. Ingin didapatkan \textit{pair} baru dari korpus yang belum diantoasi tersebut. Metode \textit{semi supervised} yang diterapkan adalah \textit{Bootstrapping}. Untuk lebih spesifiknya, algoritma \textit{bootstrapping} yang digunakan adalah \textit{Basilisk} dengan modifikasi sesuai kebutuhan. Pemilihan \textit{Basilisk} sebagai metode \textit{Bootrapping} didasari proses ekstraksi \textit{seed} baru yang memanfaatkan \textit{pattern}. Pada penelitian ini, dilakukan modifikasi sesuai kebutuhan. Secara umum, proses \textit{bootstrapping} dapat dikelompokan ke dalam dua tahap yaitu iterasi ke-1 dan iterasik ke-2 hingga n.
+
+Penggunaan \textit{seed} yang berasal dari WordNet Bahasa hanya dilakukan pada iterasi pertama. Pada iterasi ini, pattern yang merupakan hasil dari \textit{seed} dengan lema sama dan \textit{seed strict} digabung dan diurutkan berdasarkan vektor \textit{pattern}. Lima \textit{pattern} terbaik diambil untuk selanjutnya digunakan dalam proses \textit{pattern matching}. \textit{Seed} yang membentuk kelima pattern ini disimpan langsung ke dalam korpus pasangan relasi kata (\textit{pair}). Hal tersebut dapat memfilter \textit{pair} yang dihasilkan akibat \textit{error} dalam \textit{resource} WordNet Bahasa tidak ikut terambil. \textit{Pair} yang memenuhi \textit{threshold} dimasukan ke dalam korpus pasangan kata relasi. 
+
+Pada iterasi ke-2 hingga n, \textit{pair} dalam korpus pasangan relasi kata digunakan sebagai \textit{seed} untuk proses \textit{sentence tagging} dan \textit{pattern extraction}. \textit{Pattern} yang dihasilkan akan digabung dengan seluruh \textit{pattern} lama kemudian di \textit{ranking}. Seperti pada metode \textit{Basilisk}, jumlah \textit{pattern} yang digunakan pada iterasi tersebut akan ditambah. Satu \textit{pattern} terbaik dari hasil pengurutan bergabung dengan \textit{pattern} terpilih lama untuk digunakan dalam proses \textit{pattern matching}. Hal ini untuk membuka kemungkinan \textit{pair} baru terekstraksi. Sama seperti proses sebelumnya, \textit{pair} yang lolos \textit{threshold} digabung ke dalam korpus.
+
+Iterasi dilakukan hingga korpus pasangan kata relasi jenuh atau dapat dikatakan \textit{pair} baru yang masuk ke dalam korpus berjumlah kurang dari lima puluh. Evaluasi \textit{pattern} dan \textit{pair} dilakukan secara kolektif di akhir pengembangan. Anotator melakukan evaluasi secara manual untuk mengetahui kualitas \textit{pattern} dan \textit{pair} yang dihasilkan.
+
