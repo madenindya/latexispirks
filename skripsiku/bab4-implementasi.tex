@@ -110,9 +110,120 @@ Pendekatan lainnya adalah dengan metode filterisasi yang paling ketat. Jika satu
 %-----------------------------------------------------------------------------%
 \subsection{Kelemahan Seed yang Dihasilkan}
 %-----------------------------------------------------------------------------%
-Walau sudah dilakukan proses filterisasi untuk meningkatkan kualitas \textit{seed}, masih ada hambatan yang belum bisa diatasi. Beberapa kelemahan dari \textit{seed} awal yang dihasilkan, antara lain:
+Walau sudah dilakukan proses filterisasi untuk meningkatkan kualitas \textit{seed}, masih ada hambatan yang belum bisa diatasi dalam penelitian ini. Beberapa kelemahan dari \textit{seed} awal yang dihasilkan, antara lain:
 \begin{itemize}
   \item \textit{Seed} yang mengandung kata bukan Bahasa Indonesia. Korpus yang ingin dibuat berdomain Bahasa Indonesia, namun \textit{seed} yang dihasilkan mengandung Bahasa Melayu atau Bahasa Indonesia lama. Beberapa kata bukan Bahasa Indonesia yang dihasilkan adalah 'had', 'bonjol', dan 'cecok'.
   \item Kesalahan semantik \textit{synset} dan lema Bahasa Indonesia. Beberapa \textit{synset} nltk memiliki lema Bahasa Indonesia yang kurang sesuai jika dilihat secara semantik. Sebagai contoh Synset('scholar.n.01') dengan lemma Bahasa Indonesia {'buku_harian', 'pelajar'}. Dalam Bahasa Indonesia, 'buku_harian' memiliki makna yang berbeda dengan 'pelajar'.
   \item Kesalahan lema Bahasa Indonesia untuk suatu \textit{synset} menyebabkan dihasilkannya \textit{seed} yang jika dievaluasi kualitatif oleh manusia dirasa kurang tepat. Contoh \textit{seed} yang tidak baik adalah dari pemetaan ('sejarawan', Synset('historian.n.01')) => (['buku_harian', 'pelajar'], [Synset('scholar.n.01')]) dihasilkan \textit{seed} awal (sejarawan,buku harian) dan (sejarawan,pelajar). \textit{Seed} (sejarawan,buku harian) adalah salah.
 \end{itemize}
+
+
+%-----------------------------------------------------------------------------%
+\section{Sentence Tagging}
+%-----------------------------------------------------------------------------%
+Setelah memperoleh pasangan kata relasi Bahasa Indonesia, perlu dilakukan \textit{tagging} pasangan kata tersebut ke kalimat-kalimat dalam korpus Wikipedia. Data yang digunakan untuk proses ini adalah korpus Wikipedia yang tidak memiliki \textit{pos tag}. Beberapa tahapan dilakukan pada proses tagging sentence dengan seed relasi adalah sebagai berikut.
+\begin{enumerate}
+  \item Dibaca seluruh pasangan kata relasi \textit{hyponym-hypernym}.
+  \item Untuk setiap kalimat pada korpus Wikipedia, di cek apakah kalimat tersebut mengandung pasangan kata relasi.
+  \item Pengecekan dilakukan secara berulang untuk seluruh pasangan kata relasi karena terdapat kemungkinan satu kalimat mengandung lebih dari satu pasang kata relasi.
+  \item Kata-kata yang merupakan bagian dari pasangan kata relasi kemudian di-\textit{tag} sesuai relasinya dan disimpan ke dalam korpus berisi kalimat dengan \textit{tag} \textit{hyponym} dan \textit{hypernym}.
+\end{enumerate}
+
+Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari satu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah $(ikan\,\,gurame;ikan)$, kata 'ikan' terkandung dalam kedua kata relasi. 
+
+Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence tagging}. Diberikan pasangan kata relasi \textit{hyponym-hypernym} $(fermion;partikel)$ dan $(boson;partikel)$ serta kalimat  '<start> seluruh partikel dasar adalah boson atau fermion . <end>'. Hasil proses \textit{sentence tagging} adalah sebagai berikut.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+<start> seluruh <hypernym>partikel<hypernym> dasar adalah boson atau <hyponym>fermion<hyponym> . <end> \\ 
+\hline
+\hline
+<start> seluruh <hypernym>partikel<hypernym> dasar adalah <hyponym>boson<hyponym> atau fermion . <end> \\ 
+\hline
+\end{tabular}
+\end{center}
+
+
+%-----------------------------------------------------------------------------%
+\section{Pattern Extraction}
+%-----------------------------------------------------------------------------%
+Setelah mendapatkan kalimat-kalimat yang telah di-tag dengan kata relasi, ingin dicari pattern yang dapat digunakan untuk menambah jumlah relasi kata. Pembuatan pattern menggunakan algoritma dasar Standard Trie dengan beberapa modifikasi. Proses ini diimplementasi secara mandiri menggunakan program Java dengan mengikuti algoritma pembuatan Trie sederhana.
+
+Suatu node merepresentasikan kata dalam kalimat dan dari satu kalimat terbentuk sebuah cabang dalam tree. Node menyimpan beberapa informasi seperti nama node, parent, childs, dan informasi identitas tambaha seperti apakah node tersebut merupakan relasi dan apakah node tersebut merupakan leaf. Untuk kata yang merupakan kata relasi, node menyimpan informasi jenis relasi beserta list dari kata yang merupakan bagian dari relasi tersebut. Sebagai contoh dua kalimat sebagai berikut.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+<start> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang berukuran besar <end> \\ 
+\hline
+\hline
+<start> <hyponym>serigala<hyponym> adalah <hypernym>anjing<hypernym> yang tinggal di hutan <end>\\ 
+\hline
+\end{tabular}
+\end{center}
+
+Akan menghasilkan Pattern Tree sebagai berikut. Angka setelah kata adalah bobot suatu node.
+% TODO: insert coontoh pattern tree
+
+%-----------------------------------------------------------------------------%
+\subsection{Informasi dalam Pattern}
+%-----------------------------------------------------------------------------%
+Beberapa informasi yang disimpan dalam suatu pattern adalah sequence kata, jumlah kemunculan dalam korpus,  seed unik yang membentuk pattern tersebut, dan kalimat unik yang membentuk pattern tersebut. Informasi-informasi tersebut nantinya digunakan untuk memberi bobot pattern dan melakukan sorting pemilihan pattern terbaik.
+
+%-----------------------------------------------------------------------------%
+\subsection{Pattern Tree}
+%-----------------------------------------------------------------------------%
+Pattern Tree adalah sebuah tree yang menyimpan seluruh pattern yang dihasilkan dari korpus. Dalam pembuatan Pattern Tree, tidak perlu menyimpan seluruh kata dalam kalimat. Hanya sequence kata tertentu saja yang dianggap dapat menghasilkan pattern yang baik untuk diikutsertakan. Maka dari itu, perlu diambil sequence kata dalam kalimat yang digunakan sebagai pattern. Terdapat tiga pendekatan dalam proses ini, diantaranya:
+\begin{enumerate}
+  \item Hanya memperhatikan kata yang berada diantara kata relasi. Pada kasus ini, hanya ingin dilihat kata-kata yang berada diantara kata yang merupakan hypernym-hyponym atau hyponym-hypernym. Kata-kata diantara dua relasi dapat dianggap paling dekat jika ingin mencari pattern relasi tersebut. \\Pada contoh diatas, sequence kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
+  \item Mengikutsertakan n kata sebelum kata relasi pertama. Beberapa kata sebelum kata relasi, dapat memberikan informasi untuk yang dapat meningkatkan kualitas pattern yang dihasilkan.\\
+  Pada contoh diatas dengan (n=1), sequence kata yang dihasilkan adalah '<start> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
+  \item Mengikutsertakan n kata setelah kata relasi terakhir. Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. \\
+  Pada contoh diatas dengan (n=1), sequence kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang'
+\end{enumerate}
+
+%-----------------------------------------------------------------------------%
+\subsection{Vektor Pattern}
+%-----------------------------------------------------------------------------%
+Suatu pattern dapat direpresentasikan menjadi vektor berdasarkan nilai-nilai yang dimilikinya. Vektor ini dapat dimanfaatkan untuk menentukan pattern yang baik (pembobotan). Fitur utama pada vektor pattern diambil dari informasi yang disimpan oleh suatu pattern, yaitu total kemunculan pattern, jumlah seed unik, dan jumlah kalimat unik yang membentuk pattern tersebut. Fitur lain adalah hasil kombinasi perbandingan antar nilai utama. Fitur tambahannya adalah nilai perbandingan antara jumlah seed unik dibagi jumlah kalimat unik, nilai perbandingan antara jumlah seed untuk dibagi total kemunculan, dan nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan.
+
+%-----------------------------------------------------------------------------%
+\subsection{Validasi dan Filterisasi Pattern}
+%-----------------------------------------------------------------------------%
+Setelah terbentuk Pattern Tree, perlu di-list seluruh pattern yang dihasilkan. Untuk mengurangi pattern yang kurang baik dihasilkan, perlu dilakukan proses validasi. Proses ini sama seperti proses filtering yang dilakukan pada tahap pengumpulan seed. Beberapa aturan yang harus dipenuhi agar suatu pattern dianggap valid adalah sebagai berikut.
+\begin{itemize}
+  \item Harus ada minimal satu kata diantara dua kata relasi. Banyak kasus dimana dua kata relasi hanya dipisahkan oleh spasi. Pattern yang hanya mengandung spasi tidak memberikan informasi apapun karena simbol spasi dalam Bahas Indonesia pasti digunakan sebagai pemisah antar kata. Sebagai contoh kalimat hasil tagging ‘<start> semua jenis <hypernym>ular<hypernym> <hyponym>beludak<hyponym> memiliki taring yang panjang <end>’
+  \item Sebuah pattern harus memenuhi nilai threshold yang didefinisikan. Nilai perbandingan antara jumlah seed unik dibagi jumlah kalimat unik lebih dari 0.5. Nilai perbandingan antara jumlah seed unik dibagi total kemunculan lebih dari 0.2. Nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan harus lebih dari 0.7. Ketiga nilai threshold tersebut didefinisikan sendiri berdasarkan pengamatan nilai pada vektor pattern.
+\end{itemize}
+
+%-----------------------------------------------------------------------------%
+\subsection{Pembentukan Pattern Unik}
+%-----------------------------------------------------------------------------%
+Pattern yang dihasilkan dari tahap ini harus unik sehingga tidak terjadi ambiguitas jika hendak digunakan. Pada masa awal pengembangan, masalah yang muncul pada pattern yang dihasilkan adalah adanya pattern yang posisi penempatan hypernym-hyponym-nya saling berkebalikan. Sebagai contoh beberapa pattern ambigu yang dihasilkan seperti (i) <hyponym> adalah <hypernym>, (ii) <hypernym> adalah <hyponym>, (iii) <hypernym> dan <hyponym>, dan (iv) <hyponym> dan <hypernym>. Padahal, bagian hypernym-hyponym tersebut nantinya digantikan dengan kata kemunculannya cocok dengan pattern yang diberikan. Jika pattern dibiarkan begitu saja, banyak dihasilkan seed yang salah.
+
+Strategi yang dilakukan untuk masalah ambiguitas antar pattern adalah membangun suatu arsitektur yang dapat mengidentifikasi dan menyelesaikannya. Tahapan pembangunan pattern unik adalah sebagai berikut.
+\begin{enumerate}
+  \item Dicari pattern dengan pendekatan hanya memperhatikan kata-kata diantara relasi.
+  \item Pattern yang dihasilkan dievaluasi satu dengan yang lain. Jika terdapat pattern yang saling terbalik, pattern yang bersangkutan dikeluarkan dari list dan disimpan untuk dievaluasi ulang.
+  \item Proses evaluasi ulang dilakukan menggunakan pendekatan pembuatan pattern lainnya yaitu, memperhatikan n kata sebelum atau sesudah kemunculan relasi.
+  \item Hasil kedua pendekatan digabung dan dicek apakah pattern tersebut dibutuhkan. Suatu pattern hasil evaluasi ulang dinyatakan dibutuhkan jika substring dari pattern tersebut tergolong dalam list pattern yang membutuhkan evaluasi ulang.
+  \item Proses evaluasi dilakukan secara berulang dari dengan n yang terus bertambah dari 1 (satu). Pada penelitian ini, nilai n dibatasi hingga 2 (dua).
+\end{enumerate}
+
+Setelah melakukan tahapan di atas, tidak ada lagi kasus posisi relasi saling tertukar dari pattern yang dihasilkan. List pattern yang dihasilkan kemudian di-sorting sebelum ditampilkan.
+
+%-----------------------------------------------------------------------------%
+\subsection{Pengurutan Pattern}
+%-----------------------------------------------------------------------------%
+Setelah didapatkan pattern yang sesuai, dilakukan proses pengurutan (sorting) untuk mengetahui pattern mana yang terbaik berdasarkan bobot yang dimiliki. Proses pengurutan dilakukan dengan membandingkan satu pattern dengan yang lain, dengan tahapan sebagai berikut.
+\begin{enumerate}
+  \item Semakin besar jumlah kalimat unik yang membentuk pattern.
+  \item Semakin besar nilai perbandingan antara jumlah seed unik yang membentuk pattern dengan jumlah kalimat unik yang membentuk pattern.
+  \item Semakin kecil jumlah token dalam pattern tersebut jika di-parse dengan spasi.
+\end{enumerate}
+
+%-----------------------------------------------------------------------------%
+\subsection{Kelemahan Pattern yang Dihasilkan}
+%-----------------------------------------------------------------------------%
+Hasil dari tahap ekstraksi pattern dengan aturan-aturan di atas memberi pattern yang baik untuk relasi kata hyponym-hypernym. Beberapa masalah yang belum dapat diselesaikan seperti menentukan pattern mana yang lebih baik jika satu pattern adalah substring dari pattern yang lain dan generalisasi pattern. Pada penelitian ini, pattern yang diprioritiskan jika hal tersebut terjadi adalah pattern yang memiliki jumlah token terpendek. Namun, hal tersebut belum bisa dikatakan yang terbaik.
+
+Beberapa pattern terlihat kurang baik secara semantik jika dilihat sekilas. Pattern seperti (a).<hypernym> dan <hyponym> (b) <hypernym> atau <hyponym>, kurang cocok jika digunakan dalam Pattern Matching. Hal ini disebabkan kata ‘dan’ dan ‘atau’ memuat relasi yang bersifat simetris. Sementara hypernym-hyponym merupakan relasi yang hanya memiliki sifat transitif. Pada penelitian ini, relasi yang  diamati hanya hypenym-hyponym. Ada kemungkinan suatu pattern yang sama dihasilkan dari beberaparelasi yang lain dan mungkin lebih cocok digunakan utnuk relasi lain tersebut. Tidak adanya perbandingan pattern yang dihasilkan oleh relasi lain menjadi salah satu hambatan memilih pattern yang baik.
