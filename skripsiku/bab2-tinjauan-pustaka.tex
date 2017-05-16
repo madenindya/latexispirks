@@ -149,7 +149,7 @@ Sebagai contoh berikut adalah \textit{standard trie} yang dibangun dari himpunan
 %-----------------------------------------------------------------------------% 
 \textit{Suffix tree} sering digunakan untuk pencarian sequence yang panjang seperti \textit{genomes} untuk bidang bioinformatik. Pembentukan \textit{suffix tree} mirip seperti \textit{Standard Trie}, namun untuk seluruh \textit{suffix} dalam \textit{string}. Jika diberikan \textit{string} dengan panjang $n$, dibentuk cabang dengan $n(n-1)/2$ \textit{suffix}.  Metode ini banyak dimanfaatkan untuk mempercepat proses pencarian jika diberikan sebuah masukan \textit{query}. Jika terdapat sebuah \textit{pattern} dengan panjang \textit{string} $m$, maka waktu yang dibutuhkan untuk menjalankan proses \textit{pattern matching} adalah $O(dm)$ dengan $d$ adalah ukuran alfabet. Proses pencarian dilakukan dengan menelusuri \textit{path} dari \textit{root} sesuai dengan \textit{sequence query}. Jika seluruh karakter dalam \textit{query} selesai dijalankan, maka proses pencarian berhasil. 
 
-Sebagai contoh \textot{string} 'babaa' menghasilkan \textit{suffix tree} berikut. Jika diberi \textit{query} 'ba' maka akan berhasil terhadap \textot{path} 'babaa' dan 'baa'.
+Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} berikut. Jika diberi \textit{query} 'ba' maka akan berhasil terhadap \textit{path} 'babaa' dan 'baa'.
 
 
 %-----------------------------------------------------------------------------%
@@ -242,7 +242,7 @@ Terdapat dua kategori utama dalam \textit{sampling} yaitu \textit{probability} d
 Proses \textit{sampling} bermanfaat untuk merepresentasikan data tanpa perlu mengevaluasi seluruh data yang ada. Jika jumlah data yang ingin dievaluasi berukuran besar, proses \textit{sampling} mempercepat pengukuran. Jumlah data yang direpresentasikan oleh satu sample berdasarkan jumlah data asli. Sebagai contoh jika total data adalah 1000 dan jumlah data sample adalah 50, maka satu data \textit{sample} merepresentasikan 20 data asli.
 (Sumber: https://ecduganda.files.wordpress.com/2014/08/how-to-choose-sampling-techniques-for-
 evaluations.pdf)
-(http://optimierung.mathematik.uni-kl.de/mamaeusch/veroeffentlichungen/ver_texte/sampling_en.pdf)
+%(http://optimierung.mathematik.uni-kl.de/mamaeusch/veroeffentlichungen/ver_texte/sampling_en.pdf)
 
 %-----------------------------------------------------------------------------%
 \subsection{Precision dan Recall}
@@ -281,8 +281,8 @@ Beberapa variasi perhitungan untuk Kappa adalah Cohen's Kappa dan Fleiss' Kappa.
 
 Fleiss' Kappa mengukur tingkat persetujuan antar sekelompok anotator berjumlah lebih dari dua. Jika diberikan $N$ data dengan $n$ anotator dimana setiap data diantosi ke dalam salah satu dari $k$ kategori dan $n_ij$ merepresentasikan total anotator yang memberi data $i$ ke label $j$, proses perhitungan $P(A)$ dan $P(E)$ untuk Fleiss' Kappa adalah sebagai berikut.
 \[ P(A)=\frac{1}{N}\sum_{i=1}^{N}P_i \:\:\:\:\:dengan\:\:\:\:\: P_i=\frac{1}{n(n-1)}[(\sum_{j=1}^{k}n^2_ij)-(n)] \]
-[18] (MLA: Landis, J. Richard, and Gary G. Koch. “The Measurement of Observer Agreement for Categorical Data.” Biometrics, vol. 33, no. 1, 1977, pp. 159–174., www.jstor.org/stable/2529310.
-APA: Landis, J., & Koch, G. (1977). The Measurement of Observer Agreement for Categorical Data. Biometrics, 33(1), 159-174. doi:10.2307/2529310)
+%[18] (MLA: Landis, J. Richard, and Gary G. Koch. “The Measurement of Observer Agreement for Categorical Data.” Biometrics, vol. 33, no. 1, 1977, pp. 159–174., www.jstor.org/stable/2529310.
+%APA: Landis, J., & Koch, G. (1977). The Measurement of Observer Agreement for Categorical Data. Biometrics, 33(1), 159-174. doi:10.2307/2529310)
 
 %-----------------------------------------------------------------------------%
 \subsection{Spearman's Rho}
@@ -292,7 +292,7 @@ APA: Landis, J., & Koch, G. (1977). The Measurement of Observer Agreement for Ca
 Spearman's rho adalah nilai Pearson correlation coefficient antar dua variabel yang telah di-ranking. Untuk mendapatkan nilai koefisien ($r_s$), menggunakan rumus berikut.
 \[ r_s = \rho_{rg_X,rg_Y} = \frac{cov(rg_X,rg_Y)}{\sigma_{rg_X}\sigma_{rg_Y}} \]
 \begin{itemize}
-  \item \rho adalah \textit{Pearson correlation coefficent} yang diaplikasikan pada variabel \textit{ranking}
+  \item $\rho$ adalah \textit{Pearson correlation coefficent} yang diaplikasikan pada variabel \textit{ranking}
   \item $cov(rg_X,rg_Y)$ adalah nilai \textit{covariance} antar variabel \textit{ranking}
   \item $\sigma_{rg_X}$ dan $\sigma_{rg_Y}$ adalah nilai standard deviasi variabel \textit{ranking}
 \end{itemize}

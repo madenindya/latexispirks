@@ -1,0 +1,50 @@
+%-----------------------------------------------------------------------------%
+\chapter{\babTiga}
+%-----------------------------------------------------------------------------%
+Pada bab ini dipaparkan mengenai rancangan dan tahap-tahap proses ekstraksi relasi semantik, mulai dari pengumpulan seed, proses pattern extraction dan matching, dan evaluasi hingga dihasilkan korpus pasangan relasi kata hypernym-hyponym Bahasa Indonesia. 
+
+
+%-----------------------------------------------------------------------------%
+\section{Spesifikasi Penelitian}
+%-----------------------------------------------------------------------------%
+Berikut adalah spesifikasi penelitian yang dilaksanakan dan batas-batasanya.
+\begin{itemize}
+  \item Relasi yang diperhatikan adalah \textit{hypernym-hyponym}.
+  \item Kelas kata yang diperhatikan adalah \textit{noun} dan \textit{proper noun}.
+  \item Kata yang diekstrak termasuk \textit{multi word}. Contoh: sepak bola, Amerika Serikat, dan lainnya.
+\end{itemize}
+
+
+%-----------------------------------------------------------------------------%
+\section{Rancangan Pengembangan Korpus}
+%-----------------------------------------------------------------------------%
+Pengembangan korpus pasangan kata berelasi yang digunakan pada penelitian ini menggunakan arsitektur yang dapat dilihat pada gambar 3.1. Terdapat dua sumber data utama yang digunakan yaitu WordNet Bahasa untuk pembentukan \textit{seed} dan artikel Wikipedia Bahasa Indonesia sebagai korpus teks. Secara garis besar, terdapat enam tahap yang perlu dilakukan yaitu pembuatan \textit{seed}, preprocessing data Wikipedia,\textit{sentence tagging}, \textit{pattern extraction}, \textit{pattern matching}, dan terakhir adalah evaluasi. Untuk proses \textit{sentence tagging}, \textit{pattern extraction}, dan \textit{pattern matching} dilakukan secara berulang, sesuai dengan metode \textit{bootstrapping}. Berikut adalah penjelasan singkat setiap tahapan.
+\begin{enumerate}
+  \item Pembentukan \textit{seed} dilakukan untuk mendapatkan pasangan kata berelasi yang digunakan sebagai dasar penelitian. Proses ini memanfaatkan \textit{resource} yang dimiliki WordNet Bahasa.
+  \item Artikel Wikipedia diperoleh dalam bentuk \textit{Wikipedia dump} dan perlu diolah sehingga memiliki representasi sesuai dengan format yang diharapkan. Informasi yang diperlukan hanya bagian isi artikel dan kemudian ditulis berdasarkan kalimat untuk setiap baris.
+  \item Menggunakan \textit{seed} dan korpus Wikipedia, dilakukan \textit{tagging} pasangan kata berelasi terhadap kalimat-kalimat yang ada. Kalimat yang mengandung pasangan kata berelasi akan ditandai dan disimpan sebagai dasar proses selanjutnya.
+  \item Kalimat-kalimat yang sudah di-\textit{tag} dengan pasangan kata berelasi kemudian akan digunakan untuk proses \textit{pattern extraction}. Hasil dari proses ini adalah sejumlah \textit{pattern} leksikal terbaik dari banyak \textit{pattern} yang dihasilkan.
+  \item Proses berikutnya adalah \textit{pattern matching} dimana \textit{pattern} hasil ekstraksi dan korpus Wikipedia kembali digunakan untuk membentuk pasangan kata relasi baru (\textit{pair}).
+  \item Korpus pasangan relasi kata yang terbentuk digunakan untuk iterasi selanjutnya sesuai dengan metode \textit{bootstrapping}. Proses iterasi dilakukan hingga pasangan kata relasi baru yang dihasilkan jenuh. Terakhir dilakukan evaluasi untuk mengetahui akurasi data yang dihasilkan.
+\end{enumerate}
+Proses ini diharapkan dapat menghasilkan korpus pasangan kata relasi \textit{hyponym-hypernym} yang berkualitas baik dan berukuran besar. \textit{Pair} yang dihasilkan ditulis dalam bentuk \textit{tuple} $(kata_hyponym;kata_hypernym)$ dengan kedua kata berada dalam kelas kata benda.
+
+
+%-----------------------------------------------------------------------------%
+\section{Pre-processing Data}
+%-----------------------------------------------------------------------------%
+Proses inti dari penelitian ini, \textit{pattern extraction} dan \textit{matching}, memerlukan dua masukan utama yaitu sejumlah pasangan kata \textit{hypernym-hyponym} dan teks dokumen yang digunakan sebagai korpus. Pasangan kata \textit{hypernym-hyponym} digunakan untuk proses pembentukan \textit{pattern} sementara teks dokumen digunakan untuk memperoleh pasangan kata baru. Dikarenakan belum ada korpus pasangan kata relasi \textit{hypernym-hyponym} Bahasa Indonesia, perlu didefinisikan \textit{seed} yang akan digunakan sebagai dasar pasangan kata \textit{hypernym-hyponym}. Teks dokumen yang digunakan, yaitu Wikipedia, juga memerlukan pemrosesan sebelum digunakan.
+
+%-----------------------------------------------------------------------------%
+\subsection{Pre-processing Data Wikipedia}
+%-----------------------------------------------------------------------------%
+Data Wikipedia yang diperoleh dari Wikimedia \textit{dumps} masih mengandung banyak \textit{tag} yang tidak digunakan pada penelitian ini seperti \textit{tag} \textit{id} dan \textit{revision}. Selain itu simbol-simbol khusus (\textit{markup}). Penelitian ini ingin mengekstrak \textit{pattern} dari \textit{free text}, sehingga format-format khusus tersebut perlu dibersihkan. Setelah data Wikipedia dibersihkan dari simbol-simbol tersebut, langkah selanjutnya adalah merepresentasikan korpus dalam bentuk kalimat. 
+
+Artikel-artikel Wikipedia dibentuk ke dalam format yang telah didefinisikan dengan satu kalimat dipisahkan untuk setiap barisnya. Data tersebut juga digunakan untuk proses \textit{part-of-speech tagging}. Hasil dari \textit{pre-processing} data Wikipedia adalah dua korpus besar yaitu korpus tanpa \textit{pos tag} yang digunakan sebagai masukan \textit{pattern extraction} dan korpus dengan \textit{pos tag} yang digunakan sebagai masukan \textit{pattern matching}. 
+
+%-----------------------------------------------------------------------------%
+\subsection{Pembentukan Seed}
+%-----------------------------------------------------------------------------%
+Pasangan kata relasi \textit{hypernym-hyponym} diambil dari data yang dimilki oleh WordNet Bahasa yang dikembangkan oleh NTU. Pemanfaatan WordNet Bahasa dilatarbelakangi jumlahnya yang lebih besar dibanding Indonesian WordNet (IWN). Relasi semantik antar kata pada WordNet Bahasa memanfaatkan WordNet Princeton versi 3.0. Synset pada WordNet Bahasa dipetakan ke \textit{synset} WordNet Princeton, sehingga relasi kata yang dimiliki oleh WordNet Princeton ikut diwarisi. Alasan lain penggunaan WordNet Bahasa karena telah terintegrasi dengan \textit{tools} nltk sehingga dapat langsung digunakan untuk membentuk \textit{seed} secara mudah.
+
+Seluruh lema Bahasa Indonesia yang dimiliki oleh WordNet tersebut akan dipasangkan dengan lema \textit{hypernym}-nya, sehingga terbentuk relasi biner antara kata yang merupakan \textit{hyponym} dan kata yang merupakan \textit{hypernym}. Format untuk korpus ini mengikut format korpus pasangan kata relasi yang akan digunakan.

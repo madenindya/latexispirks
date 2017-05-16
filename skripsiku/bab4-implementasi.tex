@@ -1,0 +1,118 @@
+%-----------------------------------------------------------------------------%
+\chapter{\babEmpat}
+%-----------------------------------------------------------------------------%
+Bab ini menjelaskan secara detail proses implementasi dari pengolahan data, proses \textit{pattern extraction} dan \textit{matching}, iterasi \textit{semi-supervised}, dan proses evaluasi.
+
+
+%-----------------------------------------------------------------------------%
+\section{Pembentukan Korpus Kalimat Wikipedia}
+%-----------------------------------------------------------------------------%
+Data hasi Wikipedia Dump diformat secara otomatis menggunakan \textit{tools} WikiExtractor. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. Menggunakan tools ini, didapatkan data yang sudah tidak mengikuti format MediaWiki Markup Language. Program ini dapat diunduh dari Github dan dijalankan menggunakan perintah berikut. 
+\begin{lstlisting}[language=bash]
+  $ WikiExtractor.py xml-dump-file -o output-file
+\end{lstlisting}
+Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
+
+%-----------------------------------------------------------------------------%
+\subsection{Sentence Splitter}
+%-----------------------------------------------------------------------------%
+Korpus yang dihasilkan menghasilkan baris-baris yang merepresentasikan suatu paragraf dalam artikel Wikipedia. Pada penelitian kali ini, ingin dilihat relasi \textit{hypernym-hyponym} antar dua kata pada kalimat yang sama. Untuk itu, perlu dilakukan proses \textit{Sentence Splitter} yang dapat mengidentifikasi suatu kalimat dalam paragraf. Hasil dari proses tersebut adalah dokumen yang terdiri dari baris-baris yang merepresentasikan satu kalimat. 
+
+Proses ini dilakukan dengan menggunakan \textit{script} yang telah dibuat sebelumnya oleh Ken Nabila Setya dari Fasilkom UI, Indonesia. Ditambah pula satu \textit{script} yang dapat secara otomatis melakukan \textit{splitting} untuk seluruh dokumen dalam folder. Sebuah paragraf yang dihasilkan menggunakan WikiExtractor adalah sebagai berikut.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. Dia menggantikan pamannya, James Brooke sebagai raja. \\
+\hline 
+\end{tabular}
+\end{center}
+
+Setelah dihalankan \textit{sentence splitter}, berikut adalah hasilnya.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. \\
+\hline 
+ Dia menggantikan pamannya, James Brooke sebagai raja. \\
+\hline
+\end{tabular}
+\end{center}
+
+%-----------------------------------------------------------------------------%
+\subsection{Rule Based Formatter}
+%-----------------------------------------------------------------------------%
+Dari korpus yang berisi kalimat-kalimat, diberikan beberapa aturan tambahan untuk membuat korpus sesuai format yang diinginkan. Penambahan aturan juga untuk mengurangi ambiguitas dan bentuk usaha melakukan generalisasi \textit{pattern}. Berikut adalah beberapa autran tambahan untuk \textit{pre-processing} korpus Wikipedia.
+\begin{enumerate}
+  \item Menghilangkan frase yang berada di dalam tanda kurung. \\
+  Frase yang terletak di dalam tanda kurung dapat dianggap sebagai penjelas kata atau frasa sebelumnya. Proses ini merupakan salah satu upaya generalisasi \textit{pattern}.
+  \item Memisahkan simbol-simbol yang berhimpit pada awal dan akhir kata. \\
+  Beberapa token yang dipisahkan oleh spasi dalam kalimat merupakan kata yang berhimpit dengan tanda baca. Untuk mempermudah proses selanjutnya yaitu \textit{sentence tagging}, dilakukan \textit{pre-processing} tambahan yaitu memisahkan simbol-simbol \textit{non-alphanumerical}.
+  \item Memberi penanda awal kalimat dengan '<start>'' dan akhir kalimat dengan '<end>'. \\
+  Pemberian simbol awal dan akhir kalimat memperjelas isi kalimat dan juga menunjang proses \textit{pattern extraction} dan \textit{pattern matching}.
+\end{enumerate}
+
+Dari contoh kalimat diatas, setelah di proses menggunakan aturan yang didefinisikan member hasil berikut.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+<start> Charles Anthony Johnson , kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia . <end> \\
+\hline 
+<start> Dia menggantikan pamannya , James Brooke sebagai raja . <end> \\
+\hline
+\end{tabular}
+\end{center}
+
+
+%-----------------------------------------------------------------------------%
+\section{POS Tagging Kalimat Wikipedia}
+%-----------------------------------------------------------------------------%
+Proses POS Tagging dilakukan pada korpus Wikipedia yang telah berbentuk kalimat dengan format yang didefinisikan. Pada penelitian ini, kelas kata yang menjadi pengamatan adalah \textit{noun} (NN) dan \textit{proper noun} (NNP), sehingga proses \textit{pos tagging} dapat menunjang identifikasi kata-kata tersebut. Proses pos tagging menggunakan \textit{tools} Stanford POS Tagger. Model yang digunakan juga merupakan hasil penelitian sebelumnya yang menggunakan Bahasa Indonesia.  Setelah selesai melalui proses tagging, dilakukan penyesuaian agar format korpus lebih rapi dan terstruktur. 
+
+Berikut adalah contoh kalimat yang sudah melalui tahap POS Tagging. Korpus ini digunakan untuk proses \textit{pattern matching}.
+\begin{center}
+\begin{tabular}{ | m{32em} | } 
+\hline
+<start>\_X Charles\_NNP Anthony\_NNP Johnson\_NNP ,\_Z kemudian\_CC dikenal\_VB sebagai\_IN Charles\_NNP Brooke\_NNP memerintah\_VB Sarawak\_NNP sebagai\_IN Raja\_NNP Putih\_NNP kedua\_CD dari\_IN 3\_CD Agustus\_NNP 1868\_CD hingga\_IN meninggal\_VB dunia\_NN .\_Z <end>\_X \\ 
+\hline
+\end{tabular}
+\end{center}
+
+
+%-----------------------------------------------------------------------------%
+\section{Seed Builder}
+%-----------------------------------------------------------------------------%
+Proses pengumpulan \textit{seed} diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi \textit{hypernym}-nya. Dari setiap \textit{synset} relasi, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} 1-1 $(kata\_hyponym,kata\_hypernym)$.
+
+%-----------------------------------------------------------------------------%
+\subsection{Filterisasi Seed}
+%-----------------------------------------------------------------------------%
+Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha mendapatkan \textit{seed} yang cukup banyak. Filterasisasi juga dilakukan untuk mendapatkan \textit{seed} awal yang diyakini benar dan berkualitas. Salah satu bagian terpenting proses ini adalah memasangkan hanya lema yang merupakan noun ke lema yang juga adalah \textit{noun}. Jika kemungkinan lema tersebut tergolong ke dalam kelas kata bukan \textit{noun}, lema tidak diikutsertakan sebagai \textit{seed} awal.
+
+Salah satu tantangan dalam proses ini adalah banyak ditemukan kasus dimana satu lema berasal dari lebih dari satu synset atau satu synset memiliki lebih dari satu \textit{synset hypernym}. Ambiguitas dalam kasus ini dapat mengurangi kualitas \textit{seed} yang dihasilkan. Mengatahui hal tersebut, dibuatlah dua pendekatan berbeda untuk proses filterisasi \textit{seed}.
+
+Pendekatan pertama adalah tetap mengambil lemma yang sama pada \textit{synset hypernym} yang berbeda. Hal ini dilatarbelakangi adanya lema yang berasal dari \textit{synset} berbeda namun memiliki lema \textit{hypernym} yang sama. Pada contoh (i), satu lema yang sama dimiliki oleh dua \textit{synset} yang berbeda namun kedua \textit{synset} tersebut memiliki \textit{synset hypernym} yang sama. Pada contoh (ii), satu lema berasal dari dua \textit{synset} yang berbeda dan dua \textit{synset hypernym} berbeda, namun ada lema yang sama yaitu 'laluan'.
+
+Pendekatan lainnya adalah dengan metode filterisasi yang paling ketat. Jika satu lema memiliki lebih dari satu \textit{synset hypernym}, maka lema tersebut dianggap ambigu dan langsung tidak diikutsertakan ke dalam \textit{seed} awal. Berdasarkan tabel contoh lema, \textit{synset}, dan \textit{hypernym}-nya, hanya contoh (i) yang diterima sebagai \textit{seed} karena \textit{synset hypernym} untuk lema tersebut sama. Sementara (ii) ditolak karena \textit{synset hypernym} berbeda.
+
+\begin{center}
+\begin{tabular}{ |c|m{30em}| } 
+\hline
+\multirow{2}{*}{i.} & ('paruh', Synset('beak.n.02')) => (['bibir', 'kuala', 'muara'], [Synset('mouth.n.02')])
+('paruh', Synset('beak.n.01')) => (['bibir', 'kuala', 'muara'], [Synset('mouth.n.02')]) \\ 
+& ('paruh', Synset('beak.n.01')) => (['bibir', 'kuala', 'muara'], [Synset('mouth.n.02')]) \\ 
+\hline
+\multirow{2}{*}{ii.} & ('pintu\_masuk', Synset('entrance.n.01')) => (['akses', 'capaian', 'laluan'], [Synset('access.n.03')]) \\ 
+& ('pintu\_masuk', Synset('orifice.n.01')) => (['koridor', 'laluan', 'lorong'], [Synset('passage.n.07')]) \\ 
+\hline
+\end{tabular}
+\end{center}
+
+%-----------------------------------------------------------------------------%
+\subsection{Kelemahan Seed yang Dihasilkan}
+%-----------------------------------------------------------------------------%
+Walau sudah dilakukan proses filterisasi untuk meningkatkan kualitas \textit{seed}, masih ada hambatan yang belum bisa diatasi. Beberapa kelemahan dari \textit{seed} awal yang dihasilkan, antara lain:
+\begin{itemize}
+  \item \textit{Seed} yang mengandung kata bukan Bahasa Indonesia. Korpus yang ingin dibuat berdomain Bahasa Indonesia, namun \textit{seed} yang dihasilkan mengandung Bahasa Melayu atau Bahasa Indonesia lama. Beberapa kata bukan Bahasa Indonesia yang dihasilkan adalah 'had', 'bonjol', dan 'cecok'.
+  \item Kesalahan semantik \textit{synset} dan lema Bahasa Indonesia. Beberapa \textit{synset} nltk memiliki lema Bahasa Indonesia yang kurang sesuai jika dilihat secara semantik. Sebagai contoh Synset('scholar.n.01') dengan lemma Bahasa Indonesia {'buku_harian', 'pelajar'}. Dalam Bahasa Indonesia, 'buku_harian' memiliki makna yang berbeda dengan 'pelajar'.
+  \item Kesalahan lema Bahasa Indonesia untuk suatu synset menyebabkan dihasilkannya \textit{seed} yang jika dievaluasi kualitatif oleh manusia dirasa kurang tepat. Contoh \textit{seed} yang tidak baik adalah dari pemetaan ('sejarawan', Synset('historian.n.01')) => (['buku_harian', 'pelajar'], [Synset('scholar.n.01')]) dihasilkan \textit{seed} awal (sejarawan,buku harian) dan (sejarawan,pelajar). \textit{Seed} (sejarawan,buku harian) adalah salah.
+\end{itemize}
