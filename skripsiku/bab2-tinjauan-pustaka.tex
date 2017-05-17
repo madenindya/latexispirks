@@ -143,6 +143,12 @@ Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahu
 \textit{Standard Trie} membutuhkan memori sebesar $O(n)$ dimana $n$ adalah total ukuran \textit{string} dalam $S$. Operasi \textit{insert} membutuh waktu $O(dm)$ dimana $m$ adalah ukuran \textit{string} yang baru dan $d$ adalah ukuran alphabet.
 
 Sebagai contoh berikut adalah \textit{standard trie} yang dibangun dari himpunan \textit{string} {apel, ayam, baju, baja, bara}.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{pics/Contoh-StandardTrie}
+    \caption{Contoh Standard Trie}
+    \label{fig:contoh-standard-trie}
+\end{figure}
 
 %-----------------------------------------------------------------------------%
 \subsection{Suffix Tree}
@@ -150,7 +156,12 @@ Sebagai contoh berikut adalah \textit{standard trie} yang dibangun dari himpunan
 \textit{Suffix tree} sering digunakan untuk pencarian sequence yang panjang seperti \textit{genomes} untuk bidang bioinformatik. Pembentukan \textit{suffix tree} mirip seperti \textit{Standard Trie}, namun untuk seluruh \textit{suffix} dalam \textit{string}. Jika diberikan \textit{string} dengan panjang $n$, dibentuk cabang dengan $n(n-1)/2$ \textit{suffix}.  Metode ini banyak dimanfaatkan untuk mempercepat proses pencarian jika diberikan sebuah masukan \textit{query}. Jika terdapat sebuah \textit{pattern} dengan panjang \textit{string} $m$, maka waktu yang dibutuhkan untuk menjalankan proses \textit{pattern matching} adalah $O(dm)$ dengan $d$ adalah ukuran alfabet. Proses pencarian dilakukan dengan menelusuri \textit{path} dari \textit{root} sesuai dengan \textit{sequence query}. Jika seluruh karakter dalam \textit{query} selesai dijalankan, maka proses pencarian berhasil. 
 
 Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} berikut. Jika diberi \textit{query} 'ba' maka akan berhasil terhadap \textit{path} 'babaa' dan 'baa'.
-
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{pics/Contoh-SuffixTree}
+    \caption{Contoh Suffix Trie}
+    \label{fig:contoh-suffix-trie}
+\end{figure}
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
