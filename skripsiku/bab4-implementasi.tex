@@ -92,7 +92,22 @@ Berikut adalah contoh kalimat yang sudah melalui tahap \textit{pos tagging}. Kor
     \caption{Proses Pembentukan \textit{Seed}}
     \label{fig:seed-builder}
 \end{figure}
-Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi \textit{hypernym}-nya. Dari setiap \textit{synset} relasi, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} 1-1 $(kata\_hyponym,kata\_hypernym)$.
+Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi \textit{hypernym}-nya. Dari setiap \textit{synset hypernym}, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} 1-1 $(kata\_hyponym,kata\_hypernym)$.
+%--- kode seed builder ----- %
+\begin{lstlisting}[language=bash]
+buildSeed:
+  ind_lemmas = wordnet.all_lemma_names(pos=NOUN, lang='ind')
+  foreach lemma in ind_lemmas:
+    if (lemma has other postag) skip
+    synsets = wordnet.synsets(lemma, pos=NOUN, lang='ind')
+    foreach synset in synsets:
+      hypernyms = synset.hypernyms()
+      foreach hypernym in hypernyms:
+        hyplemmas = hypernym.lemma_names(pos=NOUN, lang='ind')
+        foreach hypelemma in hypelemmas:
+          print(lemma,hypelemma)
+\end{lstlisting}
+%--------------------------- %
 
 %-----------------------------------------------------------------------------%
 \subsection{Filterisasi Seed}
@@ -139,7 +154,22 @@ Setelah memperoleh pasangan kata relasi Bahasa Indonesia, perlu dilakukan \texti
   \item Pengecekan dilakukan secara berulang untuk seluruh pasangan kata relasi karena terdapat kemungkinan satu kalimat mengandung lebih dari satu pasang kata relasi.
   \item Kata-kata yang merupakan bagian dari pasangan kata relasi kemudian di-\textit{tag} sesuai relasinya dan disimpan ke dalam korpus berisi kalimat dengan \textit{tag} \textit{hyponym} dan \textit{hypernym}.
 \end{enumerate}
-Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari satu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah $(ikan\,\,gurame;ikan)$, kata 'ikan' terkandung dalam kedua kata relasi. 
+Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari satu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah $(ikan\,\,gurame;ikan)$, kata 'ikan' terkandung dalam kedua kata relasi.
+%--- kode sentence tagging ----- %
+\begin{lstlisting}[language=bash]
+tagAll:
+  seeds = load_all_seeds()
+  foreach sentence in sentences:
+    tagSentence(sentence, seeds)
+
+tagSentece(sentence, seeds):
+  foreach seed in seeds:
+    if (sentence.contains(seed.hypernym) && sentence.contains(seed.hyponym)):
+      put_tag_hyponym()
+      put_tag_hypernym()
+      save_sentence()
+\end{lstlisting}
+%------------------------------ %
 
 Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence tagging}. Diberikan pasangan kata relasi \textit{hyponym-hypernym} $(fermion;partikel)$ dan $(boson;partikel)$ serta kalimat  '<start> seluruh partikel dasar adalah boson atau fermion . <end>'. Hasil proses \textit{sentence tagging} adalah sebagai berikut.
 \begin{center}
@@ -209,6 +239,41 @@ Beberapa informasi yang disimpan dalam suatu \textit{pattern} adalah \textit{seq
   \item Mengikutsertakan $n$ kata setelah kata relasi terakhir. \\
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang'
 \end{enumerate}
+% --- kode pattern extraction: createPatternTree --- %
+\begin{lstlisting}[language=bash]
+getPattern(type):
+  createPatternTree(type):
+  for leaf in leaves:
+    patterns.add(leaf.getPattern())
+  return patterns
+
+createPatternTree(type):
+  foreach sentence in sentences:
+    index = getIndexToken(sentence, type)
+    sequence = get_sequence(sentence, index)
+    patterntree.add(sequence)
+
+getIndexToken(sentence, type):
+  tokens = tokenize_sentence(sentence)
+  index = (start, end)
+  if (type = inbetween):
+    for(i = 0..tokens.size()):
+      if (token == relation):
+        if (!start) start = i
+        else end = i
+  else if (type = n before):
+    index = getIndexToken(sentence, inbetween)
+    if (index.start - n >= 0)
+      index.start -= n
+    else index.start = 0
+  else if (type = n after):
+    index = getIndexToken(sentence, inbetween)
+    if (index.end + n < tokens.size())
+      index.end += n
+    else index.end = tokens.size()
+  return index
+\end{lstlisting}
+% -------------------------------------------------- %
 
 %-----------------------------------------------------------------------------%
 \subsection{Vektor Pattern}
@@ -240,6 +305,36 @@ Strategi yang dilakukan untuk masalah ambiguitas antar \textit{pattern} adalah m
 \end{enumerate}
 
 Setelah melakukan tahapan di atas, tidak ada lagi kasus posisi relasi saling tertukar dari \textit{pattern} yang dihasilkan. \textit{List pattern} yang dihasilkan kemudian diurutkan sebelum ditampilkan.
+% --- kode pattern extraction: patternUnik --- %
+\begin{lstlisting}[language=bash]
+patternUnik():
+  patternunik; patterntmp;
+  patterns = getPattern(inbetween)
+  unikfy(patterns)
+  i = 0;
+  while (patterntmp is not empty && i < 3):
+    before-patterns = getPattern(i-before)
+    after-patterns = getPattern(i-after)
+    hasil = cekNeeded(before-patterns, after-patterns)
+    unikfy(hasil)
+  return patternunik
+
+unikfy(patterns):
+  mappatterns;
+  foreach pattern in patterns:
+    pk = pattern.getKey()
+    if (mappatterns.containsKey(pk)):
+      mappatterns.get(pk).add(pattern)
+    else:
+      mappatterns.put(pk, List.add(pattern))
+  foreach pk in mappatterns:
+    if mappatterns.get(pk).size() > 0:
+      patterntmp.add(pk)
+    else 
+      patternunik.add(mappatterns.get(pk))
+\end{lstlisting}
+% -------------------------------------------------- %
+
 
 %-----------------------------------------------------------------------------%
 \subsection{Pengurutan Pattern}
@@ -285,6 +380,52 @@ Tahapan proses \textit{pattern matching} jika diberikan satu kalimat dan satu \t
 Pada masa awal pengembangan, setelah dijalankan proses \textit{pattern matching} terhadap korpus Wikipedia dengan \textit{pattern} hasil ekstraksi, masalah pertama yang ditemukan adalah banyaknya \textit{pair} yang salah satu atau kedua kata relasinya tidak teramasuk dalam kelas kata benda. Beberapa \textit{pair} yang salah diantaranya $(Menoitios;salah)$ dimana 'salah' adalah \textit{adjective} dan $(saya,gitaris)$ dimana 'saya' adalah preposi. Untuk itu diputuskan menggunakan korpus Wikipedia yang sudah melalui tahap POS Tagging.
 
 Masalah lain yang muncul adalah jika kata yang ingin diekstrak merupakan \textit{multi word}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang memiliki kelas kata sama dalam suatu kalimat merupakan \textit{multi word}. \textit{Multi word} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
+% --- kode pattern matching --- %
+\begin{lstlisting}[language=bash]
+main:
+  patterns = loadAllPatterns()
+  openFiles()
+  for sentence in sentences:
+    matchAllPattern(sentence, patterns)
+
+matchAllPattern(sentence, patterns):
+  suffix_tree = buildTree(sentence)
+  foreach pattern in patterns:
+    matchTree(suffix_tree, pattern)
+  
+buildTree(sentence):
+  tokens = buildSequence(sentence)
+  suffix_tree;
+  for(i = 0..tokens.size()):
+    addSequence(suffix_tree, tokens, i)
+  return suffix_tree;
+addSequence(suffix_tree, tokens, i):
+  node = suffix_tree.root
+  for (j=i..tokens.size()):
+    if (!node.childs.contains(tokens[j])):
+      node = node.childs.add(tokens[j])
+    node = node.childs.get(tokens[j])
+
+matchTree(stree, pattern):
+  foreach child in stree.root.childs:
+    recursiveMatch(pattern, 0, child, ``'', ``'')
+recursiveMatch(pattern, i, node, hype, hypo):
+  if (i >= pattern.size() && hype && hypo):
+    pair = createPair(hype, hypo)
+    savePair(pair)
+  else:
+    cek = pattern[i]
+    if (cek == ``hypenrym'' && cek.tag == (NN|NNP)):
+      hype = cek
+    else if (cek == ``hyponym'' && cek.tag == (NN|NNP)):
+      hypo = cek
+    else 
+      if (cek != node.name) return
+    foreach c in node.childs:
+      recursiveMatch(pattern, i+1, c, hype, hypo)
+\end{lstlisting}
+% -------------------------------------------------- %
+
 
 %-----------------------------------------------------------------------------%
 \subsection{Vektor Pair}
