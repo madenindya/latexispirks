@@ -12,11 +12,11 @@ Bab ini menjelaskan secara detail proses implementasi dari pengolahan data, pros
     \caption{Pre-processing Data Wikipedia}
     \label{fig:preproses-wiki}
 \end{figure}
-Data hasi Wikipedia Dump diformat secara otomatis menggunakan \textit{tools} WikiExtractor. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. Menggunakan \textit{tools} ini, didapatkan data yang sudah tidak mengikuti format MediaWiki Markup Language. Program ini dapat diunduh dari Github dan dijalankan menggunakan perintah berikut. 
-\begin{lstlisting}[language=bash]
+Data hasi Wikipedia Dump diformat secara otomatis menggunakan \textit{tools} WikiExtractor. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. Menggunakan \textit{tools} ini, didapatkan data yang sudah tidak mengikuti format MediaWiki Markup, Language. Program ini dapat diunduh dari Github dan dijalankan menggunakan perintah berikut. 
+\begin{lstlisting},[language=bash]
   $ WikiExtractor.py xml-dump-file -o output-file
 \end{lstlisting}
-Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
+Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup, language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
 
 %-----------------------------------------------------------------------------%
 \subsection{Sentence Splitting}
@@ -94,18 +94,18 @@ Berikut adalah contoh kalimat yang sudah melalui tahap \textit{pos tagging}. Kor
 \end{figure}
 Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi \textit{hypernym}-nya. Dari setiap \textit{synset hypernym}, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} 1-1 $(kata\_hyponym,kata\_hypernym)$.
 %--- kode seed builder ----- %
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[caption={Algoritme pembentukan \textit{seed}}, language=bash]
 buildSeed:
-  ind_lemmas = wordnet.all_lemma_names(pos=NOUN, lang='ind')
-  foreach lemma in ind_lemmas:
-    if (lemma has other postag) skip
-    synsets = wordnet.synsets(lemma, pos=NOUN, lang='ind')
-    foreach synset in synsets:
-      hypernyms = synset.hypernyms()
-      foreach hypernym in hypernyms:
-        hyplemmas = hypernym.lemma_names(pos=NOUN, lang='ind')
-        foreach hypelemma in hypelemmas:
-          print(lemma,hypelemma)
+  ambil seluruh lemma bahasa indonesia noun
+  untuk setiap lema:
+    ambil seluruh synset dari lema tersebut
+    untuk setiap synset:
+      ambil seluruh synset hypernym
+      untuk setiap synset hypernym 
+        ambil seluruh lemma hypernym
+        untuk setiap lemma hypernym:
+          filterisasi
+          bentuk pasangan lemma-lemma hypernym
 \end{lstlisting}
 %--------------------------- %
 
@@ -133,16 +133,6 @@ Pendekatan lainnya adalah dengan metode filterisasi yang \textit{strict}. Jika s
 \end{tabular}
 \end{center}
 
-%-----------------------------------------------------------------------------%
-\subsection{Kelemahan Seed yang Dihasilkan}
-%-----------------------------------------------------------------------------%
-Walau sudah dilakukan proses filterisasi untuk meningkatkan kualitas \textit{seed}, masih ada hambatan yang belum bisa diatasi dalam penelitian ini. Beberapa kelemahan dari \textit{seed} awal yang dihasilkan adalah sebagai berikut.
-\begin{itemize}
-  \item \textit{Seed} yang mengandung kata bukan Bahasa Indonesia. Korpus yang ingin dibuat berdomain Bahasa Indonesia, namun \textit{seed} yang dihasilkan mengandung Bahasa Melayu atau Bahasa Indonesia lama. Beberapa kata bukan Bahasa Indonesia yang dihasilkan adalah 'had', 'bonjol', dan 'cecok'.
-  \item Kesalahan semantik \textit{synset} dan lema Bahasa Indonesia. Beberapa \textit{synset} nltk memiliki lema Bahasa Indonesia yang kurang sesuai jika dilihat secara semantik. Sebagai contoh $Synset('scholar.n.01')$ dengan lemma Bahasa Indonesia ${'buku\_harian', 'pelajar'}$. Dalam Bahasa Indonesia, 'buku\_harian' memiliki makna yang berbeda dengan 'pelajar'.
-  \item Kesalahan lema Bahasa Indonesia untuk suatu \textit{synset} menyebabkan dihasilkannya \textit{seed} yang jika dievaluasi kualitatif oleh manusia dirasa kurang tepat. Contoh \textit{seed} yang tidak baik adalah dari pemetaan $('sejarawan', Synset('historian.n.01')) => (['buku\_harian', 'pelajar'], [Synset('scholar.n.01')])$ dihasilkan \textit{seed} $(sejarawan,buku harian)$ dan $(sejarawan,pelajar)$. \textit{Seed} $(sejarawan,buku harian)$ adalah salah.
-\end{itemize}
-
 
 %-----------------------------------------------------------------------------%
 \section{Sentence Tagging}
@@ -156,7 +146,7 @@ Setelah memperoleh pasangan kata relasi Bahasa Indonesia, perlu dilakukan \texti
 \end{enumerate}
 Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari satu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah $(ikan\,\,gurame;ikan)$, kata 'ikan' terkandung dalam kedua kata relasi.
 %--- kode sentence tagging ----- %
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[caption={Algoritme \textit{sentence tagging}}, language=bash]
 tagAll:
   seeds = load_all_seeds()
   foreach sentence in sentences:
@@ -173,13 +163,11 @@ tagSentece(sentence, seeds):
 
 Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence tagging}. Diberikan pasangan kata relasi \textit{hyponym-hypernym} $(fermion;partikel)$ dan $(boson;partikel)$ serta kalimat  '<start> seluruh partikel dasar adalah boson atau fermion . <end>'. Hasil proses \textit{sentence tagging} adalah sebagai berikut.
 \begin{center}
-\begin{tabular}{ | m{32em} | } 
-\hline
-<start> seluruh <hypernym>partikel<hypernym> dasar adalah boson atau <hyponym>fermion<hyponym> . <end> \\ 
-\hline
-<start> seluruh <hypernym>partikel<hypernym> dasar adalah <hyponym>boson<hyponym> atau fermion . <end> \\ 
-\hline
-\end{tabular}
+  \begin{tabular}{ | m{32em} | } 
+  \hline
+    <start> seluruh <hypernym>partikel<hypernym> dasar adalah boson atau <hyponym>fermion<hyponym> . <end> \\ \hline
+    <start> seluruh <hypernym>partikel<hypernym> dasar adalah <hyponym>boson<hyponym> atau fermion . <end> \\ \hline
+  \end{tabular}
 \end{center}
 
 \begin{figure}
@@ -198,18 +186,16 @@ Suatu \textit{\textit{node}} merepresentasikan kata dalam kalimat dan dari satu 
 
 \noindent Sebagai contoh dua kalimat sebagai berikut.
 \begin{center}
-\begin{tabular}{ | m{32em} | } 
-\hline
-<start> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang berukuran besar <end> \\ 
-\hline
-\hline
-<start> <hyponym>serigala<hyponym> adalah <hypernym>anjing<hypernym> yang tinggal di hutan <end>\\ 
-\hline
-\end{tabular}
+  \begin{tabular}{ | m{32em} | } 
+  \hline
+  <start> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang berukuran besar <end> \\ \hline
+  \hline
+  <start> <hyponym>serigala<hyponym> adalah <hypernym>anjing<hypernym> yang tinggal di hutan <end>\\ \hline
+  \end{tabular}
 \end{center}
 
 \noindent Akan menghasilkan \textit{Pattern} Tree sebagai berikut. Angka setelah kata adalah bobot suatu \textit{node}.
-\begin{lstlisting}[language=bash]
+\begin{lstlisting},[language=bash]
 `-^ (1)
  `-<hyponym> (2)
    `-adalah (2)
@@ -240,7 +226,7 @@ Beberapa informasi yang disimpan dalam suatu \textit{pattern} adalah \textit{seq
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang'
 \end{enumerate}
 % --- kode pattern extraction: createPatternTree --- %
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[caption={Algoritme pembentukan \textit{pattern}}, language=bash]
 getPattern(type):
   createPatternTree(type):
   for leaf in leaves:
@@ -306,7 +292,7 @@ Strategi yang dilakukan untuk masalah ambiguitas antar \textit{pattern} adalah m
 
 Setelah melakukan tahapan di atas, tidak ada lagi kasus posisi relasi saling tertukar dari \textit{pattern} yang dihasilkan. \textit{List pattern} yang dihasilkan kemudian diurutkan sebelum ditampilkan.
 % --- kode pattern extraction: patternUnik --- %
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[caption={Algoritme pembentukan \textit{pattern unik}}, language=bash]
 patternUnik():
   patternunik; patterntmp;
   patterns = getPattern(inbetween)
@@ -346,13 +332,6 @@ Setelah didapatkan \textit{pattern} yang sesuai, dilakukan proses pengurutan (\t
   \item Semakin kecil jumlah token dalam \textit{pattern} tersebut jika di-\textit{parse} dengan spasi.
 \end{enumerate}
 
-%-----------------------------------------------------------------------------%
-\subsection{Kelemahan Pattern yang Dihasilkan}
-%-----------------------------------------------------------------------------%
-Hasil dari tahap ekstraksi \textit{pattern} dengan aturan-aturan di atas diharapkan memberi \textit{pattern} yang baik untuk merepresentasikan relasi kata \textit{hyponym-hypernym}. Namun, proses ini tidak terlepas dari beberapa masalah. Salah satu hambatan yang belum dapat diselesaikan seperti menentukan \textit{pattern} mana yang lebih baik jika satu \textit{pattern} adalah \textit{substring} dari \textit{pattern} yang lain. Selain itu, proses generalisasi \textit{pattern} juga belum dapat diimplementasi. 
-
-Beberapa \textit{pattern} terlihat kurang baik secara semantik jika dilihat secara kualitatif. \textit{Pattern} seperti (a) <hypernym> dan <hyponym>, (b) <hypernym> atau <hyponym> kurang cocok jika digunakan dalam \textit{pattern matching}. Hal ini disebabkan kata 'dan' dan 'atau' memuat relasi yang bersifat simetris. Sementara \textit{hypernym-hyponym} merupakan relasi yang hanya memiliki sifat transitif. Pada penelitian ini, relasi yang diamati hanya \textit{hypenym-hyponym}. Namun ada kemungkinan suatu \textit{pattern} yang sama dapat digunakan untuk relasi semantik berbeda dan mungkin lebih cocok digunakan utnuk relasi lain tersebut. Tidak adanya perbandingan \textit{pattern} yang dihasilkan oleh relasi semantik lain menjadi salah satu hambatan memilih \textit{pattern} yang baik.
-
 
 %-----------------------------------------------------------------------------%
 \section{Pattern Matching}
@@ -381,7 +360,7 @@ Pada masa awal pengembangan, setelah dijalankan proses \textit{pattern matching}
 
 Masalah lain yang muncul adalah jika kata yang ingin diekstrak merupakan \textit{multi word}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang memiliki kelas kata sama dalam suatu kalimat merupakan \textit{multi word}. \textit{Multi word} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
 % --- kode pattern matching --- %
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[caption={Algoritme ekstraksi \textit{pair}}, language=bash]
 main:
   patterns = loadAllPatterns()
   openFiles()
