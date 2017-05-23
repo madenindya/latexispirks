@@ -13,10 +13,12 @@ Bab ini menjelaskan secara detail proses implementasi dari pengolahan data, pros
     \label{fig:preproses-wiki}
 \end{figure}
 Data hasi Wikipedia Dump diformat secara otomatis menggunakan \textit{tools} WikiExtractor. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. Menggunakan \textit{tools} ini, didapatkan data yang sudah tidak mengikuti format MediaWiki Markup, Language. Program ini dapat diunduh dari Github dan dijalankan menggunakan perintah berikut. 
-\begin{lstlisting},[language=bash]
-  $ WikiExtractor.py xml-dump-file -o output-file
+
+\begin{lstlisting}[caption={Penggunaan Wiki Extractor}, language=bash]
+$ WikiExtractor.py xml-dump-file -o output-file
 \end{lstlisting}
-Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup, language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
+
+\noindent Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup, language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
 
 %-----------------------------------------------------------------------------%
 \subsection{Sentence Splitting}
@@ -195,7 +197,8 @@ Suatu \textit{\textit{node}} merepresentasikan kata dalam kalimat dan dari satu 
 \end{center}
 
 \noindent Akan menghasilkan \textit{Pattern} Tree sebagai berikut. Angka setelah kata adalah bobot suatu \textit{node}.
-\begin{lstlisting},[language=bash]
+
+\begin{lstlisting}[caption={Contoh \textit{pattern tree} yang terbentuk}, language=bash]
 `-^ (1)
  `-<hyponym> (2)
    `-adalah (2)
