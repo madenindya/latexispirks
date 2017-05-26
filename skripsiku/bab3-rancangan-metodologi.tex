@@ -112,10 +112,12 @@ Evaluasi \textit{pattern} dilakukan dengan bantuan anotator dan melalui beberapa
   \item Nilai Spearman's Rho diperoleh dengan membandingkan \textit{ranking pattern} yang dilakukan anotator dengan \textit{ranking pattern} yang dihasilkan sistem.
 \end{enumerate}
 
+\textit{Pattern} manual dibandikan dengan \textit{pattern} buatan sistem dengan melihat seberapa cocok keduanya. Suatu \textit{pattern} dapat dikategorikan ke dalam tiga kelompok yaitu, \textit{exact match}, \textit{partial match}, atau \textit{no match}. \textit{Pattern} dikatakan \textit{exact match} jika seluruh token dan urutannya dalam satu \textit{pattern} adalah tepat sama dengan \textit{pattern} yang lain. \textit{Pattern} dikatakan \textit{partial match} jika token dalam satu \textit{pattern} adalah subbagian dari keseluruh token untuk \textit{pattern} lainnya, dimana urutan kemunculan diperhatikan. Sebagai contoh, \textit{<hypernym> adalah <hyponym>} dan \textit{<hypernym> adalah sebuah <hyponym>} dapat dikatakan \textit{partial match}. \textit{Pattern} dikatakan \textit{no match} jika tidak memenuhi kriteria \textit{exact match} maupun \textit{partial match}.
+
 %-----------------------------------------------------------------------------%
 \subsection{Evaluasi Pair}
 %-----------------------------------------------------------------------------%
-Evaluasi pair dilakukan menggunakan teknik random sampling. Sejumlah pair yang dihasilkan diambil secara acak dan dianotasi 'benar' atau 'salah' oleh anotator. Berikut adalah proses dalam evaluasi pair hasil ekstraksi:
+Evaluasi \textit{pair} dilakukan menggunakan teknik \textit{random sampling}. Sejumlah \textit{pair} yang dihasilkan diambil secara acak dan dianotasi dengan nilai 'benar' atau 'salah' oleh anotator. Berikut adalah proses dalam evaluasi \textit{pair} hasil ekstraksi:
 \begin{enumerate}
   \item Terdapat tiga anotator berbeda yang menganotasi data yang sama. 
   \item Anotator memberi nilai benar atau salah terhadap suatu \textit{pair} serta kategori yang didefinisikan. Untuk \textit{pair} benar dapat termasuk kategori \textit{pair} adalah \textit{instance-class} atau \textit{pair} adalah \textit{class-class}. Untuk \textit{pair} salah dapat termasuk kategori \textit{pair} tanpa relasi, \textit{pair} dengan relasi semantik lain, atau \textit{pair} yang posisi hypernym-hyponym-nya terbalik. 
@@ -123,4 +125,4 @@ Evaluasi pair dilakukan menggunakan teknik random sampling. Sejumlah pair yang d
   \item Hasil anotasi digunakan untuk menghitung akurasi \textit{pair} yang dihasilkan sistem.
 \end{enumerate}
 
-
+Dari setiap nilai anotasi, pair dimasukan ke dalam kategori yang lebih spesifik. Untuk data yang dianotasi benar, pair dapat dimasukan ke dalam dua kategori yaitu \textit{instance-class} atau \textit{class-class}. pair dimasukkan ke dalam kategori instanace-class jika kata hyponym merupakan suatu instance, sementara kategori class-class jika kata hyponym merupakan suatu class. Untuk data bernilai salah, dapat dimasukan ke kategori 

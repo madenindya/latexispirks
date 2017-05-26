@@ -1,0 +1,132 @@
+ide yang sekarang, tujuan akhirnya belum menambah relasi di wordnet
+informasi relasi ada di wordnet
+wordnet masih terbatas, ntu masih ngaco dan sensenya banyak ngaco
+kebutuhan resource cukup resource
+ide: membangun sebuah resource
+future: integrasi dengan wordnet
+tujuan: hypernym-hyponym instance
+
+BUKA DENGAN INI
+contoh: question answering: deretan pertanyaan butuh diselesaikan dengan hypernym. pertanyaan lebih mudah dijawab. deskripsi contoh. perkenalkan ada yang disebut dengan relasi hyponym-hypernym
+ditekankan resource perlu
+hypernym-hyponym juga dicakup dalam ontology, dan di inggris ada wordnet 
+latar belakang contoh satu spesifik, 
+dimana saja dipakai --> bab 2
+
+latar belakang belum perlu menyinggung relasi lain, fokus hypernym-hyponym. 
+dalam bahasa wordnet belum banyak. dan tunjukan yang ngaco dan bahasa yang salah
+singgung sekilasi mengenai pattern matching
+
+
+================================================================
+rumusan masalah:
+- bagaimana cara membangun korpus, cepat dihilangkan
+- seberapa baik dikenali dengan pendekatan pattern
+
+================================================================
+ruang lingkup:
+- single token, multi token, frase 
+
+RANCANGAN METODOLOGI --> RANCANGAN PENELITIAN
+1.5 metodologi
+
+=================================================================
+bab 2
+- leksikal semantik (belajar ttg sense)
+    di nlp ada tingkatan word, leksikal, semantik. yang berkaitan langsung dengan word = leksikal semantik. relasi kata. ada di wordnet, kasih footnote di wordnet.
+    - word features: kata dilihat dari berbagai view
+        - orthografi
+        - sense
+        - word embedding: diperoleh dengan cara word2vec
+        - pos tag
+    - relasi kata 
+
+// ontologi-(instance,class)
+
+- leksikal semantic resource
+    - wordnet
+        syntac wordnet
+    - wikipedia
+        sebagai leksikal semantic resource gurevych: analyzung and accessing wiki as a lexical semantic resource
+
+- relation extraction
+    satu-satunya gak harus pake pattern. gak harus antar sense, ada yang name entity
+    penekanan: ekstraksi
+
+- pattern analysis
+    - textual pattern
+        - tag, dan word
+    - pattern extraction  
+    - pattern matching
+
+- tree representation
+
+- semi supervised learning
+
+- evaluasi
+
+// subbab harus setara, semua harus pendekatan. algoritma 
+// analisis keunggulannya
+================================================================
+bab 3: rancangan penelitian
+3.1 -> arsitektur penelitan == pembahasan umum; penulis mengusulkan rancangan sebagai berikut. & 3.2
+evaluasi gak perlu ditulis -> bercerita di metodologi penelitian
+preprocessing --> wikipedia extraction.
+lebih detailnya dijelaskan pada bab 3.x
+
+setiap tahap input-outputnya apa
+bentuk dump bagaimana dan hasilnya bagaimana (high-level). Untuk penjelasan setiap tahap lebih detail, bab 4. terlalu teknis kasih contoh.
+
+pattern matching/extraction dikasih contoh 
+formatnya seperti apa
+
+metode evaluasi
+- highlevel guideline anotasi.
+
+penjelasan detail cycle semi supervised-nyaaaa
+
+================================================================
+bab 4.
+gambar jangan di awal atau akhir!!!!
+dikatakan masih nyambung dengan yang di bab 3
+jika tidak ada paper formal, jadikan manualnya footnote.
+
+yang pendek gak perlu pake gambar :3
+cara baca format di bab 3 (format sendiri); bab 2 (format universal)
+
+sentence tagging penjelasan di bab 3
+
+pembentukan pattern digabung aja
+
+================================================================
+
+tools2 pake footnote
+
+latar belakang
+menjelaskan topiknya apa? dari tpok tersebut ada masalah apa? dari masalah tersebut orang udah nyoba tapi indo belum. istilah yang pertama kali disebutkan harus diberi rujukan. 
+- pengantar ttg topik, kasih rujukan
+- dalam topik ada permasalahan apa
+- siapa aja sudah mengerjakan dengan tekniknya
+- bahasa indonesia belum ada, dan ingin dikerjakan
+- teknik yang dilakukan gimana
+
+
+salah ejaan
+- istilah baru: harus dijelaskan sedetail mungkin
+- jelasin pos tag
+
+
+eksperimen gimana?
+hasil gimana?
+analisa hasil
+
+naik kenapa?
+turun kenapa?
+kesalahan dimana aja?
+kesalahan jenisnya apa aja?
+contoh
+
+
+bab awal dikasih contoh biar tau mau ngapain
+
+referensi / rujukan diperiksa :O
