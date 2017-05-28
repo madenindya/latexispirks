@@ -6,46 +6,73 @@ Pada bab ini, dijelaskan mengenai studi literatur yang dilakukan. Studi literatu
 
 
 %-----------------------------------------------------------------------------%
-\section{WordNet}
+\section{Leksikal Semantik}
+%-----------------------------------------------------------------------------%
+Dalam \textit{natural language processing}, terdapat beberapa tingkatan untuk merepresentasikan suatu informasi yaitu kata, sintak, dan semantik. Kata adalah kumpulan simbol yang memiliki arti (\textit{sense}) tertentu. Sintak berarti struktur dari kata yang bila digabung akan membentuk arti baru. Semenatara semantik berarti arti atau makna dari kata itu sendiri. Suatu kata tidak hanya mengandung makna namun juga relasi antar kata serta struktur internal. Studi yang mempelajari sistematik struktur serta relasi semantik disebut Leksikal Semantik \citep{jurafsky2000speech}. % TODO: ask this. Too faguee
+
+Sebelum melangkah lebih lanjut, perlu diketahui beberapa istilah dasar dalam bidang ini. Kata dapat disebut sebagai lexeme yang mengandung suatu bentuk orthographic dan arti di dalamnya. Kumpulan lexeme tersimpan dalam lexicon atau dapat juga dikenal sebagai kamus. Arti dari suatu lexeme sebenarnya merupakan rangkaian lexeme lain yang mendeskripsikannya.
+
+Bahasa Inggris memiliki kamus digital yang menyimpan segala informasi kata dan strukturnya yang disebut WordNet\footnote{wordnet.princeton.edu}. WordNet tersebut sering digunakan untuk menunjang berbagai penelitian di bidang \textit{natural language processing}. 
+
+%-----------------------------------------------------------------------------%
+\subsection{Word Features}
+%-----------------------------------------------------------------------------%
+Suatu kata dapat dilihat dari berbagai bentuk, seperti bentuk orthographic dan phonemic-nya. Suatu kata juga memiliki arti (\textit{sense}) yang merepresentasikan deskripsi terhadap kata tersebut. Sayangnya, bentuk-bentuk tersebut tidak dapat dengan mudah diproses oleh komputer. Melalui berbagai penelitian yang telah dilakukan sebelumnya, kata dapat direpresentasikan ke dalam bentuk yang dapat dibaca oleh mesin. Berikut adalah beberapa perbandingan bentuk representasi kata yang bisa dibaca oleh mesin dan manusia.
+
+%-----------------------------------------------------------------------------%
+\subsubsection{Orthographic}
+%-----------------------------------------------------------------------------%
+Orthographic adalah bentuk paling dasar dari suatu kata. Bentuk ini merepresentasikan rangkaian simbol-simbol yang tersusun membentuk suatu kata yang memiliki arti. Studi mengenai bentuk ini banyak digunakan untuk mengetahui perbandingan bentuk kata dasar dengan kata berimbuhan. Bentuk phonemic adalah bagaimana kata tersebut dilafakan. Karena penelitian ini hanya berfokus pada teks, maka hanya diperhatikan bentuk orthographic suatu kata.
+
+%-----------------------------------------------------------------------------%
+\subsubsection{Sense}
+%-----------------------------------------------------------------------------%
+Sense adalah makna dari kata tersebut atau definisi kata. Informasi mengenai makna kata disimpan dalam kamus bahasa tersebut. Dalam kamus (lexicon), sense terbentuk dari lexeme-lexeme lain yang mendeskripsikan lexeme tersebut. 
+
+%-----------------------------------------------------------------------------%
+\subsubsection{Word Embedding}
+%-----------------------------------------------------------------------------%
+\textit{Word Embedding} digunakan untuk menentukan similarity antar kata relasi yang dihasilkan dari proses \textit{Pattern Matching}.
+
+%-----------------------------------------------------------------------------%
+\subsubsection{POS Tag}
+%-----------------------------------------------------------------------------%
+Part-of-speech tagging adalah proses mengelompokan setiap kata dalam suatu kalimat ke dalam kategori yang bersesuaian.  
+
+%-----------------------------------------------------------------------------%
+\subsection{Relasi Kata}
+%-----------------------------------------------------------------------------%
+Sebelum membahas lebih lanjut mengenai relasi kata, perlu diketahui apa itu relasi. Relasi menggambarkan hubungan atau koneksi yang dimiliki oleh suatu hal dengan yang lain (KBBI). Dalam bidang matematika, relasi memetakan suatu anggota dari himpunan satu ke himpunan lain sesuai dengan hubungan yang didefinisikan. Dalam penelitian ini, relasi yang diperhatikan adalah relasi kata yang berarti satu kata akan dipetakan ke dalam kata lain. Domain untuk kata tersebut adalah kata benda (\textit{noun}) dalam Bahasa Indonesia.
+
+Satu relasi dapat terdiri dari beberapa entitas dan dituliskan dalam bentuk tuple $t = (e_1, e_2, ..., e_n)$ dimana $e_i$ adalah suatu entitas yang memiliki relasi $r$ dalam dokumen $D$ \citep{bach2007review}. Relasi sinonim dapat ditulis dalam notasi tersebut. Selain relasi yang mengandung beberapa entitasi, banyak relasi yang hanya menghubungkan antar dua entitas (relasi biner), seperti \textit{terletak-di(Universitas Indonesia, Depok)} atau \textit{ditulis-oleh(Habis Gelap Terbitlah Terang, RA Kartini)}. Relasi kata sendiri dapat didefinisikan secara bebas seperti contoh sebelumnya maupun merupakan relasi khusus seperti relasi semantik.
+
+Semantik adalah arti (\textit{sense}) dari suatu kata. Relasi semantik kata adalah hubungan yang dimiliki antar kata berdasarkan arti atau makna dari kata tersebut. Beberapa relasi semantik adalah sebagai berikut \citep{miller1995wordnet}.
+\begin{itemize}
+  \item Sinonim adalah relasi antar kata dimana dua kata yang berbeda memiliki arti yang sama. Semua kelas kata dapat memiliki relasi sinonim. Dalam WordNet, relasi ini direpresentasikan dalam bentuk \textit{synset} dan bersifat simetris. Sebagai contoh 'makan', 'melahap', dan 'menyantap' memiliki makna yang sama.
+  \item Antonim adalah yang menggambarkan arti yang saling berkebalikan antar kata. Umumnya relasi ini digunakan pada kelas kata sifat (\textit{adverb}) dan kata keterangan (\textit{adjective}). Sama seperti synonymy, relasi ini memiliki sifat simetris. Sebagai contoh kata 'tinggi' memiliki makna yang berkebalikan dengan kata 'pendek'.
+  \item Hiponim adalah relasi yang menyatakan hubungan kata yang lebih khusus. Sementara untuk kata yang lebih umum dikenal dengan relasi hipernim. Kedua relasi ini diperuntukan kelas kata benda (\textit{noun}) dan umumnya satu kata memiliki hanya satu hipernim. Kedua relasi ini bersifat transitif, sehingga dapat digambarkan dalam bentuk hirarki. Sebagai contoh kucing, ikan, kelinci (hiponim) adalah binatang (hipernim). Binatang adalah hiponim dari makhluk hidup. Sehingga dapat dikatakan pula bahwa kucing, ikan, kelinci (hiponim) adalah makhluk hidup (hipernim).
+  \item Meronim dan holonim adalah relasi yang menyatakan hubungan bagian satu dengan yang lain, dimana meronim menyatakan sub-bagian dan holonim menyatakan bagian yang lebih besar. Seperti relasi hyponym-hypernym, relasi meronim-holonim bersifat transitif dan dapat digambarkan dalam bentuk hirarki. Dalam WordNet, relasi ini dibagi ke dalam tiga bagian yaitu \textit{part-meronym}, \textit{member-meronym}, dan \textit{substance-meronym}. Sebagai contoh sebuah sel (holonim) memiliki nukleus, ribosom, mitokondria (meronim).
+  \item \textit{Troponymy} adalah relasi seperti hiponim-hipernim yang khusus untuk kelas kata kerja (\textit{verb}). Dalam Bahasa Inggris, contoh kata yang memiliki relasi ini adalah 'stroll' dan 'walk'.
+\end{itemize}
+
+
+%-----------------------------------------------------------------------------%
+\section{Leksikal Semantik Resources}
+%-----------------------------------------------------------------------------%
+Kebutuhan menyimpan suatu korpus yang merupakan leksikal semantik resource. Informasi mengenai kata, makna, serta relasi di dalamnya tersebut perlu tersimpan secara baik sehingga dapat digunakan. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris telah membuat kamus digital yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya, namun masih ditemukan beberapa kekurangan dari WordNet Bahasa yang ada. 
+
+%-----------------------------------------------------------------------------%
+\subsection{WordNet}
 %-----------------------------------------------------------------------------%
 WordNet adalah kamus leksikal yang tersimpan secara digital dan digunakan untuk berbagai keperluan komputasi \citep{miller1995wordnet}. Pembuatan WordNet dilatarbelakangi keperluan mendapatkan \textit{sense} atau arti semantik suatu kata. Informasi tersebut perlu disimpan dan dapat dibaca oleh mesin. WordNet pertama dibuat oleh \cite{miller1995wordnet} berbasis Bahasa Inggris dan sekarang dikenal dengan nama Princeton WordNet (PWN). WordNet menyimpan informasi dalam bentuk database dimana setiap entry-nya adalah pasangan \textit{synset} dan arti semantiknya (\textit{sense}). Set sinonim (\textit{synset}) adalah himpunan kata yang memiliki arti yang sama atau saling berelasi \textit{synonym}. 
 
-WordNet mengandung beberapa kelas kata seperti kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}), dan kata keterangan (\textit{adverb}). WordNet juga menyimpan informasi mengenai relasi semantik antar \textit{synset}. Relasi yang disimpan adalah \textit{synonymy}, \textit{antonymy}, \textit{hyponymy}, \textit{hypernym}, \textit{meronymy}, \textit{holonymy}, \textit{troponymy}, dan \textit{entailment}.
+Kata dalam WordNet dikelompokkan ke dalam beberapa kelas kata yaitu kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}), dan kata keterangan (\textit{adverb}). WordNet juga menyimpan informasi mengenai relasi semantik antar \textit{synset}. Relasi yang disimpan adalah sinonim, \textit{antonymy}, hiponim, hipernim, \textit{meronymy}, \textit{holonymy}, \textit{troponymy}, dan \textit{entailment}. Hingga penulisan ini, versi WordNet yang sudah ada adalah versi 3.1 yang dapat diakses melalui situs resminya maupun diunduh datanya. Sementara aplikasi yang sudah terintegrasi dengan sistem UNIX/Linux adalah versi 3.0. 
 
-%-----------------------------------------------------------------------------%
-\subsection{Indonesian WordNet}
-%-----------------------------------------------------------------------------%
-Penelitian mengenai WordNet Bahasa Indonesia pernah dilakukan sebelumnya oleh \cite{putra2008building} serta \cite{margaretha2008comparing}. Indonesian WordNet (IWN) dibangun menggunakan metode mapping antara WordNet yang sudah ada ke dalam Bahasa Indonesia \citep{putra2008building}. WordNet yang digunakan sebagai dasarnya adalah Princeton WordNet. Synset dalam PWN akan dipetakan ke dalam entry Kamus Besar Bahasa Indonesia (KBBI), sehingga menghasilkan hasil yang berkualitas baik secara cepat dan mudah. Penelitian tersebut menghasilkan 1441 synset dan 3074 sense. Relasi semantik antar synset diperoleh dengan memetakan IWN synset dengan PWN synset, sehingga relasi yang dimiliki dalam PWN dapat diturunkan.
+Penelitian mengenai WordNet Bahasa Indonesia pernah dilakukan sebelumnya oleh \cite{putra2008building} serta \cite{margaretha2008comparing}. Indonesian WordNet (IWN) dibangun menggunakan metode mapping antara WordNet yang sudah ada ke dalam Bahasa Indonesia \citep{putra2008building}. WordNet yang digunakan sebagai dasarnya adalah Princeton WordNet. Synset dalam PWN akan dipetakan ke dalam \textit{entry} Kamus Besar Bahasa Indonesia (KBBI), sehingga menghasilkan hasil yang berkualitas baik secara cepat dan mudah. Penelitian tersebut menghasilkan 1441 synset dan 3074 sense. Relasi semantik antar synset diperoleh dengan memetakan IWN synset dengan PWN synset, sehingga relasi yang dimiliki dalam PWN dapat diturunkan.
 
-%-----------------------------------------------------------------------------%
-\subsection{WordNet Bahasa}
-%-----------------------------------------------------------------------------%
 Pengembangan WordNet untuk Bahasa Indonesia juga dilakukan oleh Nanyang Technology University (NTU) sejak tahun 2011 dan diberi nama WordNet Bahasa \citep{noor2011creating}. WordNet ini telah diintegrasi dengan salah satu \textit{tools} NLP berbasis Python yaitu nltk sehingga dapat dengan mudah digunakan dalam komputasi. WordNet Bahasa juga memanfaatkan PWN untuk mendapatkan relasi semantik antar \textit{synset}. Pada penelitian ini, dimanfaatkan \textit{tools} tersebut untuk mendapatkan \textit{seed} relasi semantik antar kata dalam Bahasa Indonesia.
 
-%-----------------------------------------------------------------------------%
-\subsection{Kelemahan WordNet Bahasa Indonesia}
-%-----------------------------------------------------------------------------%
-Hingga saat ini, relasi semantik antar kata yang dimiliki oleh WordNet Bahasa Indonesia merupakan hasil turunan dari relasi semantik WordNet Princeton. Sayangnya, pemanfaatan PWN untuk mendapatkan relasi semantik kata Bahasa Indonesia menemui beberapa hambatan. WordNet Bahasa Indonesia menjadi sangat tergantung dengan struktur PWN untuk mendapatkan relas semantik suatu \textit{synset}. Selain itu, beberapa \textit{synset} Bahasa Indonesia juga tidak dapat dipetakan secara tepat ke \textit{synset} PWN, beberapa kata kehilangan arti atau mendapat arti yang kurang tepat. Hal ini menyebabkan pasangan kata relasi semantik Bahasa Indonesia yang dihasilkan terlihat kurang baik. Untuk itu, dicetuskanlah penelitian untuk mengekstrak relasi semantik dalam Bahasa Indonesia secara mandiri. 
-
-
-%-----------------------------------------------------------------------------%
-\section{Relasi}
-%-----------------------------------------------------------------------------%
-Relasi menggambarkan hubungan atau koneksi yang dimiliki oleh suatu hal dengan yang lain (KBBI). Dalam bidang matematika, relasi memetakan suatu anggota dari himpunan satu ke himpunan lain sesuai dengan hubungan yang didefinisikan. Dalam penelitian ini, relasi yang diperhatikan adalah relasi semantik antar kata. Domainnya adalah kata-kata yang tergabung dalam kelas kata benda (\textit{noun}).
-
-Satu relasi dapat terdiri dari beberapa entitas dan dituliskan dalam bentuk tuple $t = (e_1, e_2, ..., e_n)$ dimana $e_i$ adalah suatu entitas yang memiliki relasi $r$ dalam dokumen $D$ \citep{bach2007review}. Relasi sinonim dapat ditulis dalam notasi tersebut. Banyak pula relasi yang hanya menghubungkan antar dua entitas (relasi biner), seperti \textit{terletak-di(Universitas Indonesia, Depok)} atau \textit{ditulis-oleh(Habis Gelap Terbitlah Terang, RA Kartini)}.
-
-%-----------------------------------------------------------------------------%
-\subsection{Relasi Semantik}
-%-----------------------------------------------------------------------------%
-Semantik adalah arti (\textit{sense}) dari suatu kata. Umumnya informasi tersebut disimpan dalam kamus bahasa. Relasi semantik adalah hubungan yang dimiliki antar kata berdasarkan arti atau makna dari kata tersebut. Beberapa relasi semantik adalah sebagai berikut \citep{miller1995wordnet}.
-\begin{itemize}
-  \item \textit{Synonymy} adalah relasi antar kata dimana dua kata yang berbeda memiliki arti yang sama. Semua kelas kata dapat memiliki relasi \textit{synonymy}. Dalam WordNet, relasi ini direpresentasikan dalam bentuk \textit{synset} dan bersifat simetris. Sebagai contoh 'makan', 'melahap', dan 'menyantap' memiliki makna yang sama.
-  \item \textit{Antonymy} adalah yang menggambarkan arti yang saling berkebalikan antar kata. Umumnya relasi ini digunakan pada kelas kata sifat (\textit{adverb}) dan kata keterangan (\textit{adjective}). Sama seperti synonymy, relasi ini memiliki sifat simetris. Sebagai contoh kata 'tinggi' memiliki makna yang berkebalikan dengan kata 'pendek'.
-  \item \textit{Hyponymy} adalah relasi yang menyatakan hubungan kata yang lebih khusus. Sementara untuk kata yang lebih umum dikenal dengan relasi \textit{hypernym}. Kedua relasi ini diperuntukan kelas kata benda (\textit{noun}) dan umumnya satu kata memiliki hanya satu \textit{hypernym}. Kedua relasi ini bersifat transitif, sehingga dapat digambarkan dalam bentuk hirarki. Sebagai contoh kucing, ikan, kelinci (\textit{hyponymy}) adalah binatang (\textit{hypernym}). Binatang adalah \textit{hyponym} dari makhluk hidup. Sehingga dapat dikatakan pula bahwa kucing, ikan, kelinci (\textit{hyponym}) adalah makhluk hidup (\textit{hypernym}).
-  \item \textit{Meronymy} dan \textit{holonym} adalah relasi yang menyatakan hubungan bagian satu dengan yang lain, dimana \textit{meronym} menyatakan sub-bagian dan \textit{holonym} menyatakan bagian yang lebih besar. Seperti relasi hyponym-hypernym, relasi \textit{meronym-holonym} bersifat transitif dan dapat digambarkan dalam bentuk hirarki. Dalam WordNet, relasi ini dibagi ke dalam tiga bagian yaitu \textit{part-meronym}, \textit{member-meronym}, dan \textit{substance-meronym}. Sebagai contoh sebuah sel (\textit{holonym}) memiliki nukleus, ribosom, mitokondria (\textit{meronym}).
-  \item \textit{Troponymy} adalah relasi seperti \textit{hyponymy-hypernymy} yang khusus untuk kelas kata kerja (\textit{verb}). Dalam Bahasa Inggris, contoh kata yang memiliki relasi ini adalah 'stroll' dan 'walk'.
-\end{itemize}
+Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia masih memiliki beberapa kekurangan. Jumlah kata yang terkandung di dalamnya masih terbatas. Sementara itu, relasi semantik antar kata yang dimiliki oleh WordNet Bahasa Indonesia merupakan hasil turunan dari relasi semantik WordNet Princeton. Hal ini menyebabkan ketergantungan untuk mendapatkan relasi semantik dengan struktur dari PWN. Selain itu, beberapa \textit{synset} Bahasa Indonesia juga tidak dapat dipetakan secara tepat ke \textit{synset} PWN yang menyebabkan beberapa kata kehilangan arti atau mendapat arti yang kurang tepat. Jika berusaha dibentuk ke dalam relasi biner, pasangan kata relasi semantik Bahasa Indonesia yang dihasilkan terlihat kurang baik. Untuk itu, dicetuskanlah penelitian untuk mengekstrak relasi semantik dalam Bahasa Indonesia secara mandiri. 
 
 
 %-----------------------------------------------------------------------------%
@@ -69,7 +96,7 @@ Proses evaluasi dilakukan dengan membandingkan entitas yang dihasilkan dengan sy
 
 Penelitian yang dilakukan oleh \cite{ruiz2005automatic}, memanfaatkan WordNet dan Wikipedia sebagai korpus untuk mendapatkan pasangan kata relasi. Pertama dilakukan \textit{entry sense disambiguation} yang merupakan tahap \textit{pre-processing} untuk memetakan setiap entri dalam Wikipedia dengan \textit{synset} dalam WordNet. Tahap berikutnya adalah ekstraksi \textit{pattern} antara dua konsep. Jika terdapat dua konsep yang saling berhubungan dan memiliki suatu relasi semantik dalam WordNet maka kalimat yang mengandung dua konsep tersebut akan disimpan. Proses tersebut menghasilkan daftar relasi semantik dengan masing-masing memiliki \textit{pattern} di dalamnya. Dari banyak \textit{pattern} yang dihasilkan, proses selanjutnya adalah \textit{pattern generalisation} yang bertujuan membuat pattern yang lebih umum. Tahap ini memanfaatkan algoritma \textit{edit-distance} dengan modifikasi. Setelah mendapatkan \textit{pattern}, tahapan terakhir adalah menggunakannya ke dalam korpus untuk mendapatkan entitas baru.
 
-Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus Wikipedia dan menggunakan \textit{pattern}. Selain \textit{hypernym-hyponymy} dan \textit{holonym-meronymy}, penelitian ini juga mengidentifikasi relasi \textit{synonymy}. Kalimat definisi pada Wikipedia di-\textit{parse} menggunakan \textit{Finite State Machine} (FSM) dan konsep-konsep baru diekstrak menggunakan \textit{pattern} yang telah didefinisikan. Penelitian lain yang dilakukan oleh \cite{sumida2008hacking} memanfaatkan struktur internal Wikipedia dalam mengekstraksi \textit{pattern} relasi untuk Bahasa Jepang. 
+Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus Wikipedia dan menggunakan \textit{pattern}. Selain \textit{hypernym-hyponymy} dan \textit{holonym-meronymy}, penelitian ini juga mengidentifikasi relasi sinonim. Kalimat definisi pada Wikipedia di-\textit{parse} menggunakan \textit{Finite State Machine} (FSM) dan konsep-konsep baru diekstrak menggunakan \textit{pattern} yang telah didefinisikan. Penelitian lain yang dilakukan oleh \cite{sumida2008hacking} memanfaatkan struktur internal Wikipedia dalam mengekstraksi \textit{pattern} relasi untuk Bahasa Jepang. 
 
 
 %-----------------------------------------------------------------------------%
@@ -82,7 +109,7 @@ Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki 
 %-----------------------------------------------------------------------------%
 Saat ini, belum ada korpus independen yang menggambarkan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
 
-Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata yang berelasi serta relasi yang menghubungkannya. Selanjutnya, pasangan kata berelasi akan disebut sebuah \textit{pair}. Untuk relasi yang bersifat transitif seperti \textit{hypernym-hyponym}, ada identifikasi kata mana yang merupakan \textit{hypernym} dan mana yang merupakan \textit{hyponym}. Relasi \textit{hypernym} dan \textit{hyponym} adalah relasi bersifat transitif yang dapat direpresentasikan dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh merepresentasikan hubungan yang berjarak tepat satu dari yang lain. 
+Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata yang berelasi serta relasi yang menghubungkannya. Selanjutnya, pasangan kata berelasi akan disebut sebuah \textit{pair}. Untuk relasi yang bersifat transitif seperti \textit{hypernym-hyponym}, ada identifikasi kata mana yang merupakan hipernim dan mana yang merupakan hiponim. Relasi hipernim dan hiponim adalah relasi bersifat transitif yang dapat direpresentasikan dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh merepresentasikan hubungan yang berjarak tepat satu dari yang lain. 
 
 
 %-----------------------------------------------------------------------------%
@@ -109,7 +136,7 @@ Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbaga
 %-----------------------------------------------------------------------------%
 \subsection{Lexico-syntactic Pattern}
 %-----------------------------------------------------------------------------% 
-\textit{Lexico-syntactic pattern} adalah \textit{pattern} yang hanya memanfatkan kata-kata dalam korpus dokumen dan dimanfaatkan untuk proses \textit{string matching}. Salah satu \textit{pattern} leksikal yang terkenal adalah Hearst Pattern yang merepresentasikan pola-pola untuk mendapatkan relasi \textit{hyponymy} dari dokumen \citep{hearst1992automatic}. Menurut Hearst, beberapa syarat yang harus dipenuhi suatu \textit{lexico-syntactic pattern} yang baik adalah sebagai berikut.
+\textit{Lexico-syntactic pattern} adalah \textit{pattern} yang hanya memanfatkan kata-kata dalam korpus dokumen dan dimanfaatkan untuk proses \textit{string matching}. Salah satu \textit{pattern} leksikal yang terkenal adalah Hearst Pattern yang merepresentasikan pola-pola untuk mendapatkan relasi hiponim dari dokumen \citep{hearst1992automatic}. Menurut Hearst, beberapa syarat yang harus dipenuhi suatu \textit{lexico-syntactic pattern} yang baik adalah sebagai berikut.
 \begin{itemize}
   \item Kemunculannya sering pada teks dalam berbagai domain sehingga dapat mengekstrak banyak entitas.
   \item Merepresentasikan relasi yang diinginkan sehingga hasil ekstraksi juga benar.
@@ -202,12 +229,6 @@ Algoritma \textit{Basilisk} \citep{thelen2002bootstrapping} juga memanfaatkan \t
 \end{enumerate}
 
 Kateogori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} memberi bobot berdasarkan informasi kolektif dari kumpulan \textit{pattern} yang mengekstrak kata tersebut. Sementara \textit{Meta-Bootstrapping} hanya mengambil satu \textit{pattern} terbaik dan mengelompokkan seluruh kata yang terekstrak dari \textit{pattern} ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan \citep{riloff2003learning}, didapatkan \textit{Basilisk} mengungguli performa \textit{Meta-Bootstrapping}. 
-
-%-----------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------%
-\section{Word Embedding}
-%-----------------------------------------------------------------------------%
-\textit{Word Embedding} digunakan untuk menentukan similarity antar kata relasi yang dihasilkan dari proses \textit{Pattern Matching}.
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
