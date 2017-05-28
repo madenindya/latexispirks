@@ -60,6 +60,7 @@ Semantik adalah arti (\textit{sense}) dari suatu kata. Relasi semantik kata adal
 \section{Leksikal Semantik Resources}
 %-----------------------------------------------------------------------------%
 Kebutuhan menyimpan suatu korpus yang merupakan leksikal semantik resource. Informasi mengenai kata, makna, serta relasi di dalamnya tersebut perlu tersimpan secara baik sehingga dapat digunakan. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris telah membuat kamus digital yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya, namun masih ditemukan beberapa kekurangan dari WordNet Bahasa yang ada. 
+% TODO: tambahin disini
 
 %-----------------------------------------------------------------------------%
 \subsection{WordNet}
@@ -74,6 +75,17 @@ Pengembangan WordNet untuk Bahasa Indonesia juga dilakukan oleh Nanyang Technolo
 
 Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia masih memiliki beberapa kekurangan. Jumlah kata yang terkandung di dalamnya masih terbatas. Sementara itu, relasi semantik antar kata yang dimiliki oleh WordNet Bahasa Indonesia merupakan hasil turunan dari relasi semantik WordNet Princeton. Hal ini menyebabkan ketergantungan untuk mendapatkan relasi semantik dengan struktur dari PWN. Selain itu, beberapa \textit{synset} Bahasa Indonesia juga tidak dapat dipetakan secara tepat ke \textit{synset} PWN yang menyebabkan beberapa kata kehilangan arti atau mendapat arti yang kurang tepat. Jika berusaha dibentuk ke dalam relasi biner, pasangan kata relasi semantik Bahasa Indonesia yang dihasilkan terlihat kurang baik. Untuk itu, dicetuskanlah penelitian untuk mengekstrak relasi semantik dalam Bahasa Indonesia secara mandiri. 
 
+%-----------------------------------------------------------------------------%
+\subsection{Wikipedia}
+%-----------------------------------------------------------------------------%
+Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil kolaborasi berbagai penulis \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} yang dapat diakses dan diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, informasi yang dimuat dalam Wikipedia dibuat secara terstruktur dengan bahasa yang formal. Wikipedia juga memuat informasi umum terbaru \citep{arnold2014extracting}.
+
+Hingga Mei 2017, Wikipedia Bahasa Indonesia telah memuat lebih dari 400.000 artikel dari berbagai domain. Artikel-artikel yang disimpan dalam Wikipedia dapat diunduh secara gratis dalam bentuk \textit{dumps}\footnote{dumps.wikimedia.org} dengan format XML. Beberapa tipe \textit{dump} dapat dipilih, diantarnya adalah halaman seluruh artikel, halaman artikel beserta \textit{revision history}, daftar judul artikel, dan lainnya. Secara berkala, Wikimedia membuat \textit{dump} terhadap seluruh artikel terakhir yang disimpan untuk setiap bahasa. Pada situs yang menyediakan pengunduhan data Wikipedia, terdapat tanggal unik yang menyatakan tanggal terakhir data tersebut di-\textit{update}.
+
+% wikipedia sebagai lexical semantic resource
+% TODO sebagai leksikal semantic resource gurevych: analyzung and accessing wiki as a lexical semantic resource
+Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai \textit{noun} umum. Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Selain itu, sudah banyak penelitian ekstraksi relasi semantik dengan metode pattern yang menggunakan artikel Wikipedia seperti penelitian \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. 
+
 
 %-----------------------------------------------------------------------------%
 \section{Relation Extraction}
@@ -82,6 +94,7 @@ Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia m
 
 %-----------------------------------------------------------------------------%
 \subsection{Semantic Relation Extraction}
+% TODO: tambahin penelitian yang gak pake pattern
 %-----------------------------------------------------------------------------%
 \textit{Semantic relation extraction} mengkhususkan pada proses ekstraksi relasi semantik antar kata. Penelitian dalam bidang ini sudah banyak dilakukan dengan berbagai metode. Salah satu metode populer untuk mendapatkan relasi semantik satu domain bahasa adalah menggunakan \textit{pattern extraction} dan \textit{pattern matching} seperti yang telah dilakukan pada penelitian \cite{hearst1992automatic}, \cite{ruiz2005automatic}, dan \cite{arnold2014extracting}. Penelitian lain memanfaatkan distribusi kata untuk memperoleh \textit{semantic distance} antar kata. \textit{Semantic distance} adalah nilai yang merepresentasikan kedekatan antar kata berdasarkan semantiknya.
 
@@ -100,61 +113,34 @@ Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus W
 
 
 %-----------------------------------------------------------------------------%
-\section{Korpus}
-%-----------------------------------------------------------------------------%
-Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki fungsi spesifik \citep{atkins1992corpus}.
-
-%-----------------------------------------------------------------------------%
-\subsection{Korpus Pasangan Kata Relasi Semantik}
-%-----------------------------------------------------------------------------%
-Saat ini, belum ada korpus independen yang menggambarkan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
-
-Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata yang berelasi serta relasi yang menghubungkannya. Selanjutnya, pasangan kata berelasi akan disebut sebuah \textit{pair}. Untuk relasi yang bersifat transitif seperti \textit{hypernym-hyponym}, ada identifikasi kata mana yang merupakan hipernim dan mana yang merupakan hiponim. Relasi hipernim dan hiponim adalah relasi bersifat transitif yang dapat direpresentasikan dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh merepresentasikan hubungan yang berjarak tepat satu dari yang lain. 
-
-
-%-----------------------------------------------------------------------------%
-\section{Wikipedia}
-%-----------------------------------------------------------------------------%
-Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil kolaborasi berbagai penulis \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} yang dapat diakses dan diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, informasi yang dimuat dalam Wikipedia dibuat secara terstruktur dengan bahasa yang formal. Wikipedia juga memuat informasi umum terbaru \citep{arnold2014extracting}.
-
-%-----------------------------------------------------------------------------%
-\subsection{Korpus Wikipedia}
-%-----------------------------------------------------------------------------%
-Wikipedia Bahasa Indonesia saat ini telah memuat lebih dari 400.000 artikel dari berbagai domain. Artikel-artikel yang disimpan dalam Wikipedia dapat diunduh secara gratis dalam bentuk \textit{dumps}\footnote{dumps.wikimedia.org} dengan format XML. Beberapa tipe \textit{dump} dapat dipilih, diantarnya adalah halaman seluruh artikel, halaman artikel beserta \textit{revision history}, daftar judul artikel, dan lainnya. Secara berkala, Wikimedia membuat \textit{dump} terhadap seluruh artikel terakhir yang disimpan untuk setiap bahasa. Pada situs yang menyediakan pengunduhan data Wikipedia, terdapat tanggal unik yang menyatakan tanggal terakhir data tersebut di-\textit{update}.
-
-%-----------------------------------------------------------------------------%
-\subsection{Wikipedia sebagai Lexical Semantic Resource}
-%-----------------------------------------------------------------------------%
-Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai \textit{noun} umum. Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Selain itu, sudah banyak penelitian ekstraksi relasi semantik dengan metode pattern yang menggunakan artikel Wikipedia seperti penelitian \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. 
-
-%-----------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------%
-\section{Pattern}
+\section{Pattern Analysis}
 %-----------------------------------------------------------------------------%
 \textit{Pattern} adalah suatu bentuk yang dapat merepresentasikan kumpulan data berukuran besar. Pada teks dokumen, \textit{pattern} dapat terbentuk secara eksplisit ataupun implisit. Secara eksplisit seperti \textit{lexico-syntactic pattern} yang terbentuk dari kata-kata di dalam dokumen tersebut. Sementara \textit{pattern} terbentuk secara implisit jika dilhat dari kemiripan vektor yang merepresentasika dokumen atau kata-kata di dalam dokumen tersebut.
 
-%-----------------------------------------------------------------------------%
-\subsection{Lexico-syntactic Pattern}
-%-----------------------------------------------------------------------------% 
 \textit{Lexico-syntactic pattern} adalah \textit{pattern} yang hanya memanfatkan kata-kata dalam korpus dokumen dan dimanfaatkan untuk proses \textit{string matching}. Salah satu \textit{pattern} leksikal yang terkenal adalah Hearst Pattern yang merepresentasikan pola-pola untuk mendapatkan relasi hiponim dari dokumen \citep{hearst1992automatic}. Menurut Hearst, beberapa syarat yang harus dipenuhi suatu \textit{lexico-syntactic pattern} yang baik adalah sebagai berikut.
 \begin{itemize}
   \item Kemunculannya sering pada teks dalam berbagai domain sehingga dapat mengekstrak banyak entitas.
   \item Merepresentasikan relasi yang diinginkan sehingga hasil ekstraksi juga benar.
   \item Dapat dikenali tanpa membutuhkan pengetahuan sebelumnya sehingga dapat dibentuk dalam situasi apapun.
 \end{itemize}
-
+%-----------------------------------------------------------------------------%
+\subsection{Textual Pattern}
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
-\section{Pattern Extraction dan Matching}
+\subsection{Pattern Extraction}
 %-----------------------------------------------------------------------------%
 \textit{Pattern extraction} atau \textit{pattern recognition} adalah salah satu cabang dalam \textit{machine learning} yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. \textit{Pattern matching} adalah proses untuk mencocokkan suatu \textit{pattern} dengan kumpulan data yang belum dianotasi. Penelitian ekstraksi relsasi semantik menggunakan metode pattern matching telah dilakukan oleh \cite{hearst1992automatic}, \cite{ruiz2005automatic}, \cite{arnold2014extracting}, dan \cite{sumida2008hacking}.
 
 Banyaknya penelitian menggunakan metode \textit{pattern matching} dan \textit{extraction} menjadi salah satu alasan penggunaan metode tersebut untuk mengekstrak relasi kata dalam Bahasa Indonesia. Pada penelitian ini, relasi semantik yang diekstrak dibatasi hanya untuk relasi \textit{hypernym-hyponym}. 
 
+%-----------------------------------------------------------------------------%
+\subsection{Pattern Matching}
+%-----------------------------------------------------------------------------%
+
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
-\section{Sequence Analyisis}
+\section{Tree Representation}
 %-----------------------------------------------------------------------------%
 Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung \textit{sequnce} tertentu. Pada penelitian ini, \textit{pattern} yang dihasilkan adalah \textit{pattern} leksikal yang merupakan deretan kata-kata. Algoritma seperti \textit{standard trie} dan \textit{suffix tree} dimanfaatkan secara berurut untuk proses \textit{pattern extraction} dan \textit{matching}.
 
@@ -189,6 +175,7 @@ Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} berikut
     \caption{Contoh Suffix Trie}
     \label{fig:contoh-suffix-trie}
 \end{figure}
+
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
@@ -230,24 +217,6 @@ Algoritma \textit{Basilisk} \citep{thelen2002bootstrapping} juga memanfaatkan \t
 
 Kateogori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} memberi bobot berdasarkan informasi kolektif dari kumpulan \textit{pattern} yang mengekstrak kata tersebut. Sementara \textit{Meta-Bootstrapping} hanya mengambil satu \textit{pattern} terbaik dan mengelompokkan seluruh kata yang terekstrak dari \textit{pattern} ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan \citep{riloff2003learning}, didapatkan \textit{Basilisk} mengungguli performa \textit{Meta-Bootstrapping}. 
 
-%-----------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------%
-\section{Pointwise Mutual Information}
-%-----------------------------------------------------------------------------%
-\textit{Pointwise Mutual Information} (PMI) adalah pengukuran nilai asosiasi antar variabel. Dalam bidang \textit{information theory}, PMI dapat dimanfaatkan untuk menghitung asosiasi kemunculan dua buah kata. Jika diberikan dua buah kata $x$ dan $y$, maka nilai PMI kata tersebut dalam suatu dokumen dapat dihitung menggunakan rumus berikut. 
-\[ pmi(x;y)=log\frac{p(x,y)}{(x)p(y)}=log\frac{p(x|y)}{p(x)}=log\frac{p(y|x)}{p(y)} \] dengan $p(x)=\frac{f(x)}{N}$
-\[ pmi(x;y)=log\frac{f(x)N}{f(x)f(y)} \]
-\begin{itemize}
-  \item $p(x)$ adalah probabilitas kemunculan kata $x$ dalam korpus
-  \item $f(x)$ adalah frekuensi kemunculan kata $x$ dalam korpus
-  \item $N$ adalah toatal seluruh kata dalam korpus
-\end{itemize}
-Pengukuran ini bersifat simetris, sehingga $p(x;y)=p(y;x)$. Nilai PMI dapat merupakan bilangan positif maupun negatif. Jika nilai PMI adalah nol (0), berarti kedua variabel saling \textit{independent}.
-
-%-----------------------------------------------------------------------------%
-\subsection{Skip PMI}
-%-----------------------------------------------------------------------------% 
-PMI umumnya hanya menggunakan model \textit{bigram} atau \textit{trigram}. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk \textit{bigram} 'hong kong', 'sepak bola', dan 'amerika serikat'. Pada penelitian ini dilakukan modifikasi yaitu membuat model \textit{skip-gram} PMI. Kita menghitung nilai PMI antar dua kata yang dipisahkan dengan $n$ diantaranya. 
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
@@ -309,7 +278,6 @@ Beberapa variasi perhitungan untuk Kappa adalah Cohen's Kappa dan Fleiss' Kappa.
 Fleiss' Kappa mengukur tingkat persetujuan antar sekelompok anotator berjumlah lebih dari dua. Jika diberikan $N$ data dengan $n$ anotator dimana setiap data diantosi ke dalam salah satu dari $k$ kategori dan $n_ij$ merepresentasikan total anotator yang memberi data $i$ ke label $j$, proses perhitungan $P(A)$ dan $P(E)$ untuk Fleiss' Kappa adalah sebagai berikut.
 \[ P(A)=\frac{1}{N}\sum_{i=1}^{N}P_i \:\:\:\:\:dengan\:\:\:\:\: P_i=\frac{1}{n(n-1)}[(\sum_{j=1}^{k}n^2_ij)-(n)] \]
 
-
 %-----------------------------------------------------------------------------%
 \subsection{Spearman's Rho}
 %-----------------------------------------------------------------------------% 
@@ -328,3 +296,37 @@ Jika seluruh \textit{ranking} berbeda, proses komputasi dapat dilakukan mengguna
   \item $d_i = rg(X_i)-rg(Y_i)$ adalah selisih antara dua \textit{ranking}
   \item $n$ adalah jumlah observasi
 \end{itemize}
+
+
+
+
+% %-----------------------------------------------------------------------------%
+% \section{Korpus}
+% %-----------------------------------------------------------------------------%
+% Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki fungsi spesifik \citep{atkins1992corpus}.
+
+% %-----------------------------------------------------------------------------%
+% \subsection{Korpus Pasangan Kata Relasi Semantik}
+% %-----------------------------------------------------------------------------%
+% Saat ini, belum ada korpus independen yang menggambarkan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
+
+% Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata yang berelasi serta relasi yang menghubungkannya. Selanjutnya, pasangan kata berelasi akan disebut sebuah \textit{pair}. Untuk relasi yang bersifat transitif seperti \textit{hypernym-hyponym}, ada identifikasi kata mana yang merupakan hipernim dan mana yang merupakan hiponim. Relasi hipernim dan hiponim adalah relasi bersifat transitif yang dapat direpresentasikan dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh merepresentasikan hubungan yang berjarak tepat satu dari yang lain. 
+
+% %-----------------------------------------------------------------------------%
+% %-----------------------------------------------------------------------------%
+% \section{Pointwise Mutual Information}
+% %-----------------------------------------------------------------------------%
+% \textit{Pointwise Mutual Information} (PMI) adalah pengukuran nilai asosiasi antar variabel. Dalam bidang \textit{information theory}, PMI dapat dimanfaatkan untuk menghitung asosiasi kemunculan dua buah kata. Jika diberikan dua buah kata $x$ dan $y$, maka nilai PMI kata tersebut dalam suatu dokumen dapat dihitung menggunakan rumus berikut. 
+% \[ pmi(x;y)=log\frac{p(x,y)}{(x)p(y)}=log\frac{p(x|y)}{p(x)}=log\frac{p(y|x)}{p(y)} \] dengan $p(x)=\frac{f(x)}{N}$
+% \[ pmi(x;y)=log\frac{f(x)N}{f(x)f(y)} \]
+% \begin{itemize}
+%   \item $p(x)$ adalah probabilitas kemunculan kata $x$ dalam korpus
+%   \item $f(x)$ adalah frekuensi kemunculan kata $x$ dalam korpus
+%   \item $N$ adalah toatal seluruh kata dalam korpus
+% \end{itemize}
+% Pengukuran ini bersifat simetris, sehingga $p(x;y)=p(y;x)$. Nilai PMI dapat merupakan bilangan positif maupun negatif. Jika nilai PMI adalah nol (0), berarti kedua variabel saling \textit{independent}.
+
+% %-----------------------------------------------------------------------------%
+% \subsection{Skip PMI}
+% %-----------------------------------------------------------------------------% 
+% PMI umumnya hanya menggunakan model \textit{bigram} atau \textit{trigram}. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk \textit{bigram} 'hong kong', 'sepak bola', dan 'amerika serikat'. Pada penelitian ini dilakukan modifikasi yaitu membuat model \textit{skip-gram} PMI. Kita menghitung nilai PMI antar dua kata yang dipisahkan dengan $n$ diantaranya. 
