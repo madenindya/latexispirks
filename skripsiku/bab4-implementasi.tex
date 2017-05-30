@@ -6,41 +6,44 @@ Bab ini menjelaskan secara detail proses implementasi dari pengolahan data, pros
 %-----------------------------------------------------------------------------%
 \section{Pembentukan Korpus Kalimat Wikipedia}
 %-----------------------------------------------------------------------------%
+Untuk dapat mengubah data XML Wikipedia menjadi kalimat dengan format yang diinginkan perlu melalui beberapa tahap. Gambar \ref{fig:preproses-wiki} memperlihatkan secara detil setiap tahapan dalam pemrosesan data Wikipedia. Pertama, data akan dibersihkan dari format \textit{markup language} menggunakan WikiExtractor. Kemudian setiap baris yang merepresentasika satu paragraf dipisahkan menjadi kalimat perbaris menggunakan program \textit{sentence splitter}. Kalimat yang dihasilkan akan diformat menggunakan \textit{rule-based formatter} sehingga sesuai dengan keinginan. Terakhir, POS Tagger akan memberikan \textit{postag} untuk setiap token dalam kalimat.
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{pics/Pic02-PreProcessingWikipedia}
     \caption{Pre-processing Data Wikipedia}
     \label{fig:preproses-wiki}
 \end{figure}
-Data hasi Wikipedia Dump diformat secara otomatis menggunakan \textit{tools} WikiExtractor. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. Menggunakan \textit{tools} ini, didapatkan data yang sudah tidak mengikuti format MediaWiki Markup, Language. Program ini dapat diunduh dari Github dan dijalankan menggunakan perintah berikut. 
+
+Data XML yang diperoleh dari Wikipedia Dump diekstrak secara otomatis menggunakan WikiExtractor\footnote{github.com/attardi/wikiextractor/wiki}. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. \textit{Tools} ini akan membersihkan artikel Wikipedia dari format MediaWiki \textit{markup language} sehingga dihasilkan korpus yang hanya berisi konten artikel saja. Program ini dapat diunduh dari Github dan dijalankan pada sistem operasi berbasis UNIX/Linux menggunakan perintah berikut. 
 
 \begin{lstlisting}[caption={Penggunaan Wiki Extractor}, language=bash]
 $ WikiExtractor.py xml-dump-file -o output-file
 \end{lstlisting}
 
-\noindent Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh markup, language dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
+\noindent Jika tidak memberi spesifikasi opsi apapun, artikel yang dihasilkan membersihkan seluruh \textit{markup language} dan hanya menyimpan isi artikel tanpa disertakan informasi seperti kategori, riwayat, dan versi artikel.
 
 %-----------------------------------------------------------------------------%
 \subsection{Sentence Splitting}
 %-----------------------------------------------------------------------------%
-Korpus yang dihasilkan menghasilkan baris-baris yang merepresentasikan suatu paragraf dalam artikel Wikipedia. Pada penelitian kali ini, ingin dilihat relasi \textit{hypernym-hyponym} antar dua kata pada kalimat yang sama. Untuk itu, perlu dilakukan proses \textit{sentence splitting} yang dapat mengidentifikasi suatu kalimat dalam paragraf. Hasil dari proses tersebut adalah dokumen yang terdiri dari baris-baris yang merepresentasikan satu kalimat. 
+Korpus yang dihasilkan menghasilkan baris-baris yang merepresentasikan suatu paragraf dalam artikel Wikipedia. Pada penelitian kali ini, ingin dilihat relasi hipernim-hiponim antar dua kata pada kalimat yang sama. Untuk itu, perlu dilakukan proses \textit{sentence splitting} yang dapat memisahkan setiap kalimat dalam paragraf. Hasil dari proses tersebut adalah dokumen yang terdiri dari baris-baris yang merepresentasikan satu kalimat. 
 
-Proses ini dilakukan dengan menggunakan \textit{script} yang telah dibuat sebelumnya oleh Ken Nabila Setya dari Fasilkom UI, Indonesia. Ditambah pula satu \textit{script} yang dapat secara otomatis melakukan \textit{splitting} untuk seluruh dokumen. Berikut adalah contoh sebuah paragraf dalam artikel Wikipedia yang telah dibersihkan menggunakan WikiExtractor.
+Proses ini dilakukan dengan menggunakan program berbasis Perl yang telah dibuat sebelumnya oleh Ken Nabila Setya dari Fasilkom UI, Indonesia. Ditambah satu program yang dapat secara otomatis melakukan \textit{splitting} untuk seluruh dokumen dalam direktori. Berikut adalah contoh sebuah paragraf dalam artikel Wikipedia yang telah dibersihkan menggunakan WikiExtractor.
+
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
 \hline
-Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. Dia menggantikan pamannya, James Brooke sebagai raja. \\
-\hline 
+Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. Dia menggantikan pamannya, James Brooke sebagai raja. \\ \hline 
 \end{tabular}
 \end{center}
 
-\noindent Setelah melalui proses \textit{sentence splitter}, berikut adalah hasilnya.
+\noindent Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
+
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
 \hline
-Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. \\
-\hline 
- Dia menggantikan pamannya, James Brooke sebagai raja. \\
+Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Charles Brooke memerintah Sarawak sebagai Raja Putih kedua dari 3 Agustus 1868 hingga meninggal dunia. \\ \hline 
+Dia menggantikan pamannya, James Brooke sebagai raja. \\
 \hline
 \end{tabular}
 \end{center}
@@ -48,7 +51,8 @@ Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Ch
 %-----------------------------------------------------------------------------%
 \subsection{Rule Based Formatter}
 %-----------------------------------------------------------------------------%
-Dari korpus yang berisi kalimat Wikipedia, diberikan beberapa aturan tambahan untuk membuat korpus sesuai format yang diinginkan. Penambahan aturan juga untuk mengurangi ambiguitas dan bentuk usaha generalisasi \textit{pattern}. Berikut adalah beberapa aturan tambahan untuk \textit{pre-processing} korpus Wikipedia.
+Kalimat-kalimat yang dihasilkan dari proses sebelumnya, dimasukkan ke dalam program \textit{rule based formatter} sehingga membentuk korpus dengan format yang diingingkan. Penambahan aturan juga untuk mengurangi ambiguitas dan bentuk usaha generalisasi \textit{pattern}. Berikut adalah beberapa aturan tambahan untuk yang diberikan pada korpus Wikipedia.
+
 \begin{enumerate}
   \item Menghilangkan frasa yang berada di dalam tanda kurung. \\
   Frasa yang terletak di dalam tanda kurung dapat dianggap sebagai penjelas kata atau frasa sebelumnya. Proses ini merupakan salah satu upaya generalisasi \textit{pattern}.
@@ -59,6 +63,7 @@ Dari korpus yang berisi kalimat Wikipedia, diberikan beberapa aturan tambahan un
 \end{enumerate}
 
 \noindent Dari contoh kalimat di atas, setelah melalui proses \textit{formatting} yang didefinisikan menghasilkan kalimat berikut.
+
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
 \hline
@@ -69,13 +74,11 @@ Dari korpus yang berisi kalimat Wikipedia, diberikan beberapa aturan tambahan un
 \end{tabular}
 \end{center}
 
-
 %-----------------------------------------------------------------------------%
-\section{POS Tagging Kalimat Wikipedia}
+\subsection{POS Tagging Kalimat Wikipedia}
 %-----------------------------------------------------------------------------%
-Proses \textit{part-of-speech tagging} dilakukan pada korpus Wikipedia yang telah berbentuk kalimat dengan format yang didefinisikan. Pada penelitian ini, kelas kata yang menjadi pengamatan adalah \textit{noun} (NN) dan \textit{proper noun} (NNP), sehingga proses \textit{pos tagging} digunakan untuk identifikasi kata-kata tersebut. Proses \textit{pos tagging} menggunakan \textit{tools} Stanford POS Tagger, dengan model yang digunakan merupakan hasil penelitian sebelumnya menggunakan Bahasa Indonesia.  Setelah selesai melalui proses \textit{tagging}, dilakukan penyesuaian agar format korpus lebih rapi dan terstruktur. 
+Proses \textit{part-of-speech tagging} dilakukan pada korpus Wikipedia yang telah berbentuk kalimat dengan format yang didefinisikan. Pada penelitian ini, kelas kata yang menjadi pengamatan adalah \textit{noun} (NN) dan \textit{proper noun} (NNP), sehingga proses \textit{pos tagging} dilakukan guna mengidentifikasi kata-kata tersebut. Proses \textit{pos tagging} dijalankna dengan program Stanford POS Tagger, dengan model yang digunakan merupakan hasil penelitian sebelumnya menggunakan Bahasa Indonesia.  Setelah selesai melalui proses \textit{tagging}, dilakukan penyesuaian agar format korpus lebih rapi dan terstruktur. Berikut adalah contoh kalimat yang sudah melalui tahap \textit{pos tagging}. Korpus ini digunakan untuk proses \textit{pattern matching}.
 
-Berikut adalah contoh kalimat yang sudah melalui tahap \textit{pos tagging}. Korpus ini digunakan untuk proses \textit{pattern matching}.
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
 \hline
@@ -83,44 +86,44 @@ Berikut adalah contoh kalimat yang sudah melalui tahap \textit{pos tagging}. Kor
 \hline
 \end{tabular}
 \end{center}
+% TODO: tulis model wikipedia di bab 3
 
 
 %-----------------------------------------------------------------------------%
 \section{Seed Builder}
 %-----------------------------------------------------------------------------%
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.6]{pics/Pic02-SeedBuilder}
-    \caption{Proses Pembentukan \textit{Seed}}
-    \label{fig:seed-builder}
-\end{figure}
-Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi \textit{hypernym}-nya. Dari setiap \textit{synset hypernym}, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} 1-1 $(kata\_hyponym,kata\_hypernym)$.
+Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi hipernimnya. Dari setiap \textit{synset} hipernim, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} biner. Berikut adalah
+
 %--- kode seed builder ----- %
 \begin{lstlisting}[caption={Algoritme pembentukan \textit{seed}}, language=bash]
 buildSeed:
-  ambil seluruh lemma bahasa indonesia noun
-  untuk setiap lema:
-    ambil seluruh synset dari lema tersebut
-    untuk setiap synset:
-      ambil seluruh synset hypernym
-      untuk setiap synset hypernym 
-        ambil seluruh lemma hypernym
-        untuk setiap lemma hypernym:
-          filterisasi
-          bentuk pasangan lemma-lemma hypernym
+  ls = get_all_indonesian_lemma()
+  for l in ls:
+    syns = get_all_synsets(l)
+    for s in syns:
+      hs = get_all_hypernyms(s)
+      for h in hs: 
+        hls = get_lemmas(h)
+        for hl in hls:
+          filter(hl)
+          print_seed(l, hl)
 \end{lstlisting}
 %--------------------------- %
+% \begin{figure}
+%     \centering
+%     \includegraphics[scale=0.6]{pics/Pic02-SeedBuilder}
+%     \caption{Proses Pembentukan \textit{Seed}}
+%     \label{fig:seed-builder}
+% \end{figure}
 
-%-----------------------------------------------------------------------------%
-\subsection{Filterisasi Seed}
-%-----------------------------------------------------------------------------%
+% Filterisasi Seed
 Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha mendapatkan \textit{seed} sebanyak mungkin. Filterasisasi juga dilakukan untuk mendapatkan \textit{seed} awal yang diyakini benar dan berkualitas. Salah satu bagian terpenting proses ini adalah memasangkan hanya lema yang merupakan \textit{noun} ke lema yang juga adalah \textit{noun}. Jika kemungkinan lema tersebut tergolong ke dalam kelas kata bukan \textit{noun}, lema tidak diikutsertakan sebagai \textit{seed} awal.
 
 Tantangan dalam proses ini adalah banyak ditemukan kasus dimana satu lema dikandung oleh lebih dari satu \textit{synset} atau satu \textit{synset} memiliki lebih dari satu \textit{synset hypernym}. Ambiguitas dalam kasus tersebut dapat mengurangi kualitas \textit{seed} yang dihasilkan. Mengatahui hal tersebut, dibuatlah dua pendekatan berbeda untuk proses filterisasi \textit{seed}.
 
 Pendekatan pertama adalah tetap mengambil lemma yang sama pada \textit{synset hypernym} yang berbeda. Hal ini dilatarbelakangi adanya lema yang berasal dari \textit{synset} berbeda namun memiliki lema \textit{hypernym} yang sama. Pada contoh (i), satu lema yang sama dimiliki oleh dua \textit{synset} yang berbeda namun kedua \textit{synset} tersebut memiliki \textit{synset hypernym} yang sama. Lema untuk kedua \textit{synset hypernym} adalah sama sehingga tetap diikutsertakan sebagai \textit{seed}. Pada contoh (ii), satu lema berasal dari dua \textit{synset} yang berbeda dan dua \textit{synset hypernym} berbeda, namun ada lema yang sama yaitu 'laluan'.
 
-Pendekatan lainnya adalah dengan metode filterisasi yang \textit{strict}. Jika satu lema memiliki lebih dari satu \textit{synset hypernym}, maka lema tersebut dianggap ambigu dan langsung tidak diikutsertakan ke dalam \textit{seed} awal. Berdasarkan tabel contoh lema, \textit{synset}, dan \textit{hypernym}-nya, hanya contoh (i) yang diterima sebagai \textit{seed} karena \textit{synset hypernym} untuk lema tersebut sama. Sementara (ii) ditolak karena \textit{synset hypernym} berbeda.
+Pendekatan lainnya adalah dengan metode filterisasi yang \textit{strict}. Jika satu lema memiliki lebih dari satu \textit{synset hypernym}, maka lema tersebut dianggap ambigu dan langsung tidak diikutsertakan ke dalam \textit{seed} awal. Berdasarkan tabel contoh lema, \textit{synset}, dan hipernimnya, hanya contoh (i) yang diterima sebagai \textit{seed} karena \textit{synset hypernym} untuk lema tersebut sama. Sementara (ii) ditolak karena \textit{synset hypernym} berbeda.
 
 \begin{center}
 \begin{tabular}{ |c|m{30em}| } 
@@ -222,24 +225,22 @@ Beberapa informasi yang disimpan dalam suatu \textit{pattern} adalah \textit{seq
 \textit{Pattern Tree} adalah sebuah \textit{tree} yang menyimpan seluruh \textit{pattern} yang dihasilkan dari korpus. Dalam pembuatan \textit{pattern tree}, tidak perlu menyimpan seluruh kata dalam kalimat. Hanya \textit{sequence} kata tertentu saja yang dianggap dapat menghasilkan \textit{pattern} yang baik untuk diikutsertakan. Maka dari itu, perlu diambil \textit{sequence} kata dalam kalimat yang digunakan sebagai \textit{pattern}. Terdapat tiga pendekatan dalam proses ini, diantaranya adalah sebagai berikut.
 \begin{enumerate}
   \item Hanya memperhatikan kata yang berada diantara pasangan kata relasi. \\
-  Pada kasus ini, hanya ingin dilihat kata-kata yang berada diantara kata yang merupakan \textit{hypernym-hyponym} atau \textit{hyponym-hypernym}. Kata-kata diantara dua relasi dapat dianggap paling dekat jika ingin mencari \textit{pattern} relasi tersebut. Pada contoh diatas, \textit{sequence} kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
+  Pada kasus ini, hanya ingin dilihat kata-kata yang berada diantara kata yang merupakan hipernim-hiponim atau \textit{hyponym-hypernym}. Kata-kata diantara dua relasi dapat dianggap paling dekat jika ingin mencari \textitmemisahkan setiap relasi tersebut. Pada contoh diatas, \textit{sequence} kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
   \item Mengikutsertakan $n$ kata sebelum kata relasi pertama. \\
-  Beberapa kata sebelum kata relasi, dapat memberikan informasi untuk yang dapat meningkatkan kualitas \textit{pattern} yang dihasilkan. Pada contoh diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah '<start> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
-  \item Mengikutsertakan $n$ kata setelah kata relasi terakhir. \\
+  Beberapa kata berbasis Perl sebelum program dapat memberikan informasi untuk yang dapat meningkatkan kualitas satu program. Pada contoh diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah '<start dalam direktori> <hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym>'
+  \item 
+  Mengikutsertakan $n$ kata setelah kata relasi terakhir. \\
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah '<hyponym>singa<hyponym> adalah <hypernym>kucing<hypernym> yang'
 \end{enumerate}
-% --- kode pattern extraction: createPatternTree --- %
+% --- kode pattern extraction: createPatternTree ---  
 \begin{lstlisting}[caption={Algoritme pembentukan \textit{pattern}}, language=bash]
 getPattern(type):
   createPatternTree(type):
-  for leaf in leaves:
-    patterns.add(leaf.getPattern())
-  return patterns
+  for leaf in Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut. patterns
 
 createPatternTree(type):
   foreach sentence in sentences:
-    index = getIndexToken(sentence, type)
-    sequence = get_sequence(sentence, index)
+    index = getIndexToken(sentence, type)     sequence = get_sequencesentence, index)
     patterntree.add(sequence)
 
 getIndexToken(sentence, type):
@@ -282,19 +283,21 @@ Setelah terbentuk \textit{pattern tree}, perlu di-\textit{list} seluruh \textit{
 %-----------------------------------------------------------------------------%
 \subsection{Pembentukan \textit{Pattern} Unik}
 %-----------------------------------------------------------------------------%
-\textit{Pattern} yang dihasilkan dari tahap ini harus unik sehingga tidak terjadi ambiguitas jika hendak digunakan. Pada masa awal pengembangan, masalah yang muncul pada \textit{pattern} yang dihasilkan adalah adanya \textit{pattern} yang posisi penempatan \textit{hypernym-hyponym}-nya saling berkebalikan. Sebagai contoh beberapa \textit{pattern} ambigu yang dihasilkan seperti (i) <hyponym> adalah <hypernym>, (ii) <hypernym> adalah <hyponym>, (iii) <hypernym> dan <hyponym>, dan (iv) <hyponym> dan <hypernym>. Padahal, bagian \textit{hypernym-hyponym} tersebut nantinya digantikan dengan kata yang kemunculannya cocok dengan \textit{pattern} yang diberikan. Jika \textit{pattern} tersebut dibiarkan begitu saja, akan banyak dihasilkan \textit{pair} yang salah.
+\textit{Pattern} yang dihasilkan dari tahap ini harus unik sehingga tidak terjadi ambiguitas jika hendak digunakan. Pada masa awal pengembangan, masalah yang muncul pada \textit{pattern} yang dihasilkan adalah adanya \textit{pattern} yang posisi penempatan hipernim-hiponim-nya saling berkebalikan. Sebagai contoh beberapa \textit{pattern} ambigu yang dihasilkan seperti (i) <memisahkan setiap adalah <hypernym>, (ii) <hypernym> adalah <hyponym>, (iii) <hypernym> dan <hyponym>, dan (iv) <hyponym> dan <hypernym>. Padahal, bagian hipernim-hiponim tersebut nantinya digantikan dengan kata yang kemunculannya berbasis Perl cocok dengan \textit{pattern} yang diberikan. Jika \textitmemisahkan satu program, akan dalam direktori program{pair} yang salah.
 
-Strategi yang dilakukan untuk masalah ambiguitas antar \textit{pattern} adalah membangun suatu arsitektur yang dapat mengidentifikasi dan menyelesaikannya. Tahapan pembangunan \textit{pattern} unik adalah sebagai berikut.
+Strategi yang dilakukan untuk masalah ambiguitas antar \textit{pattern} adalah membangun suatu berbasis Perl arsitektur yang dapat mengidentifikasi dan menyelesaikannya. program satu program adalah sebagai berikut dalam direktori.
 \begin{enumerate}
-  \item Dicari \textit{pattern} dengan pendekatan hanya memperhatikan kata-kata diantara pasangan kata relasi.
+  \item Dicari \textit{pattern} dengan pendekatan hanya memperhatikan kata-kata diantara pasan
+  gan ka a relasi.
   \item \textit{Pattern} yang dihasilkan dievaluasi satu dengan yang lain. Jika terdapat \textit{pattern} yang saling terbalik, \textit{pattern} yang bersangkutan dikeluarkan dari \textit{list} dan disimpan untuk dievaluasi ulang.
-  \item Proses evaluasi ulang dilakukan menggunakan pendekatan pembuatan \textit{pattern} lainnya yaitu, memperhatikan $n$ kata sebelum atau sesudah kemunculan relasi.
-  \item Hasil kedua pendekatan digabung dan dicek apakah \textit{pattern} tersebut dibutuhkan. Suatu \textit{pattern} hasil evaluasi ulang dinyatakan dibutuhkan jika \textit{substring} dari \textit{pattern} tersebut tergolong dalam \textit{list pattern} yang membutuhkan evaluasi ulang.
-  \item Proses evaluasi dilakukan secara berulang dari dengan $n$ yang terus bertambah dari 1 (satu). Pada penelitian ini nilai $n$ dibatasi hingga 2 (dua), sehingga maksimum ada dua kata sebelum kata relasi pertama atau dua kata setelah kata relasi terakhir.
+  \item Proses evaluasi ulang dilakukan menggunakan pendekatan pembuatan \textit{pattern} lainnya yaitu, memperhatikan $n$ Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut. digabung dan dicek apakah \textit{pattern} tersebut dibutuhkan. Suatu \textit{pattern} hasil e aluasi ulan
+  g dinyatakan dibutuhkan jika \textit{substring} dari \textit{pattern} tersebut tergolong dalam \textit{list pattern} yang membutuhkan evaluasi ulang.
+  \item Proses evaluasi dilakukan secara berulang dari dengan $n$ yang terus bertambah dari 1 (satu). Pada penelitian ini Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut. dua kata sebelum kata relasi pertama atau dua kata setelah
+  kata relasi terakhir.
 \end{enumerate}
 
 Setelah melakukan tahapan di atas, tidak ada lagi kasus posisi relasi saling tertukar dari \textit{pattern} yang dihasilkan. \textit{List pattern} yang dihasilkan kemudian diurutkan sebelum ditampilkan.
-% --- kode pattern extraction: patternUnik --- %
+% --- kodepattern extraction: patternUnik --- %
 \begin{lstlisting}[caption={Algoritme pembentukan \textit{pattern unik}}, language=bash]
 patternUnik():
   patternunik; patterntmp;
@@ -348,20 +351,19 @@ Setelah didapatkan \textit{pattern} yang sesuai, dilakukan proses pengurutan (\t
     \label{fig:pattern-matching}
 \end{figure}
 
-Sebuah \textit{node} merepresentasikan satu kata dalam kalimat. Untuk setiap kalimat, dibentuk sebuah suffix tree yang merepresentasikan kalimat tersebut dan selanjutnya dicocokan dengan \textit{pattern} yang ada. Dibuat pula kelas \textit{Pair} yang merepresentasikan pasangan kata relasi \textit{hypernym-hyponym} yang dihasilkan dari proses \textit{pattern matching}. \textit{Pair} menyimpan informasi seperti total kemunculan, total dokumen unik, daftar kalimat unik dan \textit{pattern} unik yang menghasilkan \textit{pair}.
+Sebuah \textit{node} merepresentasikan satu kata dalam kalimat. Untuk setiap kalimat, dibentuk sebuah suffix tree yang merepresentasikan kalimat tersebut dan selanjutnya dicocokan dengan \textit{pattern} yang ada. Dibuat pula kelas \textit{Pair} yang merepresentasikan pasangan kata relasi hipernim-hiponim yang dihasilkan dari proses \textit{pattern matching}. \textit{Pair} menyimpan informasi seperti total memisahkan setiap total dokumen unik, daftar kalimat unik dan \textit{pattern} unik yang menghasilkan \textit{pair}.
 
-Tahapan proses \textit{pattern matching} jika diberikan satu kalimat dan satu \textit{pattern} adalah sebagai berikut.
+Tahapan proses \berbasis Perl textit{program jika diberikan satu kalimat dan satu satu program berikut dalam direktori.
 \begin{enumerate}
   \item Kalimat masukan dibentuk menjadi suatu \textit{suffix tree}.
-  \item \textit{Pattern} masukan ditokenisasi ke dalam bentuk \textit{list} kata. \textit{Pattern} pasti mengandung token <hypernym> dan <hyponym>, selanjutnya disebut token relasi.
+  \item \textit{Pattern} masukan ditokenisasi ke dalam bentuk \textit{list} 
+  kata. \textit{Pattern} pasti mengandung token <hypernym> dan <hyponym>, selanjutnya disebut token relasi.
   \item Jika ditemukan token relasi pada \textit{list pattern} yang sedang dievaluasi, maka \textit{node} yang dikunjungi disimpan sementara sesuai dengan relasinya.
-  \item Jika token bukan token relasi, maka di evaluasi apakah token sama dengan \textit{node} yang dikunjungi. Jika sama maka proses evaluasi dilanjutkan, namun jika berbeda maka \textit{pattern} tidak cocok.
+  \item Jika token bukan token relasi, maka di evaluasi apakah token sama denga  \textit{node} yang dikunjungi. Jika sama maka proses evaluasi dilanjutkan, namun jika berbeda maka \textit{pattern} tidak cocok.
   \item Jika seluruh token \textit{pattern} telah dievaluasi dan tidak mengalami kegagalan, makan dianggap berhasil dan kata yang terekstrak disimpan dalam bentuk \textit{pair}.
-\end{enumerate}
-
-Pada masa awal pengembangan, setelah dijalankan proses \textit{pattern matching} terhadap korpus Wikipedia dengan \textit{pattern} hasil ekstraksi, masalah pertama yang ditemukan adalah banyaknya \textit{pair} yang salah satu atau kedua kata relasinya tidak teramasuk dalam kelas kata benda. Beberapa \textit{pair} yang salah diantaranya $(Menoitios;salah)$ dimana 'salah' adalah \textit{adjective} dan $(saya,gitaris)$ dimana 'saya' adalah preposi. Untuk itu diputuskan menggunakan korpus Wikipedia yang sudah melalui tahap POS Tagging.
-
-Masalah lain yang muncul adalah jika kata yang ingin diekstrak merupakan \textit{multi word}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang memiliki kelas kata sama dalam suatu kalimat merupakan \textit{multi word}. \textit{Multi word} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
+\end{enumerate}Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut. matching} terhadap korpus Wikipedia dengan \
+textit{pattern} hasil ekstraksi, masalah pertama yang ditemukan adalah banyaknya \textit{pair} yang salah satu atau kedua kata relasinya tidak teramasuk dalam kelas kata benda. Beberapa \textit{pair} yang salah diantaranya $(Menoitios;salah)$ dimana 'salah' adalah \textit{adjective} dan $(saya,gitaris)$ dimana 'saya' adalah preposi. Untuk itu diputuskan menggunakan korpus Wikipedia yang sudah melalui tahap POS Tagging.
+ Masalah lain yang muncul adalah jika kata yang ingin diekstrak merupakan \texti{multi word}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang memiliki kelas kata sama dalam suatu kalimat merupakan \textit{multi word}. \textit{Multi word} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
 % --- kode pattern matching --- %
 \begin{lstlisting}[caption={Algoritme ekstraksi \textit{pair}}, language=bash]
 main:
@@ -417,25 +419,23 @@ Suatu \textit{pair} dapat direpresentasikan ke dalam bentuk vektor berdasarkan n
 %-----------------------------------------------------------------------------%
 \subsection{Filterisasi dan Validasi Pair}
 %-----------------------------------------------------------------------------%
-\textit{Pair} baru yang dihasilkan untuk proses ini berjumlah sangat banyak, namun tidak semua \textit{pair} yang dihasilkan memenuhi relasi \textit{hypernym-hyponym}. Beberapa \textit{pair} kebetulan terekstrak akibat memenuhi \textit{pattern} lekscal yang sama dengan salah satu \textit{pattern} yang digunakan untuk proses \textit{pattern matching}. Untuk mengeliminasi data yang tidak diyakini benar, dilakukan validasi sederhana untuk setiap \textit{pair} yang dihasilkan. \textit{Pair} dinyatakan benar jika terdapat lebih dari satu \textit{pattern} yang mengekstrak \textit{pair} tersebut.
-
-Setelah mengeliminasi \textit{pair} yang hanya terbentuk dari satu \textit{pattern}, dilakukan pembobotan. Tidak semua \textit{pair} yang dihasilkan masuk ke dalam korpus kata relasi. Bobot satu \textit{pair} dihitung menggunakan rumus berikut. 
+\textit{Pair} baru yang dihasilkan untuk proses ini berjumlah sangat banyak, namun tidak semua \textit{pair} yang dihasilkan memenuhi relasi hipernim-hiponim. Beberapa \textit{pair} kebetulan terekstrak akibat memenuhi \textit{pattern} lekscal yang sama dengan salah satu \textitmemisahkan setiap yang digunakan untuk proses \textit{pattern matching}. Untuk mengeliminasi data yang tidak diyakini benar, dilakukan validasi sederhana untuk setiap \textit{pair} yang dihasilkan. \textit{Pair} dinyatakan benar jika terdapat lebih dari satu \textit{pattern} yang mengekstrak \textit{pair} berbasis Perl tersebut.program mengeliminasi \textit{pair} yang hanya terbentuk dari satu program dilakukan pembobotan. Tidak semua \textit{pair} yang dihasilkan masuk ke dalam direktori dalam korpus kata relasi. Bobo
+t satu \textit{pair} dihitung menggunakan rumus berikut. 
 \[ Bobot = (\frac{jumlah\,\,pattern\,\,pembentuk\,\,pair}{jumlah\,\,pattern\,\,digunakan} + similarity\,\,score)/2 \]
 \noindent Jika nilai bobot melebihi threshold, maka \textit{pair} dimasukan ke dalam korpus pasangan kata relasi.
 
 %-----------------------------------------------------------------------------%
 %\subsection{Pengurutan Pair}
 %-----------------------------------------------------------------------------%
-%Pada saat ditampilkan, \textit{pair} diurutkan untuk mengetahui \textit{pair} mana yang diyakini paling benar. Proses pengurutan dilakukan berdasarkan beberapa tahap, yaitu:
+%Pada saat ditampilkan, \textit{pair} diurutkan untuk mengetahui \textit{pair} mana yang diyakini paling benar. Proses pengurutan dilakukan berdasarkan beberapa tahap, yaitu 
 % Semakin besar jumlah \textit{pattern} unik yang menghasilkan \textit{pair}.
 % Semakin besar jumlah kalimat untuk yang menghasilkan \textit{pair}.
 
+Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
+Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut. evaluasi, dilakukan Word Embedding. Implementasinya menggunakan model Word2Vec berbasis Python. Proses ini dibuat secara otomatis dengan hanya mengmasukan dokumen Bahasa Indonesia berukuran besar. Dalam penelitianini, dokumen Bahasa Indoensia yang digunakan adalah korpus Wikipedia yang telah di proses.
 
-%-----------------------------------------------------------------------------%
-\subsection{Pemodelan Word Embedding}
-%-----------------------------------------------------------------------------%
-Untuk menambah fitur pada vektor \textit{pair} yang dapat menunjang proses evaluasi, dilakukan Word Embedding. Implementasinya menggunakan model Word2Vec berbasis Python. Proses ini dibuat secara otomatis dengan hanya mengmasukan dokumen Bahasa Indonesia berukuran besar. Dalam penelitian ini, dokumen Bahasa Indoensia yang digunakan adalah korpus Wikipedia yang telah di proses.
+Model dibuat menggunakan korpus Wikipedia yang telah melalui proses POS Tagging. Korpus tersebut diolah sedemikian sehingga kata-kata yang dianggap \textit{multi word}, memiliki kelas kata sama berurutan, digabung dengan simbol garis  awah ('\_'). Hal ini dilatarbelakangi atas hasil \textit{pair} yang banyak merupakan\textit{multi word}. Jika hal ini tidak dilakukan, maka akan banyak kata yang tidak ditemukan dalam \textit{dictionary} yang dihasilkan \textit{model word program
 
-Model dibuat menggunakan korpus Wikipedia yang telah melalui proses POS Tagging. Korpus tersebut diolah sedemikian sehingga kata-kata yang dianggap \textit{multi word}, memiliki kelas kata sama berurutan, digabung dengan simbol garis bawah ('\_'). Hal ini dilatarbelakangi atas hasil \textit{pair} yang banyak merupakan \textit{multi word}. Jika hal ini tidak dilakukan, maka akan banyak kata yang tidak ditemukan dalam \textit{dictionary} yang dihasilkan \textit{model word embedding}.
-
-Model yang terbentuk, digunakan untuk memberi nilai \textit{similarity} antara kata \textit{hypernym-hyponym} dalam satu \textit{pair}. Hal ini diharapkan dapat memberi informasi lebih mengenai kualitas \textit{pair} yang dihasilkan.
+Model yang berbasis Perl terbentuk, digunakan untuk memberi nilai \textit{similarity} antara kata hipernim-satu program}. Hal ini diharapkan dapat memberi informasi lebih dalam direktori mengenai kualitas \textitmemisahkan setiap
+ yang dihasilkan
+ .

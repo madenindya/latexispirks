@@ -62,6 +62,8 @@ Semantik adalah arti (\textit{sense}) dari suatu kata. Relasi semantik kata adal
 Kebutuhan menyimpan suatu korpus yang merupakan leksikal semantik resource. Informasi mengenai kata, makna, serta relasi di dalamnya tersebut perlu tersimpan secara baik sehingga dapat digunakan. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris telah membuat kamus digital yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya, namun masih ditemukan beberapa kekurangan dari WordNet Bahasa yang ada. 
 % TODO: tambahin disini
 
+Leksikal semantik resource yang terkenal diantaranya adalah kamus, thesaurus, ensiklopedia, dan wordnet. 
+
 %-----------------------------------------------------------------------------%
 \subsection{WordNet}
 %-----------------------------------------------------------------------------%
@@ -78,19 +80,20 @@ Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia m
 %-----------------------------------------------------------------------------%
 \subsection{Wikipedia}
 %-----------------------------------------------------------------------------%
-Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil kolaborasi berbagai penulis \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} yang dapat diakses dan diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, informasi yang dimuat dalam Wikipedia dibuat secara terstruktur dengan bahasa yang formal. Wikipedia juga memuat informasi umum terbaru \citep{arnold2014extracting}.
+Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil kolaborasi banyak penulis \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} dan dapat diakses serta diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, informasi yang dimuat dalam Wikipedia dibuat secara terstruktur dengan bahasa yang formal. Wikipedia juga memuat informasi umum terbaru \citep{arnold2014extracting}.
 
-Hingga Mei 2017, Wikipedia Bahasa Indonesia telah memuat lebih dari 400.000 artikel dari berbagai domain. Artikel-artikel yang disimpan dalam Wikipedia dapat diunduh secara gratis dalam bentuk \textit{dumps}\footnote{dumps.wikimedia.org} dengan format XML. Beberapa tipe \textit{dump} dapat dipilih, diantarnya adalah halaman seluruh artikel, halaman artikel beserta \textit{revision history}, daftar judul artikel, dan lainnya. Secara berkala, Wikimedia membuat \textit{dump} terhadap seluruh artikel terakhir yang disimpan untuk setiap bahasa. Pada situs yang menyediakan pengunduhan data Wikipedia, terdapat tanggal unik yang menyatakan tanggal terakhir data tersebut di-\textit{update}.
+Hingga Mei 2017, Wikipedia Bahasa Indonesia telah memuat lebih dari 400.000 artikel dari berbagai domain dan terus berkembang secara pesat. Artikel-artikel yang disimpan dalam Wikipedia dapat diunduh secara gratis dalam bentuk \textit{dumps}\footnote{dumps.wikimedia.org} dengan format XML. Beberapa tipe \textit{dump} yang dapat dipilih, diantarnya adalah halaman seluruh artikel, halaman artikel beserta \textit{revision history}, daftar judul artikel, dan lainnya. Secara berkala, Wikimedia membuat \textit{dump} terhadap seluruh artikel terakhir yang disimpan untuk setiap bahasa. Pada situs yang menyediakan pengunduhan data Wikipedia, terdapat tanggal unik yang menyatakan tanggal terakhir data tersebut di-\textit{update}.
 
 % wikipedia sebagai lexical semantic resource
-% TODO sebagai leksikal semantic resource gurevych: analyzung and accessing wiki as a lexical semantic resource
-Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai \textit{noun} umum. Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Selain itu, sudah banyak penelitian ekstraksi relasi semantik dengan metode pattern yang menggunakan artikel Wikipedia seperti penelitian \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. 
+Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai entitas leksikal. Kata-kata tersebut dapat ditemukan dalam berbagai leksikal semantik \textit{resource} yang sudah ada. \cite{zesch2007analyzing} melakukan penelitian yang membandingkan Wikipedia dengan leksikal semantik resource yang sudah ada seperti kamus, thesaurus, wordnet, dan ensiklopedia. Istilah-istilah yang ada dalam Wikipedia lebih mirip dengan ensiklopedia dibanding kamus, thesaurus, maupun wordnet karena memuat banyak kata benda (\textit{noun}) dan beberapa kata sifat (\textit{adjective}) maupun kata kerja (\textit{verb}). Selain itu, Wikipedia juga mengandung banyak kata yang merupakan \textit{named entity} atau \textit{domain specific terms}. Penelitian ini berfokus pada kata-kata yang merupakan kata benda, sehingga Wikipedia cocok digunakan. 
+
+Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Sudah banyak penelitian ekstraksi relasi semantik dengan metode \textit{pattern} yang menggunakan artikel Wikipedia seperti penelitian yang dilakukan oleh \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. Melihat banyaknya manfaat Wikipedia, diputuskan untuk menggunakan Wikipedia sebagai leksikal semantik \textit{resource} dalam penelitian ini. 
 
 
 %-----------------------------------------------------------------------------%
 \section{Relation Extraction}
 %-----------------------------------------------------------------------------%
-\textit{Relation extraction} adalah cabang dari \textit{Information Extraction} (IE) yang berfokus pada proses ekstraksi relasi antar kata. Proses ini berusaha mengekstrak informasi terstruktur dengan definisi yang diinginkan dari teks dokumen atau resource yang tidak terstruktur. Beberapa contoh penelitian ini seperti \textit{named entity recognition} (NER) yang mengetahui apakah suatu entitas adalah orang, organisasi, atau lokasi \citep{bikel1999algorithm}. 
+\textit{Relation extraction} adalah cabang dari \textit{Information Extraction} (IE) yang berfokus pada proses ekstraksi relasi antar kata. Proses ini berusaha mengekstrak informasi terstruktur dengan definisi yang diinginkan dari teks dokumen atau \textit{resource} yang tidak terstruktur. Beberapa contoh penelitian ini seperti \textit{named entity recognition} (NER) yang mengetahui apakah suatu entitas adalah orang, organisasi, atau lokasi \citep{bikel1999algorithm}. 
 
 %-----------------------------------------------------------------------------%
 \subsection{Semantic Relation Extraction}
@@ -123,9 +126,12 @@ Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus W
   \item Merepresentasikan relasi yang diinginkan sehingga hasil ekstraksi juga benar.
   \item Dapat dikenali tanpa membutuhkan pengetahuan sebelumnya sehingga dapat dibentuk dalam situasi apapun.
 \end{itemize}
+
 %-----------------------------------------------------------------------------%
 \subsection{Textual Pattern}
 %-----------------------------------------------------------------------------%
+\textit{Pattern} yang dibentuk mengandung tiga bagian penting, yaitu \textit{tag} hiponim, \textit{tag} hipernim, dan kata lainnya. \textit{Tag} hiponim-hipernim merepresentasikan letak kata yang merupakan kata hiponim-hipernim berada. Sementara kata lainnya adalah kata lainnya yang harus sama untuk proses \textit{pattern matching}. Sebagai contoh terdapat tekstual \textit{pattern} berikut `<hyponym> adalah <hypernym> yang'. \textit{Pattern} tersebut berarti kata sebelum kata `adalah' merupakan kata hiponim dan kata setelah kata `adalah' dan sebelum kata `yang' merupakan kata hipernim. Jika terdapat kalimat `harimau adalah kucing yang berukuran besar', maka `harimau' merupakan hiponim dan `kucing' merupakan hipernim. 
+
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Extraction}
 %-----------------------------------------------------------------------------%
