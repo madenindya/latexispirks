@@ -91,12 +91,13 @@ Sebagai contoh, terdapat pasangan relasi kata `(sepak bola;olahraga)' serta kali
 %-----------------------------------------------------------------------------%
 Setelah didapatkan kumpulan kalimat yang sudah diberi \textit{tag} hipernim dan hiponim, dicari barisan kata yang mirip dan dapat dijadikan sebuah \textit{pattern}. \textit{Pattern extraction} adalah proses untuk mendapatkan \textit{pattern} leksikal yang kemunculannya sering dalam korpus. Masukan dari proses ini adalah kalimat-kalimat Wikipedia yang telah diberi \textit{tag} hipernim dan hiponim. Tidak seluruh kata dalam kalimat digunakan untuk membentuk \textit{pattern} leksikal. Bagian dalam kalimat yang diperhatikan adalah kata diantara dua \textit{tag} hipernim-hiponim, $n$ kata sebelum \textit{tag} pertama, dan $n$ kata setelah \textit{tag} terakhir. Bagian kata yang diambil akan dimasukkan ke dalam \textit{pattern tree} untuk mengetahui kemunculannya yang paling sering. Seluruh \textit{pattern} direpresentasikan menjadi vektor dan dirutkan berdasarkan bobot tertingginya. Proses ini akan menghasilkan kumpulan \textit{pattern} unik yang terurut berdasarkan bobotnya. Dari \textit{pattern} unik tersebut, akan diambil sejumlah \textit{pattern} terbaik untuk kemudian digunakan sebagai dasar pembentukan \textit{pair} baru.
 
-Sebagai contoh, proses \textit{sentence tagging} menghasilkan tiga kalimat yang telah diberi \textit{tag} hipernim-hiponim. Kalimat berikut digunakan untuk mencari \texit{pattern} yang merepresentasikan relasi hipernim-hiponim.
+Sebagai contoh, proses \textit{sentence tagging} menghasilkan tiga kalimat yang telah diberi \textit{tag} hipernim-hiponim. Kalimat berikut digunakan untuk mencari \textit{pattern} yang merepresentasikan relasi hipernim-hiponim.
 \begin{itemize}
   \item <start> <hyponym>kelinci<hyponym> adalah <hypernym>binatang<hypernym> yang gemar memakan wortel . <end>
   \item <start> <hyponym>mobil<hyponym> adalah <hypernym>kendaaraan<hypernym> beroda empat . <end>
   \item <start> selain sepak bola, <hyponym>basket<hyponym> adalah <hypernym>olahraga<hypernym> yang disukai masyarakat . <end>
-\begin{end}
+\end{itemize}
+
 \noindent Dari kalimat di atas \textit{pattern} unik yang dihasilkan yaitu `<hyponym> adalah <hypernym>'.
 
 
@@ -108,11 +109,13 @@ Tujuan utama dari penelitian ini adalah membentuk korpus pasangan kata relasi, s
 \textit{Pattern matching} adalah proses mencocokan suatu \textit{pattern} ke dalam teks dokumen. Proses ini dilaksanakan untuk mendapatkan pasangan kata relasi (\textit{pair}) baru. Dua masukan utama untuk proses ini adalah pattern dan korpus Wikipedia \textit{pos tag}. Penggunaan korpus Wikipedia dengan \textit{pos tag} untuk membatasi \textit{pair} yang terekestrak hanya berasal dari kelas kata \textit{noun} atau \textit{proper noun}. Namun, tidak seluruh \textit{pair} yang dihasilkan benar memiliki relasi hipernim-hiponim. Untuk itu, dihitung nilai bobot untuk seluruh \textit{pair} yang dihasilkan. Nilai bobot digunakan untuk dibandingkan dengan nilai threshold yang didefinisikan. Hanya \textit{pair} yang bobotnya melebihi nilai \textit{threshold} yang dapat masuk ke korpus pasangan kata relasi.
 
 Sebagai contoh, terdapat \textit{pattern} leksikal `<hyponym> adalah <hypernym> yang'. Berikut adalah beberapa kalimat Wikipedia dengan \textit{postag}.
+
 \begin{itemize}
-  \item <start>_X sepak_NNP bola_NNP adalah_VB olahraga_NN paling_RB populer_JJ di_IN Britania_NNP ._Z <end>_X
-  \item <start>_X Berikut_VB adalah_VB daftar_NN penghargaan_NN yang_SC diberikan_VB ._Z <end>_X
-  \item <start>_X Gado-gado_NNP adalah_VB makanan_NN yang_SC berasal_VB dari_IN Betawi_NN ._Z <end>_X
-\begin{end}
+  \item <start>\_X sepak\_NNP bola\_NNP adalah\_VB olahraga\_NN paling\_RB populer\_JJ di\_IN Britania\_NNP .\_Z <end>\_X
+  \item <start>\_X Berikut\_VB adalah\_VB daftar\_NN penghargaan\_NN yang\_SC diberikan\_VB .\_Z <end>\_X
+  \item <start>\_X Gado-gado\_NNP adalah\_VB makanan\_NN yang\_SC berasal\_VB dari\_IN Betawi\_NN .\_Z <end>\_X
+\end{itemize}
+
 \textit{Pair} yang dihasilkan setelah melalui tahap \textit{pattern matching} hanya `(gado-gado;makanan)'. Pasangan kata `(berikut;daftar penghargaan)' tidak termasuk karena kata `berikut' bukan merupakan kata benda (\textit{noun}). Sementara walau `(sepak bola;olahraga)' adalah pasangan kata hipernim-hiponim yang benar, kalimat tersebut tidak cocok dengan \textit{pattern} leksikal yang diberikan.
 
 
@@ -123,7 +126,8 @@ Pembelajaran menggunakan pendekatan \textit{semi supervised learning} dilatarbel
 
 Pra-iterasi atay dapat disebut sebagai iterasi ke-0 adalah proses pembentukan \textit{pattern} pertama dengan memanfaatkan \textit{seed} yang berasal dari WordNet Bahasa. Tahap \textit{pre-processing} menghasilkan kumpulan \textit{seed} dan korpus kalimat Wikipedia. \textit{Seed} digunakan untuk \textit{tagging} kalimat Wikipedia sehingga menghasilkan kalimat yang telah di-\textit{tag} hipernim-hiponim. Kalimat-kalimat tersebut digunakan untuk membentuk \textit{pattern} unik yang digunakan untuk memulai iterasi \textit{semi supervised}. \textit{Pattern} yang dibentuk dari \textit{seed} lema sama maupun \textit{strict} digabung dan diurutkan berdasarkan bobot. Lima \textit{pattern} terbaik diambil untuk selanjutnya digunakan dalam proses ekstraksi \textit{pair}. Sementara \textit{seed} yang membentuk kelima \textit{pattern} tersebut langsung dimasukkan ke dalam korpus pasangan relasi kata. Hal tersebut guna memfilter \textit{seed} salah yang terbentuk akibat \textit{error} dari \textit{resource} WordNet Bahasa.
 
-Iteriasi pertama dimulai dengan mengekstraksi \texti{pair} menggunakan kelima \textit{pattern} terbaik. \textit{Pair} yang dihasilkan dapat direpresentasikan ke dalam bentuk vektor. Nilai-nilai dalam vektor \textit{pair} digunakan untuk menghitung bobot suatu \textit{pair}. Seluruh \textit{pair} yang nilai bobotnya melebihi \textit{threshold} bergabung dengan \texit{pair} dalam korpus pasangan kata relasi. Iterasi kedua hingga selanjutnya dimulai dengan \textit{sentence tagging} menggunakan korpus pasangan kata relasi sebagai \textit{seed}, kemudian dilanjutkan dengan proses \textit{pattern extraction}. \textit{Pattern} yang dihasilkan akan digabung dengan seluruh \textit{pattern} lama kemudian diurutkan. Seperti pada metode \textit{Basilisk}, jumlah \textit{pattern} yang digunakan pada iterasi berikutnya akan bertambah. Satu \textit{pattern} terbaik dari hasil pengurutan bergabung dengan \textit{pattern} terpilih lama untuk digunakan dalam proses \textit{pattern matching}. Hal ini membuka kemungkinan adanya \textit{pair} baru terekstrak. Sama seperti proses sebelumnya, \textit{pair} yang bobotnya melebihi nilai \textit{threshold} digabung ke dalam korpus pasangan kata relasi.
+Iteriasi pertama dimulai dengan mengekstraksi \textit{pair} menggunakan kelima \textit{pattern} terbaik. \textit{Pair} yang dihasilkan dapat direpresentasikan ke dalam bentuk vektor. Nilai-nilai dalam vektor \textit{pair} digunakan untuk menghitung bobot suatu \textit{pair}. Seluruh \textit{pair} yang nilai bobotnya melebihi \textit{threshold} bergabung dengan \textit{pair} dalam korpus pasangan kata relasi. Iterasi kedua hingga selanjutnya dimulai dengan \textit{sentence tagging} menggunakan korpus pasangan kata relasi sebagai \textit{seed}, kemudian dilanjutkan dengan proses \textit{pattern extraction}. \textit{Pattern} yang dihasilkan akan digabung dengan seluruh \textit{pattern} lama kemudian diurutkan. Seperti pada metode \textit{Basilisk}, jumlah \textit{pattern} yang digunakan pada iterasi berikutnya akan bertambah. Satu \textit{pattern} terbaik dari hasil pengurutan bergabung dengan \textit{pattern} terpilih lama untuk digunakan dalam proses \textit{pattern matching}. Hal ini membuka kemungkinan adanya \textit{pair} baru terekst
+rak. Sama seperti proses sebelumnya, \textit{pair} yang bobotnya melebihi nilai \textit{threshold} digabung ke dalam \noindent pasangan kata relasi.
 
 Iterasi dilakukan hingga korpus pasangan kata relasi jenuh atau dapat dikatakan \textit{pair} baru yang masuk ke dalam korpus berjumlah sedikit. Pada penelitian ini, jika \textit{pair} baru berjumlah kurang dari lima puluh maka iterasi akan berhenti. Evaluasi \textit{pattern} dan \textit{pair} dilakukan secara kolektif diakhir eksperimen. Anotator melakukan evaluasi secara manual untuk mengetahui kualitas \textit{pattern} dan \textit{pair} yang dihasilkan.
 
