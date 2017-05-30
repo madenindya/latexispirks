@@ -98,7 +98,7 @@ Sebagai contoh, proses \textit{sentence tagging} menghasilkan tiga kalimat yang 
   \item <start> selain sepak bola, <hyponym>basket<hyponym> adalah <hypernym>olahraga<hypernym> yang disukai masyarakat . <end>
 \end{itemize}
 
-\noindent Dari kalimat di atas \textit{pattern} unik yang dihasilkan yaitu `<hyponym> adalah <hypernym>'.
+\noindent Dari kalimat di atas \textit{pattern} unik yang dihasilkan yaitu `<hyponym> adalah <hypernym>'. Lebih detil tahapan pembentukan \textit{pattern} dapat dilihat pada bab 4.4.
 
 
 %-----------------------------------------------------------------------------%
@@ -116,7 +116,7 @@ Sebagai contoh, terdapat \textit{pattern} leksikal `<hyponym> adalah <hypernym> 
   \item <start>\_X Gado-gado\_NNP adalah\_VB makanan\_NN yang\_SC berasal\_VB dari\_IN Betawi\_NN .\_Z <end>\_X
 \end{itemize}
 
-\textit{Pair} yang dihasilkan setelah melalui tahap \textit{pattern matching} hanya `(gado-gado;makanan)'. Pasangan kata `(berikut;daftar penghargaan)' tidak termasuk karena kata `berikut' bukan merupakan kata benda (\textit{noun}). Sementara walau `(sepak bola;olahraga)' adalah pasangan kata hipernim-hiponim yang benar, kalimat tersebut tidak cocok dengan \textit{pattern} leksikal yang diberikan.
+\textit{Pair} yang dihasilkan setelah melalui tahap \textit{pattern matching} hanya `(gado-gado;makanan)'. Pasangan kata `(berikut;daftar penghargaan)' tidak termasuk karena kata `berikut' bukan merupakan kata benda (\textit{noun}). Sementara walau `(sepak bola;olahraga)' adalah pasangan kata hipernim-hiponim yang benar, kalimat tersebut tidak cocok dengan \textit{pattern} leksikal yang diberikan menyebabkan \textit{pair} tidak terekstrak.
 
 
 %-----------------------------------------------------------------------------%

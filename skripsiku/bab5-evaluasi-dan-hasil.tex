@@ -71,7 +71,7 @@ Walau sudah melakukan proses filterisasi sebagai upaya mengurangi \textit{error}
 
 
 %-----------------------------------------------------------------------------%
-\section{Pembentukan Pattern untuk Iterasi Pertama}
+\section{Pembentukan Pattern Pertama}
 %-----------------------------------------------------------------------------%
 Iterasi pertama untuk seluruh percobaan selalu menggunakan \textit{seed} diatas, sehingga hasil untuk proses pembentukan \textit{pattern} sama. Berikut adalah detil hasil untuk \textit{sentence tagging} dan \textit{pattern extraction} pada iterasi pertama.
 
@@ -109,6 +109,8 @@ Kedua korpus kalimat yang masing-masing menghasilkan daftar \textit{pattern}. Ke
   \end{tabular}
 \end{table}
 
+Kelima \textit{pattern} tersebut dibangun dengan total 140 seed. Dari 140 seed yang merepresentasikan kelima \textit{pattern}, dicari nilai akurasinya. Diambil 20 pair secara acak sehingga satu sampel merepresentasikan 7 data asli, kemudian pair tersebut dianotasi secara manual oleh tiga anotator. Total sampel yang benar adalah 18 data, sehingga dapat dikatakan bahwa akurasi pair pertama yang masuk ke dalam korpus pasangan kata relasi adalah 0.9. Jika dilihat dari keseluruhan data, masih terdapat 14 pair yang salah namun masuk ke dalam pasangan kata relasi.
+
 
 %-----------------------------------------------------------------------------%
 \section{Hasil Eksperimen}
@@ -118,19 +120,50 @@ Bagian ini akan memaparkan penjelasan parameter untuk setiap eksperimen yang tel
 %-----------------------------------------------------------------------------%
 \subsection{Eksperimen 1}
 %-----------------------------------------------------------------------------%
-Eksperimen pertama dilakukan dengan nilai \textit{threshold} untuk filterisasi \textit{pair} baru sebesar 0.6. Tabel \ref{table:eksp1} memaparkan jumlah \textit{pattern}, \textit{pattern} baru, total \textit{pair} hasil ekstraksi, dan total korpus pasangan kata relasi yang dihasilkan untuk setiap iterasi.
+Eksperimen pertama dilakukan dengan nilai \textit{threshold} untuk filterisasi \textit{pair} baru sebesar 0.6. Percobaan pertama menerima seluruh kata, baik yang merupakan \textit{multi token} maupun \textit{single token}. Tabel \ref{table:eksp1-pattern} menampilkan total \textit{pattern} yang dihasilkan dan digunakan untuk setiap iterasi. Sementara tabel \ref{table:eksp1-pair} menampilkan rincian jumlah \textit{pair} yang dihasilkan dan diterima untuk setiap iterasi.
+
 \begin{table}
   \centering
-  \caption{Hasil Eksperimen 1}
-  \label{table:eksp1}
-  \begin{tabular}{|c|m{14em}|m{4em}|m{4em}|m{4em}|}
-    \hline
-      No. & Pattern Baru Terpilih & Total Pattern & Total Pair yang Dihasilkan & Korpus Pasangan Kata Relasi \\ \hline
-      1.  &                                            & 106  &  82409   &  939 \\ \hline
-      2.  & <start> <hyponym> merupakan <hypernym>     & 347  &  104389  &  1255 \\ \hline
-      3.  & <hyponym> merupakan <hypernym> yang        & 395  &  108397  &  1430 \\ \hline
-      4.  & <hypernym> atau <hyponym>                  & 425  &  108542  &  1432 \\ \hline
-  \end{tabular}
+  \caption{Pattern Hasil Eksperimen 1}
+  \label{table:eksp1-pattern}
+  \begin{tabular}{|c|c|c|}
+  \hline
+  Iterasi ke- & Total pattern & Pattern untuk ekstraksi                 \\ \hline
+  1           & 106           & Pattern utama                           \\ \hline
+  2           & 347           & <start> <hyponym> merupakan <hypernym>  \\ \hline
+  3           & 395           & <hyponym> merupakan <hypernym> yang     \\ \hline
+  4           & 425           & <hypernym> atau <hyponym>               \\ \hline
+  \end{tabular} 
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Pair Hasil Eksperimen 1}
+  \label{table:eksp1-pair}
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  Iterasi ke-  & Total Pair & Pair baru & Korpus Pasangan kata relasi \\ \hline
+  1            & 82409      & 799       & 939  \\ \hline
+  2            & 104389     & 316       & 1255 \\ \hline
+  3            & 108397     & 175       & 1430 \\ \hline
+  4            & 108542     & 2         & 1432 \\ \hline
+  \end{tabular} 
+\end{table}
+
+\noindent \textit{Pair} yang dihasilkan dicari nilai akurasinya dengan mengambil sampel secara \textit{random}. Sampel tersebut kemudian dianotasi secara manual oleh anotator. Tabel memaparkan nilai akurasi \textit{pair} untuk setiap iterasi.
+
+\begin{table}
+  \centering
+  \caption{Akurasi Eksperimen 1}
+  \label{table:eksp1-akurasi}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Iterasi ke- & Sampel baru & Sampel benar & Akurasi sampel baru & Akurasi total \\ \hline
+  1           & 168         & 133          & 0.79                & 0.8 \\ \hline
+  2           & 59          & 45           & 0.76                & 0.79 \\ \hline
+  3           & 40          & 36           & 0.9                 & 0.81 \\ \hline
+  4           & 2           & 1            & 0.5                 & 0.81 \\ \hline
+  \end{tabular} 
 \end{table}
 
 \noindent Jumlah \textit{pair} yang nilainya melebihi \textit{threshold} dapat dikatakan sedikit jika dibandingkan dengan seluruh \textit{pair} yang terekstrak. 
@@ -138,19 +171,50 @@ Eksperimen pertama dilakukan dengan nilai \textit{threshold} untuk filterisasi \
 %-----------------------------------------------------------------------------%
 \subsection{Eksperimen 2}
 %-----------------------------------------------------------------------------%
-Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka diputuskan untuk menurunkan sedikit nilai \textit{threshold}. Nilai \textit{threshold} untuk filterisasi \textit{pair} baru menjadi sebesar 0.55. Tabel \ref{table:eksp2} memaparkan hasil dari eksperimen kedua.
+Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka diputuskan untuk menurunkan sedikit nilai \textit{threshold}. Nilai \textit{threshold} untuk filterisasi \textit{pair} baru menjadi sebesar 0.55. Tabel \ref{table:eksp2-pattern} dan \ref{table:eksp2-pair} memaparkan hasil dari eksperimen kedua.
+
 \begin{table}
   \centering
-  \caption{Hasil Eksperimen 2}
-  \label{table:eksp2}
-  \begin{tabular}{|c|m{14em}|m{4em}|m{4em}|m{4em}|}
-    \hline
-      No. & Pattern Baru Terpilih & Total Pattern & Total Pair yang Dihasilkan & Korpus Pasangan Kata Relasi \\ \hline
-      1.  &                                            & 106  &  82409   &  2193  \\ \hline
-      2.  & <start> <hyponym> merupakan <hypernym>     & 699  &  104389  &  3071 \\ \hline
-      3.  & <hyponym> merupakan <hypernym> yang        & 791  &  108397  &  3484 \\ \hline
-      4.  & <hyponym> menjadi <hypernym>               & 842  &  108737  &  3493 \\ \hline
-  \end{tabular}
+  \caption{Pattern Hasil Eksperimen 2}
+  \label{table:eksp2-pattern}
+  \begin{tabular}{|c|c|c|}
+  \hline
+    Iterasi ke- & Total pattern & Pattern baru terpilih \\ \hline
+    1 & 106 & Pattern utama \\ \hline
+    2 & 699 & <start> <hyponym> merupakan <hypernym> \\ \hline
+    3 & 791 & <hyponym> merupakan <hypernym> yang \\ \hline
+    4 & 842 & <hyponym> menjadi <hypernym> \\ \hline
+  \end{tabular} 
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Pair Hasil Eksperimen 2}
+  \label{table:eksp2-pair}
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  Iterasi ke-  & Total Pair & Pair baru & Korpus Pasangan kata relasi \\ \hline
+  1 & 82409 & 2053 & 2193 \\ \hline
+  2 & 104389 & 878 & 3071 \\ \hline
+  3 & 108397 & 413 & 3484 \\ \hline
+  4 & 108737 & 9 & 3493 \\ \hline
+  \end{tabular} 
+\end{table}
+
+\noindent Dari \textit{pair} yang dihasilkan, tabel \ref{table:eksp2-akurasi} menunjukan nilai akurasinya.
+
+\begin{table}
+  \centering
+  \caption{Akurasi Eksperimen 2}
+  \label{table:eksp2-akurasi}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Iterasi ke- & Sampel baru & Sampel benar & Akurasi sampel baru & Akurasi total \\ \hline
+  1 & 308 & 257 & 0.83 & 0.84 \\ \hline
+  2 & 129 & 106 & 0.82 & 0.83 \\ \hline
+  3 & 45 & 37 & 0.82 & 0.83 \\ \hline
+  4 & 9 & 9 & 1 & 0.84 \\ \hline
+  \end{tabular} 
 \end{table}
 
 \noindent Jika dibandingkan dengan eksperiment pertama, jumlah \textit{pair} yang nilainya melebihi \textit{threshold} bertambah hingga dua kali dari sebelumnya walaupun selisih nilai \textit{threshold} hanya 0.05. Ini berarti banyak \textit{pair} yang nilai bobotnya dekat dengan nilai batas tersebut. Jika dilihat dari total \textit{pair} yang diekstrak, hingga iterasi ke-3 jumlahnya sama karena \textit{pattern} yang digunakan juga sama. Pada iterasi ke-4 dimana \textit{pattern} eksperimen ke-1 dan ke-2 diekstrak total \textit{pair} berbeda.
@@ -159,16 +223,42 @@ Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka 
 \subsection{Eksperimen 3}
 %-----------------------------------------------------------------------------%
 Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \textit{pair} yang kata \textit{hypernym}-nya adalah \textit{class} sementara kata \textit{hyponym}-nya adalah \textit{instance}. Untuk relasi semantik \textit{hypernym-hyponym} yang lebih umum, hubungan antar kata yang lebih diinginkan adalah \textit{class-class}. Untuk pasangan kata yang bertipe \textit{class-class} lebih banyak dijumpai jika kedua kata merupakan \textit{single word}. Selain it, pembentukan \textit{multi word} yang dilakukan belum sepenuhnya baik karena masih banyak kata yang kelebihan token kata. Untuk itu, dicoba eksperimen yang hanya mengekstrak \textit{pair} yang kedua katanya adalah \textit{single word}. Untuk eksperimen ini, menggunakan \textit{threshold} sebesar 0.55.
+
 \begin{table}
   \centering
-  \caption{Hasil Eksperimen 3}
-  \label{table:eksp3}
-  \begin{tabular}{|c|m{14em}|m{4em}|m{4em}|m{4em}|}
-    \hline
-      No. & Pattern Baru Terpilih & Total Pattern & Total Pair yang Dihasilkan & Korpus Pasangan Kata Relasi \\ \hline
-      1.  &                                            & 106  &  10267   &  438  \\ \hline
-      2.  & <hyponym> adalah sebuah <hypernym>         & 437  &  11262   &  459 \\ \hline
-  \end{tabular}
+  \caption{Pattern Hasil Eksperimen 3}
+  \label{table:eksp3-pattern}
+  \begin{tabular}{|c|c|c|}
+  \hline
+    1 & 106 & Pattern utama \\ \hline
+    2 & 437 & <hyponym> adalah sebuah <hypernym> \\ \hline
+  \end{tabular} 
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Pair Hasil Eksperimen 3}
+  \label{table:eksp3-pair}
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  Iterasi ke-  & Total Pair & Pair baru & Korpus Pasangan kata relasi \\ \hline
+  1 & 10267 & 298 & 438 \\ \hline
+  2 & 11262 & 21 & 459 \\ \hline
+  \end{tabular} 
+\end{table}
+
+\noindent Hasil perhitungan akurasi untuk eksperimen ini dapat dilihat pada tabel \ref{table:eksp3-akurasi}.
+
+\begin{table}
+  \centering
+  \caption{Akurasi Eksperimen 3}
+  \label{table:eksp3-akurasi}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Iterasi ke- & Sampel baru & Sampel benar & Akurasi sampel baru & Akurasi total \\ \hline
+  1 & 78 & 67 & 0.86 & 0.87 \\ \hline
+  2 & 5 & 4 & 0.8 & 0.86 \\ \hline
+  \end{tabular} 
 \end{table}
 
 \noindent Untuk \textit{pair} yang hanya \textit{single word} sudah pasti jumlahnya jauh lebih sedikit dibanding jika dibanding keseluruhan. Jika dibandingkan dengan dua eksperimen sebelumnya, total \textit{pattern} yang dihasilkan juga jauh lebih sedikit. Dapat dikatakan bahwa jumlah pasangan kata yang digunakan mempengaruhi jumlah \textit{pattern} yang dihasilkan, dimana semakin banyak jumlah pasangan kata relasi maka semakin banyak pula \textit{pattern} yang dihasilkan.
