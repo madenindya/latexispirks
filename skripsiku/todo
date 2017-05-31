@@ -18,19 +18,19 @@ dalam bahasa wordnet belum banyak. dan tunjukan yang ngaco dan bahasa yang salah
 singgung sekilasi mengenai pattern matching
 
 
-================================================================
+======================================================================================================================
 rumusan masalah:
 - bagaimana cara membangun korpus, cepat dihilangkan
 - seberapa baik dikenali dengan pendekatan pattern
 
-================================================================
+======================================================================================================================
 ruang lingkup:
 - single token, multi token, frase 
 
 RANCANGAN METODOLOGI --> RANCANGAN PENELITIAN
 1.5 metodologi
 
-=================================================================
+======================================================================================================================
 bab 2
 - leksikal semantik (belajar ttg sense)
     di nlp ada tingkatan word, leksikal, semantik. yang berkaitan langsung dengan word = leksikal semantik. relasi kata. ada di wordnet, kasih footnote di wordnet.
@@ -67,7 +67,7 @@ bab 2
 
 // subbab harus setara, semua harus pendekatan. algoritma 
 // analisis keunggulannya
-================================================================
+======================================================================================================================
 bab 3: rancangan penelitian
 3.1 -> arsitektur penelitan == pembahasan umum; penulis mengusulkan rancangan sebagai berikut. & 3.2
 evaluasi gak perlu ditulis -> bercerita di metodologi penelitian
@@ -85,7 +85,7 @@ metode evaluasi
 
 penjelasan detail cycle semi supervised-nyaaaa
 
-================================================================
+======================================================================================================================
 bab 4.
 gambar jangan di awal atau akhir!!!!
 dikatakan masih nyambung dengan yang di bab 3
@@ -98,7 +98,7 @@ sentence tagging penjelasan di bab 3
 
 pembentukan pattern digabung aja
 
-================================================================
+======================================================================================================================
 
 tools2 pake footnote
 
@@ -130,3 +130,90 @@ contoh
 bab awal dikasih contoh biar tau mau ngapain
 
 referensi / rujukan diperiksa :O
+
+
+
+
+======================================================================================================================
+
+5.1 & 5.2 digabung
+kalimat yang udah di ekstrak
+
+% yang berhasil di tag
+
+line graph -> akurasi sampel baru & total
+jumlah sampel & akurasi
+
+
+evakuasi pattern dari pair
+
+- pattern yang sangat jelek muncul?
+- 4 iterasi, pattern yang jelek? mengekestrak banyak yang salah
+- pattern baik, permutasinya bagaimana? yang baik seberapa baik?
+
+
+
+permutasi
+- permutasi pattern abc (ranking)
+
+
+filtering threshold & skenario single token/multi
+
+
+dari 3 skenario berapa --> akurasi terakhir saja
+
+
+seberapa banyak kandidat yang masuk dari pair baru.. bisa jadi dari pattern yang lama..
+
+
+skenario dan jumlah hasil
+
+fokus mengevaluasi per pattern. seberapa baik pair yang dihasilkan
+
+5.5 Eksperimen
+- skenario
+- hasil
+- belum berbicara akurasi
+- melihat beberapa aspek threshold, single/multi token, stopping condition
+
+5.6 hasil evaluasi pair (true positif/false positf)
+-1 anotasi pair anotator
+    - akurasi -> sudut pandang per pattern
+-2 evaluasi pair, anotasi untuk mengevaluasi pair
+-3 analisis kualitatif
+---- pattern yang dihasilkan banyak skenario baik
+
+5.7 pattern
+-1 anotasi
+    - akurasi
+-2 evalusi
+-3 analisis
+
+- kappa
+- confussion matrix
+- form questioner, menurut anotator kenapa dianggap 3 & alasananya
+
+5.8 evaluasi berdasarkan skenario
+- apakah filtering berpengaruh --> urutan pattern
+    iterasi dikit, tidak kelihatan pengaruhnya
+    bergeser dikit (threshold) tidak berefek 
+- single/token
+- stopping condition -> seberapa jauh penurunan akurasi
+- skenario mengakibatka hasil tersebut
+- aristektur semi supervised 
+
+metodologi anotasi -> bab 3
+
+stopping condition -> threshold -> single/mutli
+
+kapppa -> seberapa sulit task tersebut di lakukan oleh anotatro
+-> memperbaiki kualitas
+
+
+
+bab 1 belum terjawab,
+bab 6 terjawab
+
+kesimpulan: analisis dan hasil
+
+abstrak: 2-3 paragraf. mencakup kesuluruhan laporan sampai hasil dan rangkuman. ada latar belakang
