@@ -166,3 +166,15 @@ Evaluasi \textit{pair} dilakukan menggunakan teknik \textit{random sampling}. Se
 
 % TODO: tambahin penjelasan instance-class di bab 2 !!!
 Dari setiap nilai anotasi, \textit{pair} dimasukan ke dalam kategori yang lebih spesifik. Untuk data yang dianotasi benar, \textit{pair} dapat dimasukan ke dalam dua kategori yaitu \textit{instance-class} atau \textit{class-class}. \textit{pair} dimasukkan ke dalam kategori instanace-class jika kata hyponym merupakan suatu instance, sementara kategori class-class jika kata hyponym merupakan suatu class. Untuk data bernilai salah, dapat dimasukan ke kategori salah tanpa hubungan, salah akibat posisi hiponim-hipernim terbalik (\textit{false posistion}), atau salah dengan relasi semantik lain (\textit{false relation}). Kategori salah akibat posisi hiponim-hipernim terbalik terjadi saat kedua kata yang terekstrak benar memiliki relasi semantik hiponim-hipernim namun kata yang menempati posisi hiponim seharusnya adalah hipernim, begitu pula sebaliknya. Suatu \textit{pair} dapat digolongkan ke dalam kategori salah dengan relasi semantik lain jika kedua kedua kata dalam \textit{pair} tidak berhubungan hipernim-hiponim, namun memiliki relasi lain. Dalam penelitian ini, relasi lain hanya khusus dalam relasi semantik sinonim, antonim, atau meronym-holonym.
+
+Akurasi \textit{pair} dihitung dengan melihat label benar atau salah yang diberikan oleh anotator. Jika terdapat perbedaan anotasi maka dilakukan \textit{voting} untuk mengetahui label apa yang dipilih. Terdapat dua akurasi yang akan dihitung untuk setiap iterasi yaitu akurasi sampel dan akurasi total. Setiap iterasi menghasilkan \textit{pair} baru dan dari \textit{pair} baru tersebut diambil sampel untuk dianotasi. Nilai akurasi sampel adalah perbandingan antara data sampel baru benar dengan total data sampel baru. 
+
+\begin{equation}
+akurasi\,\,sampel = \frac{jumlah\,\,data\,\,sampel\,\,baru\,\,benar}{jumlah\,\,sampel\,\,baru}
+\end{equation}
+
+\noindent Sementara, akurasi total adalah perbandingan antara total data sampel bener dengan total data sampel.
+
+\begin{equation}
+akurasi\,\,sampel = \frac{jumlah\,\,total\,\,sampel\,\,benar}{jumlah\,\,total\,\,sampel}
+\end{equation}
