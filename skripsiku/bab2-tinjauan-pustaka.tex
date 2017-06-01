@@ -132,6 +132,7 @@ Penelitian yang dilakukan oleh \cite{ruiz2005automatic}, memanfaatkan WordNet da
 Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus Wikipedia dan menggunakan \textit{pattern}. Selain \textit{hypernym-hyponymy} dan \textit{holonym-meronymy}, penelitian ini juga mengidentifikasi relasi sinonim. Kalimat definisi pada Wikipedia di-\textit{parse} menggunakan \textit{Finite State Machine} (FSM) dan konsep-konsep baru diekstrak menggunakan \textit{pattern} yang telah didefinisikan. Penelitian lain yang dilakukan oleh \cite{sumida2008hacking} memanfaatkan struktur internal Wikipedia dalam mengekstraksi \textit{pattern} relasi untuk Bahasa Jepang. 
 
 
+%TODO PENTING BANGET: HARUS DITAMBAHIN
 %-----------------------------------------------------------------------------%
 \section{Pattern Analysis}
 %-----------------------------------------------------------------------------%
@@ -154,17 +155,18 @@ Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus W
 %-----------------------------------------------------------------------------%
 \textit{Pattern extraction} atau \textit{pattern recognition} adalah salah satu cabang dalam \textit{machine learning} yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. Untuk \textit{textual pattern}, proses pembentukan \textit{pattern} dilakukan dengan mencari kemiripan diantara suatu kumpulan data yang jumlahnya banyak. \textit{Sequence} kata yang sering muncul dalam berbagai kalimat dapat diidentifikasi sebagai sebuah \textit{pattern}. Penelitian ini memanfaatkan struktur data \textit{tree} dalam pembentukan \textit{pattern} yang secara detil dapat dilihat pada bagian \ref{sec:trie}. Suatu kalimat ditokenisasi dan setiap katanya membentuk \textit{node} dalam \textit{tree}. \textit{Sequence} kata yang sering muncul menjadi \textit{pattern} terbaik untuk dokumen yang sedang diamati.
 
-%TODO PENTING BANGET: HARUS DITAMBAHIN
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Matching}
 %-----------------------------------------------------------------------------%
 \textit{Pattern matching} adalah proses untuk mencocokkan suatu \textit{pattern} terhadap kumpulan data yang belum dianotasi. Jika diberikan sebuah \textit{tekstual pattern}, dicocokan untuk setiap \textit{sequnce} kata terhadap kalimat yang diamati. Jika terdapat satu token dalam \textit{sequence pattern} yang tidak sama dengan \textit{sequence} kalimat, maka proses pencarian dapat dikatakan tidak berhasil. Penelitian ini memanfaatkan representasi \textit{suffix tree} untuk mempermudah proses pencarian. Lebih detil mengenai pembuatan \textit{suffix tree}, dapat dilihat pada bagian \ref{sec:suffix-tree}.
 
 
+%TODO PENTING BANGET: HARUS DITAMBAHIN
 %-----------------------------------------------------------------------------%
 \section{Tree Representation} 
 %-----------------------------------------------------------------------------%
-Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung \textit{sequnce} tertentu. Pada penelitian ini, \textit{pattern} yang dihasilkan adalah \textit{pattern} leksikal yang merupakan deretan kata-kata. Algoritma seperti \textit{standard trie} dan \textit{suffix tree} dimanfaatkan secara berurut untuk proses \textit{pattern extraction} dan \textit{matching}.
+Dalam penelitian ini, segala hal yang berkatan dengan proses pembuatan \textit{pattern} maupun ekstraksi \textit{pair} baru yang menggunakan metode \textit{pattern matching}, memanfaatkan struktur data \textit{tree}. Struktu data tersebut mempermudah proses pembangunan maupun pencarian \textit{pattern tekstual} karena setiap kata dapat dianggap sebagai \textit{node}. Pencocokan \textit{sequence} kata dilakukan dengan menelusuri \textit{path} dari \textit{root note} dalam \textit{tree}. Dua tipe \textit{tree} yang menjadi fokus penelitian adalah \textit{standard trie} dan \textit{suffix tree}.
+% Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung \textit{sequnce} tertentu. Pada penelitian ini, \textit{pattern} yang dihasilkan adalah \textit{pattern} leksikal yang merupakan deretan kata-kata. Algoritma seperti \textit{standard trie} dan \textit{suffix tree} dimanfaatkan secara berurut untuk proses \textit{pattern extraction} dan \textit{matching}.
 
 %-----------------------------------------------------------------------------%
 \subsection{Standard Trie} \label{sec:trie}
@@ -202,7 +204,7 @@ Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} berikut
 
 \noindent Dari contoh di atas, proses pencarian dapat dijalankan dengan cepat karena seluruh \textit{suffix} telah didaftarkan ke dalam \textit{tree}. Dari \textit{query} yang ingin dicari, dapat langsung dicocokan setiap karakternya.
 
-%-----------------------------------------------------------------------------%
+
 %-----------------------------------------------------------------------------%
 \section{Semi Supervised}
 %-----------------------------------------------------------------------------%
@@ -245,7 +247,6 @@ Kategori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} membe
 
 
 %-----------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------%
 \section{Evaluasi}
 %-----------------------------------------------------------------------------%
 Evaluasi dilakukan untuk mengetahui kebaikan hasil penelitian. Evaluasi dapat dilakukan dengan mengukur akurasi data yang dihasilkan. Akurasi adalah nilai perbandingan antara jumlah data yang benar dengan jumlah seluruh data (Manning). 
@@ -285,7 +286,7 @@ Nilai kappa ($\kappa$) merepresentasikan tingkat persetujuan antar anotator. Kap
   \item $P(E)$ adalah proporsi penilaian yang kebetulan
 \end{itemize}
 
-\cite{landis1977measurement} mendefiniskan tingkat persetujuan berdasarkan nilai Kappa yang diperoleh. 
+\noindent \cite{landis1977measurement} mendefiniskan tingkat persetujuan berdasarkan nilai Kappa yang diperoleh. 
 \begin{table}
   \centering
     \caption{Skala pengukuran Kappa}
