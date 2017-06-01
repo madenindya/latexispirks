@@ -8,9 +8,9 @@ Pada bab ini, dijelaskan mengenai studi literatur yang dilakukan. Studi literatu
 %-----------------------------------------------------------------------------%
 \section{Leksikal Semantik}
 %-----------------------------------------------------------------------------%
-Dalam \textit{natural language processing}, terdapat beberapa tingkatan untuk merepresentasikan suatu informasi yaitu kata, sintak, dan semantik. Kata adalah kumpulan simbol yang memiliki arti (\textit{sense}) tertentu. Sintak berarti struktur dari kata yang bila digabung akan membentuk arti baru. Semenatara semantik berarti arti atau makna dari kata itu sendiri. Suatu kata tidak hanya mengandung makna namun juga relasi antar kata serta struktur internal. Studi yang mempelajari sistematik struktur serta relasi semantik disebut Leksikal Semantik \citep{jurafsky2000speech}. % TODO: ask this. Too faguee
+Dalam \textit{natural language processing}, terdapat beberapa tingkatan untuk merepresentasikan suatu informasi yaitu kata, sintak, dan semantik. Kata adalah kumpulan simbol yang memiliki arti (\textit{sense}) tertentu. Sintak berarti struktur dari kata yang bila digabung akan membentuk arti baru. Semenatara semantik berarti arti atau makna dari kata itu sendiri. Suatu kata tidak hanya mengandung makna namun juga relasi antar kata serta struktur internal. Leksikal semantik mempelajari arti semantik, sistematik struktur, serta relasi semantik sebuah kata \citep{jurafsky2000speech}. % TODO: ask this. Too faguee
 
-Sebelum melangkah lebih lanjut, perlu diketahui beberapa istilah dasar dalam bidang ini. Kata dapat disebut sebagai lexeme yang mengandung suatu bentuk orthographic dan arti di dalamnya. Kumpulan lexeme tersimpan dalam lexicon atau dapat juga dikenal sebagai kamus. Arti dari suatu lexeme sebenarnya merupakan rangkaian lexeme lain yang mendeskripsikannya.
+Sebelum melangkah lebih lanjut, perlu diketahui beberapa istilah dasar dalam bidang ini. Kata dapat disebut juga sebagai lema atau bentuk dasar sebuah kata yang dapat menyimpan berbagai \textit{sense}. Lexeme adalah representasi abstrak dari sebuah kata yang bentuk orthographic, menyimpan kelas kata, dan arti di dalamnya. Kumpulan lexeme yang berukuran berhingga tersimpan dalam \textit{lexicon} atau dapat juga dikenal sebagai kamus. 
 
 Bahasa Inggris memiliki kamus digital yang menyimpan segala informasi kata dan strukturnya yang disebut WordNet\footnote{wordnet.princeton.edu}. WordNet tersebut sering digunakan untuk menunjang berbagai penelitian di bidang \textit{natural language processing}. 
 
@@ -27,67 +27,84 @@ Orthographic adalah bentuk paling dasar dari suatu kata. Bentuk ini merepresenta
 %-----------------------------------------------------------------------------%
 \subsubsection{Sense}
 %-----------------------------------------------------------------------------%
-Sense adalah makna dari kata tersebut atau definisi kata. Informasi mengenai makna kata disimpan dalam kamus bahasa tersebut. Dalam kamus (lexicon), sense terbentuk dari lexeme-lexeme lain yang mendeskripsikan lexeme tersebut. 
+Sense adalah makna atau arti dari sebuah kata. Informasi mengenai makna kata dapat ditemukan dalam kamus bahasa yang bersangkatan. Dalam kamus (lexicon), sense terbentuk dari lexeme-lexeme lain yang mendeskripsikan lexeme tersebut. 
 
 %-----------------------------------------------------------------------------%
 \subsubsection{Word Embedding}
 %-----------------------------------------------------------------------------%
-\textit{Word Embedding} digunakan untuk menentukan similarity antar kata relasi yang dihasilkan dari proses \textit{Pattern Matching}.
+Dari pasangan kata yang dihasilkan, ingin diketahui apakah kedua kata benar berelasi hipernim-hiponim. Namun, sangat sulit bagi mesin untuk melakukan komputasi jika hanya bergantung pada bentuk asli kata tersebut. Kata perlu direpresentasikan ke dalam bentuk yang lebih dibaca oleh mesin seperti vektor. Mengetahui hal tersebut, digunakan pemodelan \textit{word embedding} untuk mendapatkan representasi kata yang diinginkan. \textit{Word Embedding} atau juga dikenal sebagai \textit{distributed representation} adalah salah satu jenis representasi kata dalam bentuk vektor berdasarkan fitur yang dimiliki oleh kata tersebut. 
+
+Pada tahun 2013, diperkenalkan suatu teknik pembentukan \textit{worde mbedding} menggunakan korpus teks berukuran besar yaitu Word2Vec \cite{mikolov2013distributed}. Terdapat dua jenis arsitektur dalam sistem tersebut yaitu model \textit{continuous skipgram} (Skipgram) dan \textit{continous bag-of-word} (CBoW). Kedua pemodelan menggunakan pembelajaran \textit{neural network} sederhana terhadap korpus yang diberikan. Model skipgram memprediksi kata-kata disekitar kata yang diberikan, sedangkan model CBoW memprediksi kata yang diberikan berdasarakan konteks disekitarnya. Implementasi teknik pemodelan tersebut telah dipublikasikan sehingga pembuatan model \textit{word embedding} dapat dilakukan dengan mudah: Word2Vec\footnote{radimrehurek.com/gensim/models/word2vec.html}.
+
+% Salah satu strategi yang digunakan adalah mencari \textit{similarity} antar kata. Pencarian kemiripan antar kata dilakukan berdasarkan distribusi kata dalam kalimat atau dikatakan menggunakan teknik \textit{word embedding}.
+% digunakan untuk menentukan similarity antar kata relasi yang dihasilkan dari proses \textit{Pattern Matching}. Suatu kata dapat direpresentasikan dalam bentuk vektor
 
 %-----------------------------------------------------------------------------%
-\subsubsection{POS Tag}
+\subsubsection{POS Tagging}
 %-----------------------------------------------------------------------------%
-Part-of-speech tagging adalah proses mengelompokan setiap kata dalam suatu kalimat ke dalam kategori yang bersesuaian.  
+Kata dapat dikelompokkan berdasarkan kategori tertentu. \textit{Part-of-speech tagging} adalah proses mengelompokan setiap kata dalam suatu kalimat ke dalam kelas kata yang bersesuaian. Kelas kata yang umum dikenal adalah \textit{noun}, \textit{verb}, \textit{adjective}, \textit{adverb}, \textit{conjunction}, dan lainnya.Penelitian lain mengelompokkan kata berdasarkan kelas kata yang didefinisikan seperti Penn Treebank yang mengelompokkan ke dalam 45 kelas \citep{marcus1993building} dan Brown korpus yang mengelompokkan ke dalam 87 kelas \citep{francis1979brown}. Informasi tersebut dapat digunakan untuk mendapatkan pengetahuan lebih dalam mengenai kata. 
+
+Beberapa penelitian pembangunan \textit{pos tagging} untuk Bahasa Indonesia telah dilakukan sebelumnya oleh \cite{adriani2009statistical} dan \cite{dinakaramani2014designing}. Penelitian yang dilakukan oleh \cite{adriani2009statistical} berusaha melakukan komparasi antara dua metode dalam membangun model \textit{pos tagging} yang lebih baik. Sementara penelitian yang dilakukan oleh \cite{dinakaramani2014designing} lebih berfokus untuk membangun model yang baik itu sendiri. Penelitian tersebut menghasilkan 23 \textit{tagset} dan korpus Bahasa Indonesia yang telah di-\textit{tag} secara manual. Dari korpus tersebut, model \textit{pos tagging} dapat dibangun dengan bantuan \textit{tools} Stanford POS Tagger \citep{toutanova2003feature}.
 
 %-----------------------------------------------------------------------------%
 \subsection{Relasi Kata}
 %-----------------------------------------------------------------------------%
-Sebelum membahas lebih lanjut mengenai relasi kata, perlu diketahui apa itu relasi. Relasi menggambarkan hubungan atau koneksi yang dimiliki oleh suatu hal dengan yang lain (KBBI). Dalam bidang matematika, relasi memetakan suatu anggota dari himpunan satu ke himpunan lain sesuai dengan hubungan yang didefinisikan. Dalam penelitian ini, relasi yang diperhatikan adalah relasi kata yang berarti satu kata akan dipetakan ke dalam kata lain. Domain untuk kata tersebut adalah kata benda (\textit{noun}) dalam Bahasa Indonesia.
+Sebelum membahas lebih lanjut mengenai relasi kata, perlu diketahui apa arti relasi. Relasi menggambarkan hubungan atau koneksi yang dimiliki oleh suatu hal dengan yang lain (KBBI). Dalam bidang matematika, relasi memetakan suatu anggota dari himpunan satu ke himpunan lain sesuai dengan hubungan yang didefinisikan. Dalam penelitian ini, relasi yang diperhatikan adalah relasi kata yang berarti satu kata akan dipetakan ke dalam kata lain. Domain untuk kata tersebut adalah kata benda (\textit{noun}) dalam Bahasa Indonesia.
 
-Satu relasi dapat terdiri dari beberapa entitas dan dituliskan dalam bentuk tuple $t = (e_1, e_2, ..., e_n)$ dimana $e_i$ adalah suatu entitas yang memiliki relasi $r$ dalam dokumen $D$ \citep{bach2007review}. Relasi sinonim dapat ditulis dalam notasi tersebut. Selain relasi yang mengandung beberapa entitasi, banyak relasi yang hanya menghubungkan antar dua entitas (relasi biner), seperti \textit{terletak-di(Universitas Indonesia, Depok)} atau \textit{ditulis-oleh(Habis Gelap Terbitlah Terang, RA Kartini)}. Relasi kata sendiri dapat didefinisikan secara bebas seperti contoh sebelumnya maupun merupakan relasi khusus seperti relasi semantik.
+Satu relasi dapat terdiri dari beberapa entitas dan dituliskan dalam bentuk tuple $t = (e_1, e_2, ..., e_n)$ dimana $e_i$ adalah suatu entitas yang memiliki relasi $r$ dalam dokumen $D$ \citep{bach2007review}. Relasi sinonim dapat ditulis dalam notasi tersebut. Selain relasi yang mengandung beberapa entitasi, banyak relasi yang hanya menghubungkan antar dua entitas atau biasa disebut relasi biner. Contoh relasi biner antara dua kata adalah \textit{terletak-di(Universitas Indonesia, Depok)}, dibaca Universitas Indonesia terletak di Depok, atau \textit{ditulis-oleh(Habis Gelap Terbitlah Terang, RA Kartini)}, dibaca Habis Gelap Terbitlah Terang ditulis oleh RA Kartini. Relasi kata dapat didefinisikan secara bebas seperti contoh sebelumnya maupun berdasarkan padanan tertentu seperti relasi semantik.
 
 Semantik adalah arti (\textit{sense}) dari suatu kata. Relasi semantik kata adalah hubungan yang dimiliki antar kata berdasarkan arti atau makna dari kata tersebut. Beberapa relasi semantik adalah sebagai berikut \citep{miller1995wordnet}.
 \begin{itemize}
-  \item Sinonim adalah relasi antar kata dimana dua kata yang berbeda memiliki arti yang sama. Semua kelas kata dapat memiliki relasi sinonim. Dalam WordNet, relasi ini direpresentasikan dalam bentuk \textit{synset} dan bersifat simetris. Sebagai contoh 'makan', 'melahap', dan 'menyantap' memiliki makna yang sama.
-  \item Antonim adalah yang menggambarkan arti yang saling berkebalikan antar kata. Umumnya relasi ini digunakan pada kelas kata sifat (\textit{adverb}) dan kata keterangan (\textit{adjective}). Sama seperti synonymy, relasi ini memiliki sifat simetris. Sebagai contoh kata 'tinggi' memiliki makna yang berkebalikan dengan kata 'pendek'.
-  \item Hiponim adalah relasi yang menyatakan hubungan kata yang lebih khusus. Sementara untuk kata yang lebih umum dikenal dengan relasi hipernim. Kedua relasi ini diperuntukan kelas kata benda (\textit{noun}) dan umumnya satu kata memiliki hanya satu hipernim. Kedua relasi ini bersifat transitif, sehingga dapat digambarkan dalam bentuk hirarki. Sebagai contoh kucing, ikan, kelinci (hiponim) adalah binatang (hipernim). Binatang adalah hiponim dari makhluk hidup. Sehingga dapat dikatakan pula bahwa kucing, ikan, kelinci (hiponim) adalah makhluk hidup (hipernim).
-  \item Meronim dan holonim adalah relasi yang menyatakan hubungan bagian satu dengan yang lain, dimana meronim menyatakan sub-bagian dan holonim menyatakan bagian yang lebih besar. Seperti relasi hyponym-hypernym, relasi meronim-holonim bersifat transitif dan dapat digambarkan dalam bentuk hirarki. Dalam WordNet, relasi ini dibagi ke dalam tiga bagian yaitu \textit{part-meronym}, \textit{member-meronym}, dan \textit{substance-meronym}. Sebagai contoh sebuah sel (holonim) memiliki nukleus, ribosom, mitokondria (meronim).
-  \item \textit{Troponymy} adalah relasi seperti hiponim-hipernim yang khusus untuk kelas kata kerja (\textit{verb}). Dalam Bahasa Inggris, contoh kata yang memiliki relasi ini adalah 'stroll' dan 'walk'.
+  \item Sinonim adalah relasi antar kata yang berbeda namun memiliki arti yang sama. Semua kelas kata dapat memiliki relasi sinonim. Dalam WordNet, relasi ini direpresentasikan dalam bentuk \textit{synset} dan bersifat simetris. Sebagai contoh 'makan', 'melahap', dan 'menyantap'\footnote{bahasa.cs.ui.ac.id/iwn/wordnet.php?keyword=makan} memiliki makna yang sama.
+  \item Antonim adalah yang menggambarkan arti yang saling berkebalikan antar kata. Umumnya relasi ini digunakan pada kelas kata sifat (\textit{adverb}) dan kata keterangan (\textit{adjective}). Sama seperti synonymy, relasi ini memiliki sifat simetris. Sebagai contoh kata 'tinggi'\footnote{compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?usrname=\&gridmode=wnbahasa\&synset=05097536-n\&lang=ind\&lang2=ind} memiliki makna yang berkebalikan dengan kata 'pendek'.
+  \item Hiponim adalah relasi yang menyatakan hubungan kata yang lebih khusus. Sementara untuk kata yang lebih umum dikenal dengan relasi hipernim. Kedua relasi ini diperuntukan kelas kata benda (\textit{noun}) dan umumnya satu kata memiliki hanya satu hipernim. Kedua relasi ini bersifat transitif, sehingga dapat digambarkan dalam bentuk hirarki. Sebagai contoh macan, singa, citah, dan jaguar (hiponim) adalah kucing (hipernim)\footnote{http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?usrname=\&gridmode=wnbahasa\&synset=02127808-n\&lang=ind\&lang2=ind}, serta kucing adalah hiponim dari hewan. Sehingga dapat dikatakan pula bahwa macan, singa, citah, dan jaguar adalah hewan.
+  \item Meronim dan holonim adalah relasi yang menyatakan hubungan bagian satu dengan yang lain, dimana meronim menyatakan sub-bagian dan holonim menyatakan bagian yang lebih besar. Seperti relasi hyponym-hypernym, relasi meronim-holonim bersifat transitif dan dapat digambarkan dalam bentuk hirarki. Dalam WordNet, relasi ini dibagi ke dalam tiga bagian yaitu \textit{part-meronym}, \textit{member-meronym}, dan \textit{substance-meronym}. Sebagai contoh sebuah sel (holonim) memiliki nukleus, sitoplasma, membran, dan vakuola (meronim)\footnote{http://compling.hss.ntu.edu.sg/omw/cgi-bin/wn-gridx.cgi?usrname=\&gridmode=wnbahasa\&synset=00006484-n\&lang=ind\&lang2=ind}. 
+  \item \textit{Troponymy} adalah relasi seperti hiponim-hipernim yang khusus untuk kelas kata kerja (\textit{verb}). Dalam Bahasa Inggris, contoh kata yang memiliki relasi ini adalah 'march' dan 'walk'.
 \end{itemize}
 
+Relasi semantik hiponim-hipernim memiliki dua tipe yang lebih spesifik yaitu relasi hiponim-hipernim antar konsep dan relasi hipernim-hiponim antar konsep dan \textit{instance}. Suatu kata disebut sebagai \textit{instance} atau entitas jika wujudnya dapat tergambarkan dengan jelas walaupun tidak harus berbentuk fisik. Sementara konsep atau \textit{class} adalah abstraksi dari suatu kategori yang mengandung sejumlah objek dengan ciri-ciri yang sama. Sebagai contoh pasangan kata relasi hipernim-hiponim antar konsep adalah hiponim(sarapan, makanan), dibaca `sarapan adalah hiponim dari makanan'. Sementara pasangan kata relasi hipernim-hiponim antar \textit{instance} dan konsep adalah hiponim(Chairil Anwar, penulis).
+
 
 %-----------------------------------------------------------------------------%
-\section{Leksikal Semantik Resources}
+\section{Resource Leksikal Semantik}
 %-----------------------------------------------------------------------------%
-Kebutuhan menyimpan suatu korpus yang merupakan leksikal semantik resource. Informasi mengenai kata, makna, serta relasi di dalamnya tersebut perlu tersimpan secara baik sehingga dapat digunakan. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris telah membuat kamus digital yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya, namun masih ditemukan beberapa kekurangan dari WordNet Bahasa yang ada. 
-% TODO: tambahin disini
-
-Leksikal semantik resource yang terkenal diantaranya adalah kamus, thesaurus, ensiklopedia, dan wordnet. 
+Leksikal semantik \textit{resource} adalah suatu korpus yang menyimpan informasi mengenai kata, makna kata, serta relasi antar kata. Leksikal semantik \textit{resource} yang terkenal diantaranya adalah kamus, thesaurus, ensiklopedia, dan wordnet. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris telah membuat kamus digital yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya, namun masih ditemukan beberapa kekurangan dari WordNet Bahasa yang ada. 
+% TODO: tambahin disini apakek 
 
 %-----------------------------------------------------------------------------%
 \subsection{WordNet}
 %-----------------------------------------------------------------------------%
-WordNet adalah kamus leksikal yang tersimpan secara digital dan digunakan untuk berbagai keperluan komputasi \citep{miller1995wordnet}. Pembuatan WordNet dilatarbelakangi keperluan mendapatkan \textit{sense} atau arti semantik suatu kata. Informasi tersebut perlu disimpan dan dapat dibaca oleh mesin. WordNet pertama dibuat oleh \cite{miller1995wordnet} berbasis Bahasa Inggris dan sekarang dikenal dengan nama Princeton WordNet (PWN). WordNet menyimpan informasi dalam bentuk database dimana setiap entry-nya adalah pasangan \textit{synset} dan arti semantiknya (\textit{sense}). Set sinonim (\textit{synset}) adalah himpunan kata yang memiliki arti yang sama atau saling berelasi \textit{synonym}. 
+WordNet adalah kamus leksikal yang tersimpan secara digital dan digunakan untuk berbagai keperluan komputasi \citep{miller1995wordnet}. Pembuatan WordNet dilatarbelakangi keperluan mendapatkan \textit{sense} atau arti semantik suatu kata. Informasi tersebut perlu disimpan dan dapat dibaca oleh mesin. WordNet pertama dibuat oleh \cite{miller1995wordnet} berbasis Bahasa Inggris dan sekarang dikenal dengan nama Princeton WordNet\footnote{wordnet.princeton.edu} (PWN). WordNet menyimpan informasi dalam bentuk \textit{database} dimana setiap \textit{entry}-nya adalah pasangan \textit{synset} dan arti semantiknya (\textit{sense}). Set sinonim (\textit{synset}) adalah himpunan kata yang memiliki arti yang sama atau saling berelasi \textit{synonym}. 
 
-Kata dalam WordNet dikelompokkan ke dalam beberapa kelas kata yaitu kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}), dan kata keterangan (\textit{adverb}). WordNet juga menyimpan informasi mengenai relasi semantik antar \textit{synset}. Relasi yang disimpan adalah sinonim, \textit{antonymy}, hiponim, hipernim, \textit{meronymy}, \textit{holonymy}, \textit{troponymy}, dan \textit{entailment}. Hingga penulisan ini, versi WordNet yang sudah ada adalah versi 3.1 yang dapat diakses melalui situs resminya maupun diunduh datanya. Sementara aplikasi yang sudah terintegrasi dengan sistem UNIX/Linux adalah versi 3.0. 
+Kata dalam WordNet dikelompokkan ke dalam beberapa kelas kata yaitu kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}), dan kata keterangan (\textit{adverb}). WordNet juga menyimpan informasi mengenai relasi semantik antar \textit{synset}. Relasi yang disimpan adalah sinonim, \textit{antonymy}, hiponim, hipernim, \textit{meronymy}, \textit{holonymy}, \textit{troponymy}, dan \textit{entailment}. Hingga penulisan ini, versi WordNet yang sudah ada adalah versi 3.1 yang dapat diakses melalui situs resminya maupun diunduh datanya. Sementara bentuk aplikasinya yang sudah terintegrasi dengan sistem UNIX/Linux adalah versi 3.0. 
 
-Penelitian mengenai WordNet Bahasa Indonesia pernah dilakukan sebelumnya oleh \cite{putra2008building} serta \cite{margaretha2008comparing}. Indonesian WordNet (IWN) dibangun menggunakan metode mapping antara WordNet yang sudah ada ke dalam Bahasa Indonesia \citep{putra2008building}. WordNet yang digunakan sebagai dasarnya adalah Princeton WordNet. Synset dalam PWN akan dipetakan ke dalam \textit{entry} Kamus Besar Bahasa Indonesia (KBBI), sehingga menghasilkan hasil yang berkualitas baik secara cepat dan mudah. Penelitian tersebut menghasilkan 1441 synset dan 3074 sense. Relasi semantik antar synset diperoleh dengan memetakan IWN synset dengan PWN synset, sehingga relasi yang dimiliki dalam PWN dapat diturunkan.
+Penelitian mengenai WordNet Bahasa Indonesia pernah dilakukan sebelumnya oleh \cite{putra2008building} serta \cite{margaretha2008comparing}. Indonesian WordNet\footnote{bahasa.cs.ui.ac.id/iwn/} (IWN) dibangun menggunakan metode mapping antara WordNet yang sudah ada ke dalam Bahasa Indonesia \citep{putra2008building}. WordNet yang digunakan sebagai dasarnya adalah Princeton WordNet. Synset dalam PWN akan dipetakan ke dalam \textit{entry} Kamus Besar Bahasa Indonesia (KBBI), sehingga menghasilkan hasil yang berkualitas baik secara cepat dan mudah. Penelitian tersebut menghasilkan 1441 synset dan 3074 sense. Relasi semantik antar synset diperoleh dengan memetakan IWN synset dengan PWN synset, sehingga relasi yang dimiliki dalam PWN dapat diturunkan.
 
-Pengembangan WordNet untuk Bahasa Indonesia juga dilakukan oleh Nanyang Technology University (NTU) sejak tahun 2011 dan diberi nama WordNet Bahasa \citep{noor2011creating}. WordNet ini telah diintegrasi dengan salah satu \textit{tools} NLP berbasis Python yaitu nltk sehingga dapat dengan mudah digunakan dalam komputasi. WordNet Bahasa juga memanfaatkan PWN untuk mendapatkan relasi semantik antar \textit{synset}. Pada penelitian ini, dimanfaatkan \textit{tools} tersebut untuk mendapatkan \textit{seed} relasi semantik antar kata dalam Bahasa Indonesia.
+Pengembangan WordNet untuk Bahasa Indonesia juga dilakukan oleh Nanyang Technology University (NTU) sejak tahun 2011 dan diberi nama WordNet Bahasa\footnote{wn-msa.sourceforge.net/} \citep{noor2011creating}. WordNet ini telah diintegrasi dengan salah satu \textit{tools} NLP berbasis Python yaitu nltk sehingga dapat dengan mudah digunakan dalam komputasi. WordNet Bahasa juga memanfaatkan PWN untuk mendapatkan relasi semantik antar \textit{synset}. Pada penelitian ini, dimanfaatkan \textit{tools} tersebut untuk mendapatkan \textit{seed} relasi semantik antar kata dalam Bahasa Indonesia.
 
-Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia masih memiliki beberapa kekurangan. Jumlah kata yang terkandung di dalamnya masih terbatas. Sementara itu, relasi semantik antar kata yang dimiliki oleh WordNet Bahasa Indonesia merupakan hasil turunan dari relasi semantik WordNet Princeton. Hal ini menyebabkan ketergantungan untuk mendapatkan relasi semantik dengan struktur dari PWN. Selain itu, beberapa \textit{synset} Bahasa Indonesia juga tidak dapat dipetakan secara tepat ke \textit{synset} PWN yang menyebabkan beberapa kata kehilangan arti atau mendapat arti yang kurang tepat. Jika berusaha dibentuk ke dalam relasi biner, pasangan kata relasi semantik Bahasa Indonesia yang dihasilkan terlihat kurang baik. Untuk itu, dicetuskanlah penelitian untuk mengekstrak relasi semantik dalam Bahasa Indonesia secara mandiri. 
+Walau beberapa penelitian sudah dilakukan sebelumnya, WordNet Bahasa Indonesia masih memiliki beberapa kekurangan. Jumlah kata yang terkandung di dalamnya masih terbatas. Sementara itu, relasi semantik antar kata yang dimiliki oleh WordNet Bahasa Indonesia merupakan hasil turunan dari relasi semantik WordNet Princeton. Hal ini menyebabkan ketergantungan dengan struktur dari PWN untuk mendapatkan relasi semantik suatu kata. Selain itu, beberapa kata maupun \textit{synset} Bahasa Indonesia juga tidak dapat dipetakan secara tepat ke \textit{synset} PWN yang menyebabkan beberapa kata kehilangan arti atau mendapat arti yang kurang tepat. Jika dibentuk suatu relasi biner yang memetakan satu kata dengan kata lain berdasarakan relasi semantiknya, hasil yang didapatkan terlihat kurang baik. Untuk itu, dicetuskanlah penelitian untuk mengekstrak relasi semantik dalam Bahasa Indonesia secara mandiri. 
 
 %-----------------------------------------------------------------------------%
 \subsection{Wikipedia}
 %-----------------------------------------------------------------------------%
-Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil kolaborasi banyak penulis \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} dan dapat diakses serta diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, informasi yang dimuat dalam Wikipedia dibuat secara terstruktur dengan bahasa yang formal. Wikipedia juga memuat informasi umum terbaru \citep{arnold2014extracting}.
+Wikipedia\footnote{www.wikipedia.org} adalah ensiklopedia terbuka yang memuat berbagai bahasa dan merupakan hasil tulisan dari berbagai kontributor \citep{denoyer2006wikipedia}. Wikipedia adalah salah satu korpus teks dokumen terbesar yang disimpan secara \textit{online} dan dapat diakses serta diunduh secara bebas. Wikipedia dikelola oleh organisasi nonprofit bernama Wikimedia Foundation. Pada tahun 2009, jumlah kontributor Wikipedia Bahasa Indonesia telah mencapai 2.502 pengguna aktif. Walau ditulis oleh berbagai narasumber, artikel yang dimuat dalam Wikipedia disusun secara terstruktur dan dengan bahasa yang cukup formal. Wikipedia juga memuat berbagai informasi umum terbaru \citep{arnold2014extracting}.
 
 Hingga Mei 2017, Wikipedia Bahasa Indonesia telah memuat lebih dari 400.000 artikel dari berbagai domain dan terus berkembang secara pesat. Artikel-artikel yang disimpan dalam Wikipedia dapat diunduh secara gratis dalam bentuk \textit{dumps}\footnote{dumps.wikimedia.org} dengan format XML. Beberapa tipe \textit{dump} yang dapat dipilih, diantarnya adalah halaman seluruh artikel, halaman artikel beserta \textit{revision history}, daftar judul artikel, dan lainnya. Secara berkala, Wikimedia membuat \textit{dump} terhadap seluruh artikel terakhir yang disimpan untuk setiap bahasa. Pada situs yang menyediakan pengunduhan data Wikipedia, terdapat tanggal unik yang menyatakan tanggal terakhir data tersebut di-\textit{update}.
 
 % wikipedia sebagai lexical semantic resource
-Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai entitas leksikal. Kata-kata tersebut dapat ditemukan dalam berbagai leksikal semantik \textit{resource} yang sudah ada. \cite{zesch2007analyzing} melakukan penelitian yang membandingkan Wikipedia dengan leksikal semantik resource yang sudah ada seperti kamus, thesaurus, wordnet, dan ensiklopedia. Istilah-istilah yang ada dalam Wikipedia lebih mirip dengan ensiklopedia dibanding kamus, thesaurus, maupun wordnet karena memuat banyak kata benda (\textit{noun}) dan beberapa kata sifat (\textit{adjective}) maupun kata kerja (\textit{verb}). Selain itu, Wikipedia juga mengandung banyak kata yang merupakan \textit{named entity} atau \textit{domain specific terms}. Penelitian ini berfokus pada kata-kata yang merupakan kata benda, sehingga Wikipedia cocok digunakan. 
+Artikel dalam Wikipedia terdiri dari berbagai domain kategori dan memuat berbagai entitas leksikal. Kata-kata tersebut dapat ditemukan dalam berbagai leksikal semantik \textit{resource} yang sudah ada. \cite{zesch2007analyzing} melakukan penelitian yang membandingkan Wikipedia dengan leksikal semantik \textit{resource} yang sudah ada seperti kamus, thesaurus, wordnet, dan ensiklopedia. Istilah-istilah yang ada dalam Wikipedia lebih mirip dengan ensiklopedia dibanding kamus, thesaurus, maupun wordnet karena memuat banyak kata benda (\textit{noun}) dan beberapa kata sifat (\textit{adjective}) maupun kata kerja (\textit{verb}). Selain itu, Wikipedia juga mengandung banyak kata yang merupakan \textit{named entity} atau \textit{domain specific terms}. Penelitian ini berfokus pada kata-kata yang merupakan kata benda, sehingga Wikipedia cocok digunakan. 
 
-Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas. Bahasa yang ditulis juga cukup formal dan terstruktur. Sudah banyak penelitian ekstraksi relasi semantik dengan metode \textit{pattern} yang menggunakan artikel Wikipedia seperti penelitian yang dilakukan oleh \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. Melihat banyaknya manfaat Wikipedia, diputuskan untuk menggunakan Wikipedia sebagai leksikal semantik \textit{resource} dalam penelitian ini. 
+Walau ditulis secara kolaboratif, Wikipedia memuat artikel secara terstruktur dimana pada paragraf pertama umumnya berisi kalimat-kalimat definisi menganai topik yang sedang dibahas, kemudian paragraf selanjutnya memuat bahasan yang lebih rinci. Setiap artikel ditulis dalam bahasa yang formal dan terstruktur. Selain itu, sudah banyak penelitian ekstraksi relasi semantik dengan metode \textit{pattern} yang menggunakan artikel Wikipedia seperti penelitian yang dilakukan oleh \cite{ruiz2005automatic} dan \cite{arnold2014extracting}. Melihat banyaknya manfaat dan kelebihan Wikipedia, diputuskan untuk menggunakan Wikipedia sebagai leksikal semantik \textit{resource} dalam penelitian ini. 
+
+
+%-----------------------------------------------------------------------------%
+\subsection{Korpus Pasangan Kata Relasi Semantik}
+%-----------------------------------------------------------------------------%
+Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki fungsi spesifik \citep{atkins1992corpus}. Saat ini, belum ada korpus independen yang menyimpan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
+
+Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata berelasi serta relasi yang menghubungkannya. Pasangan kata relasi akan disebut sebuah relasi biner dengan format sebagai berikut.
+\[ hiponim(w_1,w_2) \]
+\noindent Format di atas dibaca $w_1$ adalah hiponim dari $w_2$ atau dapat dikatakan juga bahwa $w_2$ adalah hipernim dari $w_1$. Selanjutnya pasangan kata relasi akan disebut sebagai \textit{pair}. Relasi hipernim-hiponim bersifat transitif dan dapat disusun ke dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh tidak memperdulikan jarak hubungan antar kata, sehingga dapat terbentuk \textit{pair} seperti `hiponim(kelinci,mamalia)' serta `hiponim(kelinci,makhluk hidup)'.
 
 
 %-----------------------------------------------------------------------------%
@@ -130,28 +147,27 @@ Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus W
 %-----------------------------------------------------------------------------%
 \subsection{Textual Pattern}
 %-----------------------------------------------------------------------------%
-\textit{Pattern} yang dibentuk mengandung tiga bagian penting, yaitu \textit{tag} hiponim, \textit{tag} hipernim, dan kata lainnya. \textit{Tag} hiponim-hipernim merepresentasikan letak kata yang merupakan kata hiponim-hipernim berada. Sementara kata lainnya adalah kata lainnya yang harus sama untuk proses \textit{pattern matching}. Sebagai contoh terdapat tekstual \textit{pattern} berikut `<hyponym> adalah <hypernym> yang'. \textit{Pattern} tersebut berarti kata sebelum kata `adalah' merupakan kata hiponim dan kata setelah kata `adalah' dan sebelum kata `yang' merupakan kata hipernim. Jika terdapat kalimat `harimau adalah kucing yang berukuran besar', maka `harimau' merupakan hiponim dan `kucing' merupakan hipernim. 
+\textit{Pattern} yang dibentuk mengandung tiga bagian penting, yaitu \textit{tag} hiponim, \textit{tag} hipernim, dan kata lainnya. \textit{Tag} hiponim-hipernim merepresentasikan letak kata yang merupakan kata hiponim-hipernim berada. Sementara kata lainnya adalah kata lainnya yang harus sama untuk proses \textit{pattern matching}. Sebagai contoh terdapat tekstual \textit{pattern} berikut `{\fontfamily{qcr}\selectfont<hyponym>} adalah {\fontfamily{qcr}\selectfont<hypernym>} yang'. \textit{Pattern} tersebut berarti kata sebelum kata `adalah' merupakan kata hiponim dan kata setelah kata `adalah' dan sebelum kata `yang' merupakan kata hipernim. Jika terdapat kalimat `harimau adalah kucing yang berukuran besar', maka `harimau' merupakan hiponim dan `kucing' merupakan hipernim. Di dalam kata lainnya, terdapat \textit{tag} khusus yang digunakan dalam penelitian ini yaitu {\fontfamily{qcr}\selectfont<start>} dan {\fontfamily{qcr}\selectfont<end>}. Penelitian ekstraksi relsasi semantik kata menggunakan metode \textit{pattern extraction} dan \textit{matching} telah dilakukan oleh \cite{hearst1992automatic}, \cite{ruiz2005automatic}, \cite{arnold2014extracting}, dan \cite{sumida2008hacking}.
 
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Extraction}
 %-----------------------------------------------------------------------------%
-\textit{Pattern extraction} atau \textit{pattern recognition} adalah salah satu cabang dalam \textit{machine learning} yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. \textit{Pattern matching} adalah proses untuk mencocokkan suatu \textit{pattern} dengan kumpulan data yang belum dianotasi. Penelitian ekstraksi relsasi semantik menggunakan metode pattern matching telah dilakukan oleh \cite{hearst1992automatic}, \cite{ruiz2005automatic}, \cite{arnold2014extracting}, dan \cite{sumida2008hacking}.
+\textit{Pattern extraction} atau \textit{pattern recognition} adalah salah satu cabang dalam \textit{machine learning} yang berusaha mencari pola kemiripan tertentu dari kumpulan data yang diberikan. Untuk \textit{textual pattern}, proses pembentukan \textit{pattern} dilakukan dengan mencari kemiripan diantara suatu kumpulan data yang jumlahnya banyak. \textit{Sequence} kata yang sering muncul dalam berbagai kalimat dapat diidentifikasi sebagai sebuah \textit{pattern}. Penelitian ini memanfaatkan struktur data \textit{tree} dalam pembentukan \textit{pattern} yang secara detil dapat dilihat pada bagian \ref{sec:trie}. Suatu kalimat ditokenisasi dan setiap katanya membentuk \textit{node} dalam \textit{tree}. \textit{Sequence} kata yang sering muncul menjadi \textit{pattern} terbaik untuk dokumen yang sedang diamati.
 
-Banyaknya penelitian menggunakan metode \textit{pattern matching} dan \textit{extraction} menjadi salah satu alasan penggunaan metode tersebut untuk mengekstrak relasi kata dalam Bahasa Indonesia. Pada penelitian ini, relasi semantik yang diekstrak dibatasi hanya untuk relasi \textit{hypernym-hyponym}. 
-
+%TODO PENTING BANGET: HARUS DITAMBAHIN
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Matching}
 %-----------------------------------------------------------------------------%
+\textit{Pattern matching} adalah proses untuk mencocokkan suatu \textit{pattern} terhadap kumpulan data yang belum dianotasi. Jika diberikan sebuah \textit{tekstual pattern}, dicocokan untuk setiap \textit{sequnce} kata terhadap kalimat yang diamati. Jika terdapat satu token dalam \textit{sequence pattern} yang tidak sama dengan \textit{sequence} kalimat, maka proses pencarian dapat dikatakan tidak berhasil. Penelitian ini memanfaatkan representasi \textit{suffix tree} untuk mempermudah proses pencarian. Lebih detil mengenai pembuatan \textit{suffix tree}, dapat dilihat pada bagian \ref{sec:suffix-tree}.
 
 
 %-----------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------%
-\section{Tree Representation}
+\section{Tree Representation} 
 %-----------------------------------------------------------------------------%
 Dalam bidang bioinformatik, \textit{suquence analysis} digunakan untuk mengetahui apakah suatu DNA atau RNA mengandung \textit{sequnce} tertentu. Pada penelitian ini, \textit{pattern} yang dihasilkan adalah \textit{pattern} leksikal yang merupakan deretan kata-kata. Algoritma seperti \textit{standard trie} dan \textit{suffix tree} dimanfaatkan secara berurut untuk proses \textit{pattern extraction} dan \textit{matching}.
 
 %-----------------------------------------------------------------------------%
-\subsection{Standard Trie}
+\subsection{Standard Trie} \label{sec:trie}
 %-----------------------------------------------------------------------------% 
 \textit{Standard Trie} untuk suatu himpunan \textit{string} $S$ adalah \textit{ordered tree} dengan ketentuan berikut.
 \begin{itemize}
@@ -169,8 +185,10 @@ Sebagai contoh berikut adalah \textit{standard trie} yang dibangun dari himpunan
     \label{fig:contoh-standard-trie}
 \end{figure}
 
+\noindent Dari kata-kata di atas, dapat dilihat bahwa \textit{substring} `ba' paling sering muncul dibandingkan dengan yang lain.
+
 %-----------------------------------------------------------------------------%
-\subsection{Suffix Tree}
+\subsection{Suffix Tree} \label{sec:suffix-tree}
 %-----------------------------------------------------------------------------% 
 \textit{Suffix tree} sering digunakan untuk pencarian sequence yang panjang seperti \textit{genomes} untuk bidang bioinformatik. Pembentukan \textit{suffix tree} mirip seperti \textit{Standard Trie}, namun untuk seluruh \textit{suffix} dalam \textit{string}. Jika diberikan \textit{string} dengan panjang $n$, dibentuk cabang dengan $n(n-1)/2$ \textit{suffix}.  Metode ini banyak dimanfaatkan untuk mempercepat proses pencarian jika diberikan sebuah masukan \textit{query}. Jika terdapat sebuah \textit{pattern} dengan panjang \textit{string} $m$, maka waktu yang dibutuhkan untuk menjalankan proses \textit{pattern matching} adalah $O(dm)$ dengan $d$ adalah ukuran alfabet. Proses pencarian dilakukan dengan menelusuri \textit{path} dari \textit{root} sesuai dengan \textit{sequence query}. Jika seluruh karakter dalam \textit{query} selesai dijalankan, maka proses pencarian berhasil. 
 
@@ -182,6 +200,7 @@ Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} berikut
     \label{fig:contoh-suffix-trie}
 \end{figure}
 
+\noindent Dari contoh di atas, proses pencarian dapat dijalankan dengan cepat karena seluruh \textit{suffix} telah didaftarkan ke dalam \textit{tree}. Dari \textit{query} yang ingin dicari, dapat langsung dicocokan setiap karakternya.
 
 %-----------------------------------------------------------------------------%
 %-----------------------------------------------------------------------------%
@@ -209,6 +228,7 @@ Berikut adalah beberapa proses \citep{riloff1999learning} yang dijalankan algori
   \item Diambil \textit{pattern} terbaik dan seluruh seed lama yang merepresentasikan \textit{pattern} maupun \textit{seed} baru yang berhasil diekstrak disimpan.
   \item Dilakukan pembobotan ulang untuk setiap \textit{pattern} menggunakan \textit{seed} lama dan baru.
 \end{enumerate}
+
 Proses diatas dinamakan \textit{mutual bootstrapping} dan setelah proses tersebut selesai, semua entitas baru hasil ekstraksi dievaluasi. Pembobotan entitas baru diberikan berdasarkan jumlah \textit{pattern} yang mengekstrak kata tersebut. Lima kata terbaik diterima dan dimasukkan ke kamus (korpus) kata berelasi untuk selanjutnya diproses ulang.
 
 %-----------------------------------------------------------------------------%
@@ -221,7 +241,7 @@ Algoritma \textit{Basilisk} \citep{thelen2002bootstrapping} juga memanfaatkan \t
   \item Sepuluh kata terbaik diambil dan dimasukan ke dalam kamus (korpus) yang kemudian digunakan untuk iterasi selanjutnya. 
 \end{enumerate}
 
-Kateogori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} memberi bobot berdasarkan informasi kolektif dari kumpulan \textit{pattern} yang mengekstrak kata tersebut. Sementara \textit{Meta-Bootstrapping} hanya mengambil satu \textit{pattern} terbaik dan mengelompokkan seluruh kata yang terekstrak dari \textit{pattern} ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan \citep{riloff2003learning}, didapatkan \textit{Basilisk} mengungguli performa \textit{Meta-Bootstrapping}. 
+Kategori semantik untuk proses ini bisa lebih dari satu. \textit{Basilisk} memberi bobot berdasarkan informasi kolektif dari kumpulan \textit{pattern} yang mengekstrak kata tersebut. Sementara \textit{Meta-Bootstrapping} hanya mengambil satu \textit{pattern} terbaik dan mengelompokkan seluruh kata yang terekstrak dari \textit{pattern} ke dalam kategori semantik yang sama. Dari hasil penelitian komparatif yang pernah dilakukan \citep{riloff2003learning}, didapatkan \textit{Basilisk} mengungguli performa \textit{Meta-Bootstrapping}. 
 
 
 %-----------------------------------------------------------------------------%
@@ -242,6 +262,7 @@ Terdapat dua kategori utama dalam \textit{sampling} yaitu \textit{probability} d
   \item \textit{Stratified random sampling} akan mengelompokan data ke dalam kategori berdasarkan karakteristik tertentu (strata), kemudian data diambil secara acak dari kategori yang ada. Hal ini menyebabkan hasil lebih representatif. 
   \item \textit{Cluster} sampling mirip seperti \textit{stratified sampling} namun dilakukan jika data kelompok yang ingin di-\textit{sampling} sulit berada di lokasi yang terpisah jauh.
 \end{itemize}
+
 Proses \textit{sampling} bermanfaat untuk merepresentasikan data tanpa perlu mengevaluasi seluruh data yang ada. Jika jumlah data yang ingin dievaluasi berukuran besar, proses \textit{sampling} mempercepat pengukuran. Jumlah data yang direpresentasikan oleh satu sample berdasarkan jumlah data asli. Sebagai contoh jika total data adalah 1000 dan jumlah data sample adalah 50, maka satu data \textit{sample} merepresentasikan 20 data asli.
 %(Sumber: https://ecduganda.files.wordpress.com/2014/08/how-to-choose-sampling-techniques-for-evaluations.pdf)
 %(http://optimierung.mathematik.uni-kl.de/mamaeusch/veroeffentlichungen/ver_texte/sampling_en.pdf)
@@ -254,12 +275,16 @@ Teknik yang umum digunakan untuk mengevaluasi suatu ekstraksi adalah \textit{pre
 %-----------------------------------------------------------------------------%
 \subsection{Kappa}
 %-----------------------------------------------------------------------------%  
-Nilai kappa ($\kappa$) merepresentasikan tingkat persetujuan antar anotator. Kappa digunakan pada penelitian yang menggunakan bantuan anotator untuk memberi penilaian secara manual. Peniliaian didapatkan menggunakan rumus berikut.
-\[ \kappa=\frac{P(A)-P(E)}{1-P(E)} \]
+Nilai kappa ($\kappa$) merepresentasikan tingkat persetujuan antar anotator. Kappa digunakan pada penelitian yang menggunakan bantuan anotator untuk memberi penilaian secara manual. Peniliaian didapatkan menggunakan rumus \ref{kappa}.
+\begin{equation}
+\label{kappa}
+\kappa=\frac{P(A)-P(E)}{1-P(E)}
+\end{equation}
 \begin{itemize}
   \item $P(A)$ adalah proporsi penilaian yang setuju (\textit{agreement})
   \item $P(E)$ adalah proporsi penilaian yang kebetulan
 \end{itemize}
+
 \cite{landis1977measurement} mendefiniskan tingkat persetujuan berdasarkan nilai Kappa yang diperoleh. 
 \begin{table}
   \centering
@@ -290,33 +315,24 @@ Fleiss' Kappa mengukur tingkat persetujuan antar sekelompok anotator berjumlah l
 \textit{Spearman's rank correlation coefficient} adalah nilai koefisien korelasi antar \textit{ranking} dua parameter. Nilai \textit{Spearman correlation} sama dengan nilai \textit{Pearson correlation} antar dua paramter yang telah di-\textit{ranking}. \textit{Pearson correlation}  menggambarkan nilai linear antara dua parameter. \textit{Spearman correlation} berkisar antara $-1$ hingga $+1$.
 
 Spearman's rho adalah nilai Pearson Correlation Coefficient antar dua variabel yang telah di-\textit{ranking}. Untuk mendapatkan nilai koefisien ($r_s$), menggunakan rumus berikut.
-\[ r_s = \rho_{rg_X,rg_Y} = \frac{cov(rg_X,rg_Y)}{\sigma_{rg_X}\sigma_{rg_Y}} \]
+\begin{equation}
+r_s = \rho_{rg_X,rg_Y} = \frac{cov(rg_X,rg_Y)}{\sigma_{rg_X}\sigma_{rg_Y}}
+\end{equation}
 \begin{itemize}
   \item $\rho$ adalah \textit{Pearson correlation coefficent} yang diaplikasikan pada variabel \textit{ranking}
   \item $cov(rg_X,rg_Y)$ adalah nilai \textit{covariance} antar variabel \textit{ranking}
   \item $\sigma_{rg_X}$ dan $\sigma_{rg_Y}$ adalah nilai standard deviasi variabel \textit{ranking}
 \end{itemize}
-Jika seluruh \textit{ranking} berbeda, proses komputasi dapat dilakukan menggunakan rumus berikut.
-\[ r_s = 1-\frac{6 \Sigma d_i^2}{n(n^2-1)} \]
+
+\noindent Jika seluruh \textit{ranking} berbeda, proses komputasi dapat dilakukan menggunakan rumus berikut.
+\begin{equation}
+r_s = 1-\frac{6 \Sigma d_i^2}{n(n^2-1)}
+\end{equation}
 \begin{itemize}
   \item $d_i = rg(X_i)-rg(Y_i)$ adalah selisih antara dua \textit{ranking}
   \item $n$ adalah jumlah observasi
 \end{itemize}
 
-
-
-
-% %-----------------------------------------------------------------------------%
-% \section{Korpus}
-% %-----------------------------------------------------------------------------%
-% Korpus adalah data yang dengan format yang dapat dibaca oleh mesin dan memiliki fungsi spesifik \citep{atkins1992corpus}.
-
-% %-----------------------------------------------------------------------------%
-% \subsection{Korpus Pasangan Kata Relasi Semantik}
-% %-----------------------------------------------------------------------------%
-% Saat ini, belum ada korpus independen yang menggambarkan relasi semantik antar kata dalam Bahasa Indonesia. Relasi semantik Bahasa Indonesia yang ada saat ini didapatkan dari hasil relasi turunan pemetaan \textit{synset} Bahasa Indonesia dengan PWN. 
-
-% Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasangan kata yang berelasi serta relasi yang menghubungkannya. Selanjutnya, pasangan kata berelasi akan disebut sebuah \textit{pair}. Untuk relasi yang bersifat transitif seperti \textit{hypernym-hyponym}, ada identifikasi kata mana yang merupakan hipernim dan mana yang merupakan hiponim. Relasi hipernim dan hiponim adalah relasi bersifat transitif yang dapat direpresentasikan dalam bentuk hirarki. Pada penelitian ini, korpus \textit{pair} yang diperoleh merepresentasikan hubungan yang berjarak tepat satu dari yang lain. 
 
 % %-----------------------------------------------------------------------------%
 % %-----------------------------------------------------------------------------%
