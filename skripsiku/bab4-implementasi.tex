@@ -195,14 +195,14 @@ Setelah mendapatkan kalimat-kalimat yang telah di-\textit{tag} dengan kata relas
 Suatu \textit{\textit{node}} merepresentasikan kata dalam kalimat dan dari satu kalimat terbentuk sebuah cabang dalam \textit{tree}. \textit{Node} menyimpan beberapa informasi seperti nama \textit{\textit{node}}, \textit{parent}, \textit{childs}, dan informasi identitas tambahan seperti apakah \textit{\textit{node}} tersebut merupakan relasi (hipernim atau \textit{hyponym}) dan apakah \textit{\textit{node}} tersebut merupakan \textit{leaf}. Untuk kata yang merupakan kata relasi, \textit{\textit{node}} menyimpan informasi jenis relasi beserta \textit{list} dari kata yang merupakan bagian dari relasi tersebut. 
 
 Sebagai contoh jika terdapat beberapa \textit{sequnce} kalimat yang akan dibentuk ke dalam \textit{tree} sebagai berikut menghasilkan \textit{tree} seperti yang dapat dilihat pada gambar \ref{fig:contoh-ptree}.
-K1: {\tagHyponym}piano{\tagHyponym} adalah {\tagHypernym}alat musik{\tagHypernym}
-K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah seorang {\tagHypernym}pelukis{\tagHypernym}
-K3: {\tagHyponym}kucing{\tagHyponym} adalah {\tagHypernym}binatang{\tagHypernym}
-K4: {\tagHyponym}sepak bola{\tagHyponym} adalah {\tagHypernym}olahraga{\tagHypernym}
+K1: {\tagHyponym}piano{\tagHyponym} adalah {\tagHypernym}alat musik{\tagHypernym}.
+K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah seorang {\tagHypernym}pelukis{\tagHypernym}.
+K3: {\tagHyponym}kucing{\tagHyponym} adalah {\tagHypernym}binatang{\tagHypernym}.
+K4: {\tagHyponym}sepak bola{\tagHyponym} adalah {\tagHypernym}olahraga{\tagHypernym}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{pics/contoh-patterntree}
+    \includegraphics[scale=0.6]{pics/contoh-patterntree}
     \caption{Contoh \textit{pattern tree} yang terbentuk}
     \label{fig:contoh-ptree}
 \end{figure}
@@ -466,7 +466,7 @@ Untuk menambah fitur pada vektor \textit{pair} yang dapat menunjang proses evalu
 
 Model dibuat memanfaatkan korpus Wikipedia yang telah melalui proses POS Tagging. Korpus tersebut diolah sedemikian sehingga kata-kata yang dianggap \textit{multi word}, memiliki kelas kata sama berurutan, digabung dengan simbol garis  awah ('\_'). Hal ini dilatarbelakangi atas hasil \textit{pair} yang banyak merupakan\textit{multi word}. Jika hal ini tidak dilakukan, maka akan banyak kata yang tidak ditemukan dalam \textit{dictionary} yang dihasilkan model \textit{word embedding}. Kode \ref{code:model-we} menunjukan proses pembuatan model \textit{word embedding}.
 
-\begin{lstlisting}[caption={Kode pembangunan model \textit{word embedding}, language=bash, label={code:model-we}]
+\begin{lstlisting}[caption={Kode pembangunan model \textit{word embedding}}, language=bash, label={code:model-we}]
 sentences = #kumpulan kalimat yang menjadi model
 
 import gensim
