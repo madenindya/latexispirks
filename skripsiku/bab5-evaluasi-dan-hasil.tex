@@ -299,16 +299,16 @@ Dari ketiga eksperimen yang telah dilakukan, berikut adalah beberapa hal yang da
 %-----------------------------------------------------------------------------%
 \section{Hasil Evaluasi Pair}
 %-----------------------------------------------------------------------------%
-Proses evaluasi \textit{pair} dilakukan hanya terhadap \textit{pair} yang diterima ke dalam korpus pasangan kata. Anotasi \textit{pair} dilakukan oleh tiga anotator berbeda dengan daftar \textit{pair} yang sama. Total sampel yang dianotasi adalah 514 \textit{pair}, dimana sampel tersebut diambil dari gabungan ketiga percobaan.
-%Akibat keterbatasan sumber daya, tidak semua \textit{pair} yang dihasilkan dapat dianotasi secara manual. Untuk itu, dilakukan \textit{sampling} dari seluruh \textit{pair} unik yang dihasilkan. 
+Proses evaluasi \textit{pair} dilakukan hanya terhadap \textit{pair} yang diterima ke dalam korpus pasangan kata. Anotasi \textit{pair} dilakukan oleh tiga anotator berbeda dengan daftar \textit{pair} yang sama. Dari data hasil anotasi, akan dilihat akurasi tiap eksperimen yang telah dilakukan, akurasi berdasarkan \texit{pattern} yang digunakan, tingkat persetujuan antar anotator, kemudian menganalisis data hasil.
 
-Anotator memberi nilai anotasi terhadap dua dimensi yaitu apakah \textit{pair} benar memiliki relasi semantik hipernim-hiponim dan mengelompokan berdasarkan kategorinya. Sayangnya, nilai yang diberikan antar anotator tidak selalu sama, untuk itu ingin diketahui tingkat persetujuan antar anotator. Tingkat persetujuan ketiga anotator dihitung menggunakan Fleiss' Kappa karena anotasi dilakukan oleh lebih dari dua anotator.
+Total sampel yang dianotasi adalah 514 \textit{pair}, dimana sampel tersebut diambil dari gabungan ketiga percobaan. Anotator memberi nilai anotasi terhadap dua dimensi yaitu apakah \textit{pair} benar memiliki relasi semantik hipernim-hiponim dan mengelompokan berdasarkan kategorinya. Sayangnya, nilai yang diberikan antar anotator tidak selalu sama, untuk itu ingin diketahui tingkat persetujuan antar anotator. Tingkat persetujuan ketiga anotator dihitung menggunakan Fleiss' Kappa karena anotasi dilakukan oleh lebih dari dua anotator.
+%Akibat keterbatasan sumber daya, tidak semua \textit{pair} yang dihasilkan dapat dianotasi secara manual. Untuk itu, dilakukan \textit{sampling} dari seluruh \textit{pair} unik yang dihasilkan. 
 % Evaluasi dilakukan dengan melihat akurasi \textit{pair} berdasarkan hasil anotasi. 
 
 %-----------------------------------------------------------------------------%
 \subsection{Hasil Anotasi Pair}
 %-----------------------------------------------------------------------------%
-Tiga anotator memberi nilai anotasi \textit{pair} berdasarkan dua dimensi yaitu apakah \textit{pair} yang dihasilkan benar memiliki relasi hipernim-hiponim dan berikutnya mengkategorikan hasil anotasi. Dari seluruh eksperimen, diambil sampel sejumlah 514 \textit{pair} untuk dianotasi. Tabel \ref{table:jumlah-bs} memperlihatkan perbandingan jumlah data yang dianotasi antar anotator. Kolum dalam tabel menyatakan jumlah data di beri label benar oleh n anotator. Misal `3 Benar' berarti kolum tersebut memperlihatkan jumlah data yang dianotasi benar oleh ketiga anotator. Kolum `1 Benar' memperlihatkan jumlah data yang dianotasi benar oleh hanya seorang anotator atau dapat diartikan juga jumlah data yang dilabeli benar oleh satu anotator dan salah oleh dua anotator.
+Data yang telah dianotasi digunakan untuk mengetahui akurasi korpus pasangan kata relasi yang dihasilkan. Tabel \ref{table:jumlah-bs} memperlihatkan perbandingan jumlah data yang dianotasi antar anotator. Kolum dalam tabel menyatakan jumlah data yang diberi label benar oleh n anotator. Misal `3 Benar' berarti kolum tersebut memperlihatkan jumlah data yang dianotasi benar oleh ketiga anotator. Kolum `1 Benar' memperlihatkan jumlah data yang dianotasi benar oleh hanya seorang anotator atau dapat diartikan juga jumlah data yang dilabeli benar oleh satu anotator dan salah oleh dua anotator.
 
 \begin{table}
   \centering
@@ -321,10 +321,9 @@ Tiga anotator memberi nilai anotasi \textit{pair} berdasarkan dua dimensi yaitu 
   \end{tabular} 
 \end{table}
 
-Dari data di atas, dapat dihitung akurasi kebenaran sampel. Untuk data yang memiliki label berbeda seperti kolum 
-`2 Benar' dan `1 Benar', diambil nilai kebenarannya menggunakan sistem \textit{voting}. Akurasi total yang diadapatkan dari seluruh data sampel adalah 0.83. Dari sisi akurasi, korpus yang dihasilkan dari seluruh eksperimen dapat dikatakan cukup baik.
+Dari data di atas, dapat dihitung akurasi kebenaran sampel. Data yang memiliki labelnya tidak sama untuk ketiga anotator seperti kolum `2 Benar' dan `1 Benar', nilai kebenaran diambil menggunakan sistem \textit{voting}. Akurasi total yang diadapatkan dari seluruh data sampel adalah 0.83.
 
-Untuk mengevaluasi parameter \textit{semi-supervised} yang dimodifikasi, perlu dicari dihitung akurasi untuk setiap eksperimen sehingga dapat dibandingkan. Tabel \ref{table:akurasi-all} memperlihatkan akurasi \textit{pair} untuk setiap eksperimen.
+Selanjutnya, untuk mengevaluasi parameter \textit{semi-supervised} yang dimodifikasi, perlu dicari dihitung akurasi untuk setiap eksperimen sehingga dapat dibandingkan. Tabel \ref{table:akurasi-all} memperlihatkan akurasi \textit{pair} untuk setiap eksperimen.
 
 \begin{table}
   \centering
@@ -368,7 +367,6 @@ Evaluasi \textit{pair} dapat dilihat berdasarkan \textit{pattern} yang membentuk
 
 Data di atas menunjukan sebagian besar \textit{pattern} yang terpilih untuk proses \textit{pattern matching} adalah \textit{pattern} yang baik karena menghasilkan kumpulan \textit{pair} dengan akurasi yang cukup tinggi. Namun, ada juga \textit{pattern} terpilih yang nilai akurasinya buruk yaitu \textit{pattern} `<hypernym> atau <hyponym>'.
 
-
 %-----------------------------------------------------------------------------%
 \subsection{Tingkat Persetujuan Anotator Pair}
 %-----------------------------------------------------------------------------%
@@ -411,7 +409,7 @@ Dalam proses anotasi, tidak mungkin semua data dapat dianotasi ke dalam kategori
 \noindent Nilai kappa yang dihasilkan jika dilihat dari anotasi berdasarkan kategori adalah 0.43. Hal tersebut menunjukan bahwa tingkat persetujuan untuk kasus ini sama seperti sebelumnya yaitu tergolong \textit{moderate agreement}.
 
 %-----------------------------------------------------------------------------%
-\subsection{Analisis Kualitatif}
+\subsection{Analisis \texit{Pair} yang Dihasilkan}
 %-----------------------------------------------------------------------------%
 Dari hasil anotasi terebut, beberapa hal yang diketahui adalah sebagai berikut.
 \begin{itemize}
