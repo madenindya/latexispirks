@@ -4,26 +4,26 @@
 %-----------------------------------------------------------------------------%
 Bab ini membahas mengenai latar belakang penelitian, perumusan masalah, tujuan dan manfaat dilakukannya penelitian, ruang lingkup penelitan, metodologi yang digunakan, dan terakhir sistematika penulisan. 
 
-
-%-----------------------------------------------------------------------------%
+%
 %-----------------------------------------------------------------------------%
 \section{Latar Belakang}
 %-----------------------------------------------------------------------------%
 Relasi kata adalah informasi mengenai hubungan yang dimiliki antar satu kata dengan kata yang lain. Informasi mengenai relasi kata sering digunakan untuk menunjang berbagai penelitian, salah satunya adalah \textit{Question Answering} atau sistem tanya jawab. Suatu pertanyaan dapat langsung dijawab jika diketahui hubungan antar suatu kata dalam pertanyaan dengan relasi yang ditanyakan. Sebagai contoh jika diberi pertanyaan `Apa ibu kota Indonesia?' dan dimiliki pengetahuan yang menyimpan relasi ibu-kota(Indonesia, Jakarta), dibaca `ibu kota Indonesia adalah Jakarta', maka pertanyaan tersebut langsung dapat dijawab dengan jawaban `Jakarta'.
 
-Selain relasi-relasi seperti diatas, beberapa kasus membutuhkan informasi semantik suatu kata untuk dapat menjawab pertanyaan yang diajukan. Berikut adalah beberapa contoh pertanyaan yang jawabannya memerlukan pengetahuan lebih dalam mengenai arti dari kata dan relasinya.
+Selain relasi seperti diatas, beberapa kasus membutuhkan informasi semantik atau makna dari suatu kata untuk dapat menjawab pertanyaan yang diajukan. Relasi yang menghubungkan dua kata berdasarkan semantik kata tersebut dinamakan relasi semantik. Berikut adalah beberapa contoh pertanyaan yang jawabannya memerlukan pengetahuan lebih dalam mengenai arti dari kata dan relasinya.
 
 Pertanyaan: Hewan apa yang senang terbang?
 
 Teks dokumen: Burung cendrawasih senang terbang di antara pepohonan hutan Papua.
 
-Dari teks dokumen yang dimiliki, jawaban dari pertanyaan di atas adalah `burung cendrawasih'. Melihat hal tersebut perlu ada pengetahuan mengenai relasi antara `hewan' dengan `burung cendrawasih'. Dilihat dari level semantik, kedua kata memiliki hubungan hipernim-hiponim. Relasi hipernim-hiponim menunjukan hubungan antara kata yang lebih umum (hipernim) dengan kata yang lebih khusus (hiponim). Relasi hipernim-hiponim bersifat transitif dan dapat direpresentasikan dalam bentuk hirarki. Dalam kasus di atas, `hewan' adalah kata hipernim dan `burung cendrawasih' adalah kata hiponim. Jika sistem menyimpan pengetahuan relasi semantik hipernim-hiponim dua kata tersebut, jawaban dapat langsung diberikan dengan mudah.
+Dari teks dokumen yang dimiliki, manusia dapat dengan mudah menjawab pertanyaan yaitu `burung cendrawasih'. Hal tersebut karena manusia memeiliki pengetahuan bahwa `burung cendrawasi' adalah `hewan'. Dilihat dari level semantik, kedua kata memiliki hubungan hipernim-hiponim. Relasi hipernim-hiponim menunjukan hubungan antara kata yang lebih umum (hipernim) dengan kata yang lebih khusus (hiponim). Dalam Bahasa Inggris, relasi tersebut juga dikenal sebagai \textit{is-a relationship}. Sebagai contoh `nasi adalah makanan' berarti `nasi' adalah hiponim dari `makanan' atau `makanan' adalah hipernim dari `nasi'. Dalam kasus di atas, yang menjadi kata hipernim adalah `hewan' sementara `burung cendrawasih' adalah kata hiponim. Jika sistem menyimpan pengetahuan relasi semantik hipernim-hiponim dua kata tersebut, jawaban dapat langsung diberikan dengan mudah.
+% Relasi hipernim-hiponim bersifat transitif dan dapat direpresentasikan dalam bentuk hirarki.
 
-Sistem tanya jawab juga memiliki salah satu subbagian lain yaitu \textit{answer type detection}. Proses tersebut berusaha mengidentifikasi tipe jawaban dari pertanyaan sehingga dapat mempercepat proses pencarian jawaban \citep{jurafsky2000speech}. Tipe jawaban dapat dibangun dalam bentuk hirarki atau yang dikenal sebagai \textit{answer type taxonomy}. Sebuah kata dalam pertanyaan mengandung informasi yang dapat mengenali tipe jawaban. Pengetahuan mengenai hirarki hipernim-hiponim kata dapat membantu mempermudah pencarian tipe jawaban. Sebagai contoh diberi pertanyaan `Buah apa yang bewarna merah?' maka jawaban dari pertanyaan tersebut harus merupakan objek `buah'. Sistem yang menyimpan seluruh kata hiponim dari `buah' dapat mempercepat pencarian dengan hanya mengamati kata-kata tersebut.
+Sistem tanya jawab juga memiliki salah satu subbagian lain yaitu \textit{answer type detection}. Proses tersebut berusaha mengidentifikasi tipe jawaban dari pertanyaan sehingga dapat mempercepat proses pencarian jawaban \citep{jurafsky2000speech}. Tipe jawaban dapat dibangun dalam bentuk hirarki atau yang dikenal sebagai \textit{answer type taxonomy}. Sebuah kata dalam pertanyaan mengandung informasi yang dapat mengenali tipe jawaban. Pengetahuan mengenai hirarki hipernim-hiponim kata dapat membantu mempermudah pencarian tipe jawaban. Sebagai contoh diberi pertanyaan `Buah apa yang bewarna merah?' maka jawaban dari pertanyaan tersebut harus merupakan objek `buah'. Sistem yang menyimpan seluruh kata hiponim dari `buah' dapat mempercepat pencarian dengan hanya mengamati kata-kata tersebut. Penelitian sebelumnya telah memanfaatkan relasi hipernim-hiponim kata untuk mengklasifikasikan pertanyaan \citep{huang2008question}.
 
-Dari beberapa kasus yang telah disebutkan, dapat dilihat bahwa pengetahuan mengenai relasi semantik kata penting dan bermanfaat. Dalam Bahasa Inggris, \textit{resource} pasangan kata relasi semantik dapat diambil dari salah satu kamus digital populer yaitu WordNet \citep{miller1995wordnet}. WordNet tersebut dibangun secara manual oleh berbagai ahli linguistik. Setiap \textit{entry} pada WordNet disimpan dalam bentuk set sinonim atau biasa disebut \textit{synset} dan arti dari \textit{synset} tersebut atau biasa disebut \textit{sense}. \textit{Entry} dalam WordNet juga mengandung informasi mengenai relasi semantik antar \textit{synset}. Penelitian mengenai pembangunan WordNet Bahasa Indonesia telah dilakukan sebelumnya, sayangnya jumlah \textit{entry} dalam WordNet Bahasa Indonesia masih sangat terbatas. Selain itu, relasi semantik dalam WordNet juga belum dapat dikatakan baik.
+Dari beberapa kasus yang telah disebutkan, dapat dilihat bahwa pengetahuan mengenai relasi semantik kata, khususnya relasi hipernim-hiponim, penting dan bermanfaat. Dalam Bahasa Inggris, \textit{resource} pasangan kata relasi semantik dapat diambil dari salah satu kamus digital populer yaitu WordNet \citep{fellbaum1998wordnet}. WordNet tersebut dibangun secara manual oleh berbagai ahli linguistik. Setiap \textit{entry} pada WordNet disimpan dalam bentuk set sinonim atau biasa disebut \textit{synset} dan arti dari \textit{synset} tersebut atau biasa disebut \textit{sense}. \textit{Entry} dalam WordNet juga mengandung informasi mengenai relasi semantik antar \textit{synset}. Penelitian mengenai pembangunan WordNet Bahasa Indonesia telah dilakukan sebelumnya oleh  \cite{putra2008building} dan \citep{noor2011creating}. Sayangnya jumlah \textit{entry} dalam WordNet Bahasa Indonesia masih sangat terbatas. Selain itu, relasi semantik yang disimpan dalam WordNet Bahasa Indonesia merupakan turunan dari WordNet Bahas Inggris sehingga dapat dikatakan kurang baik.
 
-Fokus penelitian ini adalah berusaha mengekstrak kata berdasarkan relasi semantik dari suatu dokumen sehingga daoat dibangun korpus pasangan kata relasi. Relasi yang diamati dalam penelitian ini adalah relasi semantik hiperim-hiponim. Penelitian-penelitian sebelumnya yang bertujuan mengekstrak relasi kata hipernim-hiponim telah dilakukan dengan berbagai metode. Pada penelitian ini, metode yang digunakan adalah \textit{pattern-based} yaitu dengan teknik \textit{pattern extraction} dan \textit{matching}. Dokumen yang digunakan sebagai dasar ekstraksi pasangan kata adalah korpus Wikipedia Bahasa Indonesia. Wikipedia memuat banyak kata dari berbagai domain sehingga dapat dimanfaatkan untuk membuat \textit{pattern} yang general serta menghasilkan korpus berukuran besar.
+Fokus penelitian ini adalah berusaha mengekstrak kata berdasarkan relasi semantik dari suatu dokumen sehingga dapat dibangun korpus pasangan kata relasi secara mandiri. Relasi yang diamati dalam penelitian ini adalah relasi semantik hiperim-hiponim. Penelitian-penelitian sebelumnya yang bertujuan mengekstrak relasi kata hipernim-hiponim telah dilakukan dengan berbagai metode. Pada penelitian ini, metode yang digunakan adalah \textit{pattern-based} yaitu dengan teknik \textit{pattern extraction} dan \textit{matching}. Penelitian ekstraksi relasi kata berbasis \textit{pattern} telah dilakukan oleh \cite{hearst1992automatic}, \cite{ruiz2005automatic}, dan \cite{arnold2014extracting}. Dokumen yang digunakan sebagai dasar ekstraksi pasangan kata adalah korpus Wikipedia Bahasa Indonesia. Wikipedia memuat banyak kata dari berbagai domain sehingga dapat dimanfaatkan untuk membuat \textit{pattern} yang general serta menghasilkan korpus berukuran besar.
 
 % Berbagai penelitian yang berkaitan dengan \textit{Information Retrieval} dan \textit{Natural Language Processing} mulai muncul menggunakan Bahasa Indonesia. Salah satu yang Informasi mengenai kata dan artinya sangat dibutuhkan. Sayangnya, \textit{resource} yang dimiliki berbasis Bahasa Indonesia masih sangat terbatas. Informasi tersebut umumnya disimpan dalam kamus digital seperti WordNet. Penelitian ini dilaksanakan untuk mengembangkan \textit{resource} dalam Bahasa Indonesia. 
 
@@ -35,42 +35,42 @@ Fokus penelitian ini adalah berusaha mengekstrak kata berdasarkan relasi semanti
 
 % Melihat adanya kebutuhan akan korpus relasi kata, dilakukanlah penelitian \textit{word relation extraction}. Penelitian ini berusaha mengekstrak kata berdasarkan relasi tertentu dari suatu dokumen sehingga dihasilkan korpus relasi kata. Penelitian kali ini akan fokus pada relasi kata \textit{hypernym-hyponym}. Keduanya menyatakan relasi antara kata yang lebih umum (hipernim) dengan kata yang lebih khusus (hiponim). Metode yang digunakan adalah pattern matching dengan memanfaatkan korpus Wikipedia Bahasa Indonesia. Wikipedia memuat banyak kata dari berbagai domain sehingga dapat dimanfaatkan untuk membuat pattern yang general serta menghasilkan korpus relasi berukuran besar.
 
-%-----------------------------------------------------------------------------%
+%
 %-----------------------------------------------------------------------------%
 \section{Perumusan Masalah}
 %-----------------------------------------------------------------------------%
 Berdasarkan latar belakang yang telah dipaparkan, pertanyaan yang menjadi rumusan penelitian adalah sebagai berikut.
 \begin{enumerate}
 	\item Bagaimana cara membangun korpus pasangan kata relasi hypernim-hiponim berkualitas baik secara otomatis?
-	\item Seberapa baik metode \textit{pattern extraction} dan \textit{matching} digunakan untuk ekstraksi pasangan kata relasi semantik kata Bahasa Indonesia?
+	\item Seberapa baik metode \textit{pattern extraction} dan \textit{matching} digunakan untuk mengekstraksi pasangan kata relasi semantik Bahasa Indonesia?
 	% \item Bagaimana cara mengevaluasi \textit{pattern} dan korpus relasi kata dari hasil eksperimen?
 \end{enumerate}
 
-%-----------------------------------------------------------------------------%
+%
 %-----------------------------------------------------------------------------%
 \section{Tujuan dan Manfaat Penelitian}
 %-----------------------------------------------------------------------------%
-Tujuan dari penelitian \textit{word relation extraction} ini adalah membangun korpus pasangan relasi semantik kata Bahasa Indonesia berukuran besar dan berkualitas baik secara otomatis. Selain itu, ingin diketahui pula apakah metode \textit{pattern extraction} dan \textit{matching} baik digunakan untuk mengekstrak relasi kata Bahasa Indonesia. Diharapkan korpus pasangan kata relasi yang dihasilkan dapat menunjang berbagai penelitian lainnya.
+Tujuan dari penelitia ini adalah membangun korpus pasangan kata relasi semantik hipernim-hiponim untuk Bahasa Indonesia berukuran besar dan berkualitas baik secara otomatis. Selain itu, ingin diketahui pula apakah metode \textit{pattern extraction} dan \textit{matching} baik digunakan untuk mengekstrak pasangan kata relasi semantik hipernim-hiponim Bahasa Indonesia. Diharapkan korpus pasangan kata yang dihasilkan dapat menunjang berbagai penelitian lainnya.
 
-Penelitian ini juga diharapkan dapat memotivasi adanya penelitian selanjutnya di bidang \textit{Language Resource Development}, terutama pembangunan WordNet Bahasa Indonesia. Penelitian mengenai ekstraksi relasi sematik kata berikutnya dengan berbagai metode lain diharapkan terus dilaksanakan sehingga Bahasa Indonesia memiliki \textit{resource} yang semakin baik.
+Penelitian ini juga diharapkan dapat memotivasi adanya penelitian selanjutnya di bidang \textit{Language Resource Development}, terutama pembangunan WordNet Bahasa Indonesia. Penelitian mengenai ekstraksi pasangan kata relasi semantik berikutnya dengan berbagai metode lain diharapkan terus dilaksanakan sehingga Bahasa Indonesia memiliki \textit{resource} yang semakin baik.
 
-%-----------------------------------------------------------------------------%
+%
 %-----------------------------------------------------------------------------%
 \section{Ruang Lingkup Penelitian}
 %-----------------------------------------------------------------------------%
-Penelitian ini berupaya membangun korpus pasangan kata relasi semantik untuk Bahasa Indonesia. Relasi semantik yang menjadi fokus penelitian adalah hipernim dan hiponim, dengan kelas katanya yaitu kata benda (\textit{noun} dan \textit{proper noun}). Penelitian ini berusaha mengekstrak tidak hanya kata-kata yang merupakan \textit{single token} seperti `komputer' dan `sekolah', namun juga kata-kata yang merupakan \textit{multi token} seperti `bulu tangkis' serta \textit{noun phrase} seperti `mamalia laut'.
+Penelitian ini berupaya membangun korpus pasangan kata relasi semantik untuk Bahasa Indonesia. Relasi semantik yang diteliti adalah relasi hipernim dan hiponim, dengan kelas katanya yaitu kata benda (\textit{noun} dan \textit{proper noun}). Penelitian ini berusaha mengekstrak tidak hanya kata-kata yang merupakan \textit{single token} seperti `komputer' dan `sekolah', namun juga kata-kata yang merupakan \textit{multi token} seperti `bulu tangkis' serta \textit{noun phrase} seperti `mamalia laut'.
 
 % Penelitian ini hanya fokus pada pembuatan korpus pasangan kata dengan relasi hipernim dan hiponim Bahasa Indonesia. Kelas kata yang menjadi fokusi penelitan adalah kata benda (\textit{noun}). Pengembangan korpus dilakukan secara \textit{semi-supervised} dengan metode \textit{pattern matching}. \textit{Pattern} yang dibuat masih terbatas hanya merupakan \textit{pattern} leksikal. Evaluasi akan dilakukan pada \textit{pattern} dan korpus pasangan kata yang dihasilkan. Proses evaluasi korpus pasangan kata dilakukan menggunakan teknik \textit{random sampling}. Data yang digunakan untuk pembuatan \textit{pattern} maupun untuk ekstraksi korpus pasangan kata baru adalah Wikipedia Bahasa Indonesia. 
 % Pemilihan relasi \textit{hypernym-hyponym} dalam penelitian karena memiliki berbagai manfaat. Relasi tersebut dapat mengidentifikasi \textit{Proper Noun} baru yang belum diketahui maknanya.
 
-%-----------------------------------------------------------------------------%
+%
 %-----------------------------------------------------------------------------%
 \section{Tahapan Penelitian}
 %-----------------------------------------------------------------------------%
 Proses penelitian dilakukan dalam beberapa tahapan sebagai berikut.
 \begin{enumerate}
 	\item Studi Literatur \\
-	Pada tahap ini, dilakukan pembelajaran mengenai penelitian-penelitian sebelumnya yang telah dilakukan di bidang \textit{word relation extraction} sehingga diketahui langkah yang perlu diambil selanjutnya.
+	Pada tahap ini, dilakukan pembelajaran mengenai penelitian-penelitian terdahulu yang telah dilakukan di bidang \textit{word relation extraction} sehingga diketahui langkah yang perlu diambil selanjutnya.
 	\item Perumusan Masalah \\
 	Perumusan masalah dilakukan untuk mendefinisikan masalah yang ingin diselesaikan, tujuan penelitian, dan hasil yang diharapkan sehingga proses penelitian dapat berjalan dengan baik.
 	\item Rancangan Penelitian \\
@@ -79,10 +79,9 @@ Proses penelitian dilakukan dalam beberapa tahapan sebagai berikut.
 	Implementasi dilaksanakan sesuai dengan rancangan penelitian untuk menjawab rumusan masalah. Segala hasil yang ditemukan digunakan untuk terus memperbaiki metode dan teknik penelitan sehingga didapatkan hasil yang semakin baik.
 	\item Analisis dan Kesimpulan \\
 	Tahap terakhir dari penelitian ini adalah menganalisis korpus pasangan kata relasi yang dihasilkan. Pertanyaan dari perumusan masalah dijawab, kemudian ditarik kesimpulan.
-	
 \end{enumerate}
 
-
+%
 %-----------------------------------------------------------------------------%
 \section{Sistematika Penulisan}
 %-----------------------------------------------------------------------------%
