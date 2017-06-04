@@ -5,7 +5,13 @@
 %---------------------------------------------------------------
 \section{Kesimpulan}
 %---------------------------------------------------------------
-analisis dan hasil
+Korpus pasangan kata relasi semantik dibutuhkan untuk digunakan dalam berbagai penelitian. Relasi kata hipernim-hiponim adalah relasi yang menghubungkan antara kata yang lebih umum dan kata yang lebih khusus. Proses pembangunan korpus dapat dilakukan dengan berbagai metode, salah satu yang cukup sering dan efisien adalah dengan pendekatan berbasis \textit{pattern} yaitu \textit{pattern matching} dan \textit{pattern extraction}. Metode berbasis \textit{pattern} tersebut telah banyak dilakukan dalam beberapa penelitian sebelumnya. 
+
+Pembangunan korpus dilakukan secara bertahap menggunakan pendekatan \textit{semi-supervised learning}. Secara umum, terdapat empat tahap utama untuk aristektur \textit{semi-supervised} yang diusulkan. Pertama adalah \textit{pre-processing} data yang terdiri dari pembentukan \textit{seed} dan pengolahan data Wikipedia. Kemudian \textit{pattern} dibentuk dengan melakukan \textit{sentence tagging} dari \textit{seed} ke kalimat Wikipedia dan dilanjutkan dengan \textit{pattern extraction} dari kalimat yang sudah memiliki \textit{tag}. Selanjutnya \textit{pair} baru diekstrak menggunakan \textit{pattern} yang sudah terbentuk terhadap korpus kalimat Wikipedia. Proses evaluasi dilakukan secara kolektif pada akhir eksperimen. Dalam implementasi \textit{cycle semi-supervised}, banyak parameter yang didefinisikan sendiri berdasarkan pengamatan kualitatif.
+
+Dari banyak \textit{seed} yang dihasilkan dari WordNet Bahasa, hanya 140 \textit{pair} yang masuk ke dalam korpus pasangan kata relasi. Hal ini disebabkan karena hanya \textit{seed} yang membentuk lima \textit{pattern} utama yang dapat masuk ke dalam korpus. Proses ini dilakukan guna memfilterisasi banyaknya \textit{seed} salah yang terbentuk pada pembangunan \textit{seed}. Walaupun \textit{seed} yang diambil sangat sedikit, \textit{seed} tersebut dapat dikatakan baik dimana akurasinya mencapai 0.9. 
+
+
 
 %---------------------------------------------------------------
 \section{Saran}
