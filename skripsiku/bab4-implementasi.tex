@@ -8,7 +8,7 @@ Bab ini menjelaskan secara detail proses implementasi dari pengolahan data, pros
 \section{Pembentukan Korpus Kalimat Wikipedia}
 % TODO: tulis model wikipedia di bab 3
 %-----------------------------------------------------------------------------%
-Untuk dapat mengubah data XML Wikipedia menjadi kalimat dengan format yang diinginkan perlu melalui beberapa tahap. Gambar \ref{fig:preproses-wiki} memperlihatkan secara detil setiap tahapan dalam pemrosesan data Wikipedia. Pertama, data akan dibersihkan dari format \textit{markup language} menggunakan WikiExtractor. Kemudian setiap baris yang merepresentasika satu paragraf dipisahkan menjadi kalimat perbaris menggunakan program \textit{sentence splitter}. Kalimat yang dihasilkan akan diformat menggunakan \textit{rule-based formatter} sehingga sesuai dengan keinginan. Terakhir, POS Tagger akan memberikan \textit{pos tag} untuk setiap token dalam kalimat.
+Untuk dapat mengubah data XML Wikipedia menjadi kalimat dengan format yang diinginkan perlu melalui beberapa tahap. Gambar \ref{fig:preproses-wiki} memperlihatkan secara detil setiap tahapan dalam pemrosesan data Wikipedia. Pertama, data akan dibersihkan dari format \textit{markup language} menggunakan WikiExtractor. Kemudian setiap baris yang merepresentasika satu paragraf dipisahkan menjadi kalimat perbaris menggunakan program \textit{sentence splitter}. Kalimat yang dihasilkan akan diformat menggunakan \textit{rule-based formatter} sehingga sesuai dengan keinginan. Terakhir, POS Tagger akan memberikan \textit{POS tag} untuk setiap token dalam kalimat.
 
 \begin{figure}
     \centering
@@ -17,7 +17,7 @@ Untuk dapat mengubah data XML Wikipedia menjadi kalimat dengan format yang diing
     \label{fig:preproses-wiki}
 \end{figure}
 
-Data XML yang diperoleh dari Wikipedia Dump diekstrak secara otomatis menggunakan WikiExtractor\footnote{github.com/attardi/wikiextractor/wiki}. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. \textit{Tools} ini akan membersihkan artikel Wikipedia dari format MediaWiki \textit{markup language} sehingga dihasilkan korpus yang hanya berisi konten artikel saja. Program ini dapat diunduh dari Github dan dijalankan pada sistem operasi berbasis UNIX/Linux menggunakan perintah berikut. 
+Data XML yang diperoleh dari Wikipedia Dump diekstrak secara otomatis menggunakan WikiExtractor\footnote{github.com/attardi/wikiextractor/wiki}. WikiExtractor adalah program berbasis Python yang dibuat oleh Giuseppe Attardi dan Antonio Fuschetto. \textit{Tools} ini akan membersihkan artikel Wikipedia dari format MediaWiki \textit{markup language} (Gambar 3.2) sehingga dihasilkan korpus yang hanya berisi konten artikel saja. Program ini dapat diunduh dari Github dan dijalankan pada sistem operasi berbasis UNIX/Linux menggunakan perintah berikut. 
 
 \begin{lstlisting}[caption={Penggunaan Wiki Extractor}, language=bash]
 $ WikiExtractor.py xml-dump-file -o output-file
@@ -30,7 +30,7 @@ $ WikiExtractor.py xml-dump-file -o output-file
 %-----------------------------------------------------------------------------%
 Korpus yang dihasilkan menghasilkan baris-baris yang merepresentasikan suatu paragraf dalam artikel Wikipedia. Pada penelitian kali ini, ingin dilihat relasi hipernim-hiponim antar dua kata pada kalimat yang sama. Untuk itu, perlu dilakukan proses \textit{sentence splitting} yang dapat memisahkan setiap kalimat dalam paragraf. Hasil dari proses tersebut adalah dokumen yang terdiri dari baris-baris yang merepresentasikan satu kalimat. 
 
-Proses ini dilakukan dengan menggunakan program berbasis Perl yang telah dibuat sebelumnya oleh Ken Nabila Setya dari Fasilkom UI, Indonesia. Ditambah satu program yang dapat secara otomatis melakukan \textit{splitting} untuk seluruh dokumen dalam direktori. Berikut adalah contoh sebuah paragraf dalam artikel Wikipedia yang telah dibersihkan menggunakan WikiExtractor.
+Proses ini dilakukan dengan menggunakan program berbasis Perl yang telah dibuat sebelumnya oleh \cite{ken2016pengembangan} dari Fasilkom UI, Indonesia. Ditambah satu program yang dapat secara otomatis melakukan \textit{splitting} untuk seluruh dokumen dalam direktori. Berikut adalah contoh sebuah paragraf dalam artikel Wikipedia yang telah dibersihkan menggunakan WikiExtractor.
 
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
@@ -39,7 +39,7 @@ Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Ch
 \end{tabular}
 \end{center}
 
-\noindent Kalimat di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
+\noindent Paragraf   di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
 
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
@@ -53,14 +53,14 @@ Dia menggantikan pamannya, James Brooke sebagai raja. \\
 %-----------------------------------------------------------------------------%
 \subsection{Rule Based Formatter}
 %-----------------------------------------------------------------------------%
-Kalimat-kalimat yang dihasilkan dari proses sebelumnya, dimasukkan ke dalam program \textit{rule based formatter} sehingga membentuk korpus dengan format yang diingingkan. Penambahan aturan juga untuk mengurangi ambiguitas dan bentuk usaha generalisasi \textit{pattern}. Berikut adalah beberapa aturan tambahan untuk yang diberikan pada korpus Wikipedia.
+Kalimat-kalimat yang terbentuk, selanjutnya diproses dengan program \textit{rule based formatter} sehingga membentuk korpus dengan format yang diingingkan. Penambahan aturan juga untuk mengurangi ambiguitas dan bentuk usaha membentuk \textit{pattern} yang lebih umum. Berikut adalah beberapa aturan tambahan untuk yang diberikan pada korpus Wikipedia.
 
 \begin{enumerate}
   \item Menghilangkan frasa yang berada di dalam tanda kurung. \\
-  Frasa yang terletak di dalam tanda kurung dapat dianggap sebagai penjelas kata atau frasa sebelumnya. Proses ini merupakan salah satu upaya generalisasi \textit{pattern}.
+  Frasa yang terletak di dalam tanda kurung dapat dianggap sebagai penjelas kata atau frasa sebelumnya. Proses ini dilakukan agar dapat mengekstrak lebih banyak \textit{pattern} yang sama.
   \item Memisahkan simbol-simbol yang berhimpit pada awal dan akhir kata. \\
   Beberapa token yang dipisahkan oleh spasi dalam kalimat merupakan kata yang berhimpit dengan tanda baca. Untuk mempermudah proses selanjutnya yaitu \textit{sentence tagging}, dilakukan \textit{pre-processing} tambahan yaitu memisahkan simbol-simbol \textit{non-alphanumerical}.
-  \item Memberi penanda awal kalimat dengan '{\tagStart}'' dan akhir kalimat dengan '{\tagEnd}'. \\
+  \item Memberi penanda awal kalimat dengan '{\tagStart}' dan akhir kalimat dengan '{\tagEnd}'. \\
   Pemberian simbol awal dan akhir kalimat memperjelas isi kalimat dan juga menunjang proses \textit{pattern extraction} dan \textit{pattern matching}.
 \end{enumerate}
 
@@ -79,7 +79,7 @@ Kalimat-kalimat yang dihasilkan dari proses sebelumnya, dimasukkan ke dalam prog
 %-----------------------------------------------------------------------------%
 \subsection{POS Tagging Kalimat Wikipedia}
 %-----------------------------------------------------------------------------%
-Proses \textit{part-of-speech tagging} dilakukan pada korpus Wikipedia yang telah berbentuk kalimat dengan format yang didefinisikan. Pada penelitian ini, kelas kata yang menjadi pengamatan adalah \textit{noun} (NN) dan \textit{proper noun} (NNP), sehingga proses \textit{POS Tagging} dilakukan guna mengidentifikasi kata-kata tersebut. Proses \textit{POS Tagging} dijalankna dengan program Stanford POS Tagger \citep{toutanova2003feature}, dengan model yang digunakan merupakan hasil penelitian sebelumnya menggunakan Bahasa Indonesia \citep{dinakaramani2014designing}.  Setelah selesai melalui proses \textit{tagging} masih ditemui beberapa kesalahan \textit{tagging} untuk beberapa token. Hal ini menyebabkan ditambahkannya \textit{rule-based tagging} untuk memperbaik kata-kata yang sering salah. Selanjutnya dilakukan penyesuaian format sehingga korpus yang dihasilkan lebih rapi dan terstruktur. Berikut adalah contoh kalimat yang sudah melalui tahap \textit{POS Tagging}. Kalimat teersebut digunakan untuk proses \textit{pattern matching}.
+Proses \textit{part-of-speech tagging} dilakukan pada korpus Wikipedia yang telah berbentuk kalimat dengan format yang didefinisikan. Pada penelitian ini, kelas kata yang menjadi pengamatan adalah \textit{noun} (NN) dan \textit{proper noun} (NNP), sehingga proses \textit{POS Tagging} perlu dilakukan untuk mengidentifikasi kata-kata tersebut. Proses ini dijalankan menggunakan program Stanford POS Tagger \citep{toutanova2003feature} dan sebuah model Bahasa Indonesia yang merupakan hasil penelitian sebelumnya \citep{dinakaramani2014designing}.  Setelah selesai melalui proses \textit{tagging} masih ditemui beberapa kesalahan \textit{tagging} untuk beberapa token. Hal ini menyebabkan ditambahkannya \textit{rule-based tagging} untuk memperbaik kata-kata yang sering salah. Selanjutnya dilakukan penyesuaian format sehingga korpus yang dihasilkan lebih rapi dan terstruktur. Berikut adalah contoh kalimat yang sudah melalui tahap \textit{POS Tagging}. Kalimat tersebut digunakan untuk proses \textit{pattern matching}.
 
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
@@ -110,7 +110,7 @@ buildSeed:
 \end{lstlisting}
 
 % Filterisasi Seed
-Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha mendapatkan \textit{seed} sebanyak mungkin. Filterasisasi juga dilakukan untuk mendapatkan \textit{seed} awal yang diyakini benar dan berkualitas. Salah satu bagian terpenting proses ini adalah memasangkan hanya lema yang merupakan \textit{noun} ke lema yang juga adalah \textit{noun}. Jika kemungkinan lema tersebut tergolong ke dalam kelas kata bukan \textit{noun}, lema tidak diikutsertakan sebagai \textit{seed} awal.
+Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha mendapatkan \textit{seed} sebanyak mungkin. Filterasisasi juga dilakukan untuk mendapatkan \textit{seed} awal yang diyakini benar dan berkualitas baik. Salah satu bagian terpenting proses ini adalah memasangkan hanya lema yang merupakan \textit{noun} ke lema yang juga adalah \textit{noun}. Jika kemungkinan lema tersebut tergolong ke dalam kelas kata bukan \textit{noun}, lema tidak diikutsertakan sebagai \textit{seed} awal.
 
 Tantangan dalam proses ini adalah banyak ditemukan kasus dimana satu lema dikandung oleh lebih dari satu \textit{synset} atau satu \textit{synset} memiliki lebih dari satu \textit{synset} hipernim. Ambiguitas dalam kasus tersebut dapat mengurangi kualitas \textit{seed} yang dihasilkan. Mengatahui hal tersebut, dibuatlah dua pendekatan berbeda untuk proses filterisasi \textit{seed}.
 
@@ -195,14 +195,18 @@ Setelah mendapatkan kalimat-kalimat yang telah di-\textit{tag} dengan kata relas
 Suatu \textit{\textit{node}} merepresentasikan kata dalam kalimat dan dari satu kalimat terbentuk sebuah cabang dalam \textit{tree}. \textit{Node} menyimpan beberapa informasi seperti nama \textit{\textit{node}}, \textit{parent}, \textit{childs}, dan informasi identitas tambahan seperti apakah \textit{\textit{node}} tersebut merupakan relasi (hipernim atau \textit{hyponym}) dan apakah \textit{\textit{node}} tersebut merupakan \textit{leaf}. Untuk kata yang merupakan kata relasi, \textit{\textit{node}} menyimpan informasi jenis relasi beserta \textit{list} dari kata yang merupakan bagian dari relasi tersebut. 
 
 Sebagai contoh jika terdapat beberapa \textit{sequnce} kalimat yang akan dibentuk ke dalam \textit{tree} sebagai berikut menghasilkan \textit{tree} seperti yang dapat dilihat pada gambar \ref{fig:contoh-ptree}.
+
 K1: {\tagHyponym}piano{\tagHyponym} adalah {\tagHypernym}alat musik{\tagHypernym}.
-K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah seorang {\tagHypernym}pelukis{\tagHypernym}.
+
+K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah seorang {\tagHypernym} pelukis{\tagHypernym}.
+
 K3: {\tagHyponym}kucing{\tagHyponym} adalah {\tagHypernym}binatang{\tagHypernym}.
-K4: {\tagHyponym}sepak bola{\tagHyponym} adalah {\tagHypernym}olahraga{\tagHypernym}.
+
+K4: {\tagHyponym}sepak bola{\tagHyponym} adalah {\tagHypernym} olahraga{\tagHypernym}.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.6]{pics/contoh-patterntree}
+    \includegraphics[scale=0.7]{pics/contoh-patterntree}
     \caption{Contoh \textit{pattern tree} yang terbentuk}
     \label{fig:contoh-ptree}
 \end{figure}
@@ -329,7 +333,7 @@ Strategi yang diusulkan dalam penelitian ini untuk mengatasi masalah ambiguitas 
 %-----------------------------------------------------------------------------%
 \subsection{Pengurutan Pattern}
 %-----------------------------------------------------------------------------%
-Setelah terbentuk \textit{pattern} yang sesuai, dilakukan proses pengurutan (\textit{sorting}) untuk mengetahui \textit{pattern} mana yang terbaik berdasarkan vektor \textit{pattern} yang dimiliki. Proses pengurutan dilakukan dengan membandingkan satu \textit{pattern} dengan yang lain, dengan tahapan sebagai berikut.
+Setelah terbentuk \textit{pattern} yang sesuai, dilakukan proses pengurutan (\textit{sorting}) untuk mengetahui \textit{pattern} mana yang terbaik berdasarkan informasi dalam vektor \textit{pattern}. Proses pengurutan dilakukan dengan membandingkan satu \textit{pattern} dengan yang lain, dengan tahapan sebagai berikut.
 \begin{enumerate}
   \item Semakin besar jumlah kalimat unik yang membentuk \textit{pattern}.
   \item Semakin besar nilai perbandingan antara jumlah \textit{seed} unik yang membentuk \textit{pattern} dengan jumlah kalimat unik yang membentuk \textit{pattern}.
@@ -357,10 +361,10 @@ Pembentukan \textit{suffix tree} mirip seperti pembentukan \textit{pattern tree}
   kata. \textit{Pattern} pasti mengandung token {\tagHypernym} dan {\tagHyponym}, selanjutnya disebut token relasi.
   \item Jika ditemukan token relasi pada daftar token \textit{pattern} yang sedang dievaluasi, maka \textit{node} yang dikunjungi disimpan sementara sesuai dengan relasinya.
   \item Jika token bukan token relasi, maka di evaluasi apakah token sama denga  \textit{node} yang dikunjungi. Jika sama maka proses evaluasi dilanjutkan, namun jika berbeda maka \textit{pattern} tidak cocok.
-  \item Jika seluruh token \textit{pattern} telah dievaluasi dan tidak mengalami kegagalan, makan dianggap berhasil dan kata yang terekstrak disimpan dalam bentuk \textit{pair}.
+  \item Jika seluruh token \textit{pattern} telah dievaluasi dan tidak mengalami kegagalan, maka dianggap berhasil dan kata yang terekstrak disimpan dalam bentuk \textit{pair}.
 \end{enumerate}
 
-Pada masa awal pengembangan, masalah pertama yang ditemukan adalah banyaknya \textit{pair} yang salah satu atau kedua kata relasinya tidak teramasuk dalam kelas kata benda. Beberapa \textit{pair} yang salah diantaranya $(Menoitios;salah)$ dimana 'salah' adalah \textit{adjective} dan $(saya,gitaris)$ dimana 'saya' adalah preposi. Untuk itu diputuskan menggunakan korpus Wikipedia yang sudah melalui tahap POS Tagging. \textit{Pos tag} pada setiap kata dalam kalimat membatasi proses \textit{pattern matching} hanya akan mengekstrak \textit{pair} yang kedua katanya berada dalam kelas kata benda (\textit{noun} atau \textit{proper noun}). 
+Pada masa awal pengembangan, masalah pertama yang ditemukan adalah banyaknya \textit{pair} yang salah satu atau kedua kata relasinya tidak teramasuk dalam kelas kata benda. Beberapa \textit{pair} yang salah diantaranya $(Menoitios;salah)$ dimana 'salah' adalah \textit{adjective} dan $(saya,gitaris)$ dimana 'saya' adalah preposi. Untuk itu diputuskan menggunakan korpus Wikipedia yang sudah melalui tahap POS Tagging. \textit{POS tag} pada setiap kata dalam kalimat membatasi proses \textit{pattern matching} hanya akan mengekstrak \textit{pair} yang kedua katanya berada dalam kelas kata benda (\textit{noun} atau \textit{proper noun}). 
 
 Masalah lain yang ditemukan adalah jika kata yang ingin diekstrak merupakan \textit{multi token}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya adalah $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang tergolong dalam kelas kata yang sama dalam suatu kalimat merupakan \textit{multi token}. \textit{Multi token} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
 

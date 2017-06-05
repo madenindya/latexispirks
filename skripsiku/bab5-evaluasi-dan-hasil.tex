@@ -28,12 +28,12 @@ Data hasil ekstraksi memisahkan satu paragraf untuk setiap baris, sementara form
 \subsection{Hasil POS Tagging Kalimat}
 % TODO: tambahin hasil-hasil
 %-----------------------------------------------------------------------------%
-Kalimat-kalimat yang telah dibentuk, dimasukan ke dalam program POS Tagger, sehingga dihasilkan kalimat yang setiap tokennya memiliki \textit{tag} berdasarkan kelas kata. Total ukuran berkas adalah 623 MB. Berkas ini digunakan sebagai masukan proses \textit{pattern matching}. 
+Kalimat-kalimat yang telah dibentuk, dimasukan ke dalam program POS Tagger, sehingga dihasilkan kalimat yang setiap tokennya memiliki \textit{tag} berdasarkan kelas kata. Total ukuran berkas adalah 623 MB. Berkas ini digunakan sebagai masukan proses \textit{pattern matching}. Sebelum diberi \textit{rule} tambahan, masih ditemukan beberapa kata yang di-\textit{tag} salah sehingga berakibat terekstraksi pula \textit{pair} yang salah. 
 
 %-----------------------------------------------------------------------------%
 \subsection{Pemodelan Word Embedding}
 %-----------------------------------------------------------------------------%
-Pembuatan model \textit{word embedding} menggunakan korpus Wikipedia yang sudah berbentuk kalimat. Proses ini menghasilkan tiga berkas model (tabel \ref{table:modelWE}). Berkas hasil pemodelan berukuran besar karena menggunakan seluruh kalimat yang ada dalam korpus Wikipedia.
+Pembuatan model \textit{word embedding} menggunakan korpus Wikipedia yang sudah berbentuk kalimat. Model yang digunakan adalah Word2Vec dengan \textit{tools} gensim. Proses ini menghasilkan tiga berkas model (tabel \ref{table:modelWE}). Berkas hasil pemodelan berukuran besar karena menggunakan seluruh kalimat yang ada dalam korpus Wikipedia.
 
 \begin{table}
   \centering
@@ -50,7 +50,7 @@ Pembuatan model \textit{word embedding} menggunakan korpus Wikipedia yang sudah 
 
 % 5.2
 %-----------------------------------------------------------------------------%
-\section{Pengumpulan Seed}
+\section{Pengumpulan dan Evaluasi Seed}
 \label{bab-pengumpulanseed}
 %-----------------------------------------------------------------------------%
 Pasangan kata relasi hipernim-hiponim awal diambil dari korpus yang dimiliki oleh WordNet Bahasa. Setelah melalui proses pembentukan \textit{seed}, berikut adalah jumlah \textit{seed} yang dihasilkan berdasarkan jenis filterisasi. Kedua tipe \textit{seed} tersebut digunakan proses pembentukan pattern pada iterasi pertama. 
@@ -70,9 +70,9 @@ Pasangan kata relasi hipernim-hiponim awal diambil dari korpus yang dimiliki ole
 Walau sudah melakukan proses filterisasi sebagai upaya mengurangi \textit{error} dan ambiguitas yang terjadi pada proses pemenentukan \textit{seed} serta untuk meningkatkan kulatias \textit{seed}, masih ada hambatan yang belum dapat diatasi dalam penelitian ini. Beberapa kelemahan dari \textit{seed} awal yang dihasilkan adalah sebagai berikut.
 
 \begin{itemize}
-  \item \textit{Seed} yang mengandung kata bukan Bahasa Indonesia. Korpus yang ingin dibuat berdomain Bahasa Indonesia, namun \textit{seed} yang dihasilkan mengandung Bahasa Melayu atau Bahasa Indonesia lama. Beberapa kata bukan Bahasa Indonesia yang dihasilkan adalah 'had', 'bonjol', dan 'cecok'.
-  \item Kesalahan semantik \textit{synset} dan lema Bahasa Indonesia. Beberapa \textit{synset} nltk memiliki lema Bahasa Indonesia yang kurang sesuai jika dilihat secara semantik. Sebagai contoh \textit{Synset('scholar.n.01')} dengan lemma Bahasa Indonesia \textit{{'buku\_harian', 'pelajar'}}. Dalam Bahasa Indonesia, 'buku\_harian' memiliki makna yang berbeda dengan 'pelajar'.
-  \item Kesalahan lema Bahasa Indonesia untuk suatu \textit{synset} menyebabkan dihasilkannya \textit{seed} yang jika dievaluasi kualitatif oleh manusia dirasa kurang tepat. Contoh \textit{seed} yang tidak baik adalah dari pemetaan \textit{('sejarawan', Synset('historian.n.01')) => (['buku\_harian', 'pelajar'], Synset('scholar.n.01'))} dihasilkan \textit{seed} \textit{(sejarawan,buku harian)} dan \textit{(sejarawan,pelajar)}. \textit{Seed} (sejarawan,buku harian) adalah salah.
+  \item \textit{Seed} yang mengandung kata bukan Bahasa Indonesia. Korpus yang ingin dibuat berdomain Bahasa Indonesia, namun \textit{seed} yang dihasilkan mengandung Bahasa Melayu atau Bahasa Indonesia lama. Beberapa kata bukan Bahasa Indonesia yang dihasilkan adalah `had', `bonjol', dan `cecok'.
+  \item Kesalahan semantik \textit{synset} dan lema Bahasa Indonesia. Beberapa \textit{synset} nltk memiliki lema Bahasa Indonesia yang kurang sesuai jika dilihat secara semantik. Sebagai contoh \textit{Synset('scholar.n.01')} dengan lemma Bahasa Indonesia `buku\_harian', `pelajar'. Dalam Bahasa Indonesia, `buku\_harian' memiliki makna yang berbeda dengan `pelajar'.
+  \item Kesalahan lema Bahasa Indonesia untuk suatu \textit{synset} menyebabkan dihasilkannya \textit{seed} yang jika dievaluasi kualitatif oleh manusia dirasa kurang tepat. Contoh \textit{seed} yang tidak baik adalah dari pemetaan \textit{(`sejarawan', Synset('historian.n.01')) => ([`buku\_harian', `pelajar'], Synset('scholar.n.01'))} dihasilkan \textit{seed} \textit{(sejarawan,buku harian)} dan \textit{(sejarawan,pelajar)}. \textit{Seed} (sejarawan,buku harian) adalah salah karena kedua kata tidak berelasi hipernim-hiponim. 
 \end{itemize}
 
 Walau terlihat masih banyak ditemukan kasus salah seperti di atas, beberapa pasangan kata yang terbentuk dapat diniali cukup baik. Beberapa \textit{seed} baik yang berhasil dibentuk adalah '(lori,truk)', '(kecap,bumbu)', '(itik,unggas)', dan '(kelelawar,mamalia)'.
@@ -81,7 +81,7 @@ Walau terlihat masih banyak ditemukan kasus salah seperti di atas, beberapa pasa
 %-----------------------------------------------------------------------------%
 \section{Pembentukan Pattern Pertama}
 %-----------------------------------------------------------------------------%
-Iterasi pertama untuk seluruh percobaan selalu menggunakan \textit{seed} diatas, sehingga hasil untuk proses pembentukan \textit{pattern} sama. Berikut adalah detil hasil untuk \textit{sentence tagging} dan \textit{pattern extraction} pada iterasi pertama.
+Iterasi pertama untuk seluruh percobaan selalu menggunakan \textit{seed} di atas, sehingga hasil untuk proses pembentukan \textit{pattern} selalu sama. Berikut adalah detil hasil untuk \textit{sentence tagging} dan \textit{pattern extraction} pada iterasi pertama.
 
 %-----------------------------------------------------------------------------%
 \subsection{Sentence Tagging dengan Seed}
@@ -103,34 +103,37 @@ Dari kedua tipe \textit{seed} hasil filterisasi, masing-masing digunakan untuk m
   }
 \end{table}
 
-\noindent Data pada tabel \ref{table:sentencetagging1} memperlihatkan bahwa banyak ditemukan kasus dimana satu kalimat mengandung lebih dari satu pasangan kata relasi. Sementara, jika dibandingkan dengan keseluruhan kalimat dalam Wikipedia, hanya sekitar 0.01 yang mengandung \textit{seed}. Hal ini dapat berarti banyak kalimat yang kurang merepresentasikan relasi atau banyak \textit{seed} yang kurang tepat. Seperti yang sudah dijelaskan pada bab \ref{bab-pengumpulanseed}, masih banyak \textit{seed} kurang baik yang terbentuk.
+\noindent Data pada tabel \ref{table:sentencetagging1} memperlihatkan bahwa banyak ditemukan kasus dimana satu kalimat mengandung lebih dari satu pasangan kata relasi. Sementara, jika dibandingkan dengan keseluruhan kalimat dalam Wikipedia, hanya sekitar 0.01 yang mengandung \textit{seed}. Hal ini dapat berarti banyak kalimat yang kurang merepresentasikan relasi atau banyak \textit{seed}. Selain itu, data di atas juga dapat disebabkan masih banyak \textit{seed} kurang baik yang terbentuk seperti yang sudah dijelaskan pada bab \ref{bab-pengumpulanseed}.
 
 %-----------------------------------------------------------------------------%
 \subsection{Hasil Pattern Extraction}
 %-----------------------------------------------------------------------------%
-Kedua korpus kalimat yang masing-masing menghasilkan daftar \textit{pattern}. Kedua daftar \textit{pattern} digabung dan diurutkan sesuai bobot. Dari 106 \textit{pattern} yang dihasilkan pada iterasi pertama, tabel \ref{table:pattern1} memaparkan lima \textit{pattern} terbaik yang digunakan untuk proses \textit{pattern matching}. Kelima \textit{pattern} tersebut dibentuk dari total 104 \textit{seed} yang langsung masuk ke korpus pasangan kata relasi.
+Kedua korpus kalimat yang masing-masing menghasilkan daftar \textit{pattern}. Kedua daftar \textit{pattern} digabung dan diurutkan sesuai bobot. Dari 106 \textit{pattern} yang dihasilkan pada iterasi pertama, tabel \ref{table:pattern1} memaparkan lima \textit{pattern} terbaik yang digunakan untuk proses \textit{pattern matching}. Kolum `Jumlah Seed' merepresentasik jumlah \textit{seed} unik yang membentuk \textit{pattern} tersebut.
 
 \begin{table}
   \centering
   \caption{Pattern terbaik iterasi pertama}
   \label{table:pattern1}
-  \begin{tabular}{|c|}
+  \begin{tabular}{|c|c|}
     \hline
-      start <hyponym> adalah <hypernym> \\
-      <hyponym> merupakan <hypernym> \\ 
-      <hyponym> adalah <hypernym> yang \\
-      <hypernym> seperti <hyponym> dan \\
-      <hypernym> termasuk <hyponym> \\ \hline
+      Pattern & Jumlah Seed \\ \hline
+      start {\tagHyponym} adalah {\tagHypernym} & 87 \\ \hline
+      {\tagHyponym} merupakan {\tagHypernym} & 35 \\ \hline
+      {\tagHyponym} adalah {\tagHypernym} yang & 35 \\ \hline
+      {\tagHypernym} seperti {\tagHyponym} dan & 16\\ \hline
+      {\tagHypernym} termasuk {\tagHyponym} & 17 \\ \hline
   \end{tabular}
 \end{table}
 
-Kelima \textit{pattern} tersebut dibangun dengan total 140 \textit{seed}. Dari 140 \textit{seed} yang merepresentasikan kelima \textit{pattern}, dicari nilai akurasinya. Diambil 20 \textit{pair} secara acak sehingga satu sampel merepresentasikan 7 data asli, kemudian \textit{pair} tersebut dianotasi secara manual oleh tiga anotator. Total sampel yang benar adalah 18 data, sehingga dapat dikatakan bahwa akurasi \textit{pair} pertama yang masuk ke dalam korpus pasangan kata relasi adalah 0.9. Jika dilihat dari keseluruhan data, masih terdapat 14 \textit{pair} yang salah namun masuk ke dalam pasangan kata relasi. Hal ini berarti walau sudah dilakukan proses filterisasi, korpus \textit{seed} yang dihasilkan masih mengandung \textit{error}. 
+\noindent Dari data di atas, dapat dilihat bahwa \textit{seed} yang membentuk \textit{pattern} terbaik dapat dikatakan sedikit dibanding jumlah \textit{seed} total yang terbentuk. Hal ini membuktikan bahwa masih banyak \textit{seed} kurang baik yang terbentuk pada tahap pembangunan \textit{seed}.
+
+Kelima \textit{pattern} tersebut dibentuk dari total 104 \textit{seed} unik dimana \textit{seed} tersebut langsung masuk ke korpus pasangan kata relasi. Dari 140 \textit{seed} yang merepresentasikan kelima \textit{pattern}, kemudian dicari nilai akurasinya. Diambil 20 \textit{pair} secara acak sehingga satu sampel merepresentasikan 7 data asli, kemudian \textit{pair} tersebut dianotasi secara manual oleh tiga anotator. Total sampel yang benar adalah 18 data, sehingga dapat dikatakan bahwa akurasi \textit{pair} pertama yang masuk ke dalam korpus pasangan kata relasi adalah 0.9. Jika dilihat dari keseluruhan data, masih terdapat 14 \textit{pair} yang salah namun masuk ke dalam pasangan kata relasi. Hal ini berarti walau sudah dilakukan proses filterisasi, korpus \textit{seed} yang dihasilkan masih mengandung \textit{error}. Contoh \textit{seed} yang salah adalah `(aorta;arteri)' yang lebih cocok dikategorikan ke dalam relasi holonim-meronim dan `(atmosfer;bagian)' yang kurang jelas artinya.
 
 % 5.4
 %-----------------------------------------------------------------------------%
 \section{Hasil Eksperimen}
 %-----------------------------------------------------------------------------%
-Bagian ini akan memaparkan penjelasan parameter untuk setiap eksperimen yang telah dilakukan dan hasil dari eksperimen tersebut. Setiap eksperimen dilalukan dengan memodifikasi parameter dalam arsitektur \textit{semi-supervised} yaitu mengubah nilai \textit{threshold} dalam filterisasi \textit{pair} baru atau mengubah tipe \textit{pair} yang diterima antar \textit{single token} dan \textit{multi token}.
+Bagian ini akan memaparkan skenario untuk setiap eksperimen yang telah dilakukan dan hasil dari eksperimen tersebut. Setiap eksperimen dilakukan dengan memodifikasi parameter dalam arsitektur \textit{semi-supervised} yaitu mengubah nilai \textit{threshold} dalam filterisasi \textit{pair} baru atau mengubah tipe \textit{pair} yang diterima antar \textit{single token} dan \textit{multi token}.
 
 %-----------------------------------------------------------------------------%
 \subsection{Eksperimen 1}
@@ -145,9 +148,9 @@ Eksperimen pertama dilakukan dengan nilai \textit{threshold} untuk filterisasi \
   \hline
   Iterasi ke- & Total pattern & Pattern untuk ekstraksi                 \\ \hline
   1           & 106           & Pattern utama                           \\ \hline
-  2           & 347           & <start> <hyponym> merupakan <hypernym>  \\ \hline
-  3           & 395           & <hyponym> merupakan <hypernym> yang     \\ \hline
-  4           & 425           & <hypernym> atau <hyponym>               \\ \hline
+  2           & 347           & <start> {\tagHyponym} merupakan {\tagHypernym}  \\ \hline
+  3           & 395           & {\tagHyponym} merupakan {\tagHypernym} yang     \\ \hline
+  4           & 425           & {\tagHypernym} atau {\tagHyponym}               \\ \hline
   \end{tabular} 
 \end{table}
 
@@ -165,10 +168,10 @@ Eksperimen pertama dilakukan dengan nilai \textit{threshold} untuk filterisasi \
   \end{tabular} 
 \end{table}
 
-Data di atas memperlihatkan bahwa jumlah \textit{pair} yang diyakini benar atau nilai bobotnya melebihi \textit{threshold} dapat dikatakan sedikit jika dibandingkan dengan total \textit{pair} yang terekstraksi. Perbandingan total \textit{pair} yang masuk ke dalam korpus pasangan kata relasi dengan total \textit{pair} yang dihasilkan oleh sistem hanya 0.013. Untuk meningkatkan jumlah \textit{pair} yang masuk ke dalam korpus pasangan kata relasi, dilakukanlah eksperimen dimana nilai \textit{threshold} diturunkan.
+Data di atas memperlihatkan bahwa jumlah \textit{pair} yang diyakini benar atau nilai bobotnya melebihi \textit{threshold} dapat dikatakan sedikit jika dibandingkan dengan total \textit{pair} yang terekstraksi. Perbandingan total \textit{pair} yang masuk ke dalam korpus pasangan kata relasi dengan total \textit{pair} yang dihasilkan oleh sistem hanya 0.013. Untuk meningkatkan jumlah \textit{pair} yang masuk ke dalam korpus pasangan kata relasi, dilakukanlah eksperimen 2 dimana nilai \textit{threshold} diturunkan.
 
 % biar nyambung ke eksperimen 3
-Selanjutnya, dari seluruh data sampel eksperimen pertama (tabel \ref{table:akurasi-all}), \textit{pair} yang kata hipernim dan hiponimnya merupakan \textit{single token} ada sejumlah 73 \textit{pair}. Setelah dianotasi, 63 diantaranya adalah \textit{pair} yang berlabel benar. Hal ini menunjukan akurasinya untuk \textit{pair} yang bertipe \textit{single token} adalah 0.86. Kemudian dari data tersebut, 44 \textit{pair} adalah kata hipernim-hiponim yang keduanya merupakan konsep. Hal tersebut memperlihatkan bahwa \textit{pair} yang kedua katanya adalah \textit{single token} memiliki kualitas yang jauh lebih baik dibanding \textit{multi token}. Untuk membuktikan hal tersebut, dilakukan eksperimen 3 yang hanya memperhatikan data yang merupakan \textit{single token}.
+Selanjutnya setelah dihitung akurasi sampel \textit{pair} yang dihasil dalam eksperimen ini (tabel \ref{table:akurasi-all}), \textit{pair} yang kata hipernim dan hiponimnya merupakan \textit{single token} ada sejumlah 73 \textit{pair}. Setelah dianotasi, 63 diantaranya adalah \textit{pair} yang berlabel benar. Hal ini menunjukan akurasinya untuk \textit{pair} yang bertipe \textit{single token} adalah 0.86. Kemudian dari data tersebut, 44 \textit{pair} adalah pasangan kata hipernim-hiponim yang keduanya merupakan konsep. Hal tersebut memperlihatkan bahwa \textit{pair} yang kedua katanya merupakan \textit{single token} memiliki kualitas yang jauh lebih baik dibanding \textit{multi token}. Untuk membuktikan hal tersebut, dilakukan eksperimen 3 yang hanya memperhatikan data yang merupakan \textit{single token}.
 
 % \noindent \textit{Pair} yang dihasilkan dicari nilai akurasinya dengan mengambil sampel secara \textit{random}. Sampel tersebut kemudian dianotasi secara manual oleh anotator. Tabel memaparkan nilai akurasi \textit{pair} untuk setiap iterasi.
 % \begin{table}
@@ -199,9 +202,9 @@ Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka 
   \hline
     Iterasi ke- & Total pattern & Pattern baru terpilih \\ \hline
     1 & 106 & Pattern utama \\ \hline
-    2 & 699 & <start> <hyponym> merupakan <hypernym> \\ \hline
-    3 & 791 & <hyponym> merupakan <hypernym> yang \\ \hline
-    4 & 842 & <hyponym> menjadi <hypernym> \\ \hline
+    2 & 699 & <start> {\tagHyponym} merupakan {\tagHypernym} \\ \hline
+    3 & 791 & {\tagHyponym} merupakan {\tagHypernym} yang \\ \hline
+    4 & 842 & {\tagHyponym} menjadi {\tagHypernym} \\ \hline
   \end{tabular} 
 \end{table}
 
@@ -219,7 +222,7 @@ Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka 
   \end{tabular} 
 \end{table}
 
-\noindent Jika dibandingkan dengan eksperiment pertama, jumlah \textit{pair} yang nilainya melebihi \textit{threshold} bertambah hingga dua kali dari sebelumnya walaupun selisih nilai \textit{threshold} hanya 0.05. Ini berarti banyak \textit{pair} yang nilai bobotnya dekat dengan nilai batas tersebut. Selanjutnya, jika dilihat dari total \textit{pair} yang diekstrak, hingga iterasi ke-3 jumlahnya total \textit{pair} yang terekstrak sama. Perubahan terjadi pada iterasi ke-4 ketika \textit{pattern} yang digunakan berubah. Hal ini berarti jumlah total \textit{pair} yang terekstrak sepenuhnya bergantung dengan \textit{pattern} yang digunakan.
+Jika dibandingkan dengan eksperiment pertama, jumlah \textit{pair} yang nilainya melebihi \textit{threshold} bertambah hingga dua kali dari sebelumnya walaupun selisih nilai \textit{threshold} hanya 0.05. Ini berarti banyak \textit{pair} yang nilai bobotnya dekat dengan nilai batas tersebut. Selanjutnya, jika dilihat dari total \textit{pair} yang diekstrak, hingga iterasi ke-3 jumlahnya total \textit{pair} yang terekstrak sama. Perubahan terjadi pada iterasi ke-4 ketika \textit{pattern} yang digunakan berubah. Hal ini berarti jumlah total \textit{pair} yang terekstrak sepenuhnya bergantung dengan \textit{pattern} yang digunakan.
 %
 % \noindent Dari \textit{pair} yang dihasilkan, tabel \ref{table:eksp2-akurasi} menunjukan nilai akurasinya.
 % \begin{table}
@@ -239,7 +242,7 @@ Melihat sedikitnya jumlah pattern yang dihasilkan dari eksperimen pertama, maka 
 %-----------------------------------------------------------------------------%
 \subsection{Eksperimen 3}
 %-----------------------------------------------------------------------------%
-Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \textit{pair} yang kata hipernimnya adalah konsep sementara kata hiponimnya adalah \textit{instance}. Untuk relasi semantik hipernim-hiponim yang lebih umum, hubungan antar kata yang lebih umum adalah antar konsep. Untuk pasangan kata relasi hipernim-hiponim yang bertipe konsep-konsep, lebih banyak dijumpai jika kedua kata merupakan \textit{single token}. Selain it, pembentukan \textit{multi token} yang dilakukan belum sepenuhnya baik seperti banyaknya dijumpai kasus terbentuk kata yang kelebihan token. Eksperimen ini akan mencoba mengekstrak \textit{pair} yang kedua katanya adalah \textit{single token}. Nilai \textit{threshold} yang digunakan adalah 0.55.
+Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \textit{pair} yang kata hipernimnya adalah konsep sementara kata hiponimnya adalah \textit{instance}. Untuk relasi semantik hipernim-hiponim yang umum, hubungan antar kata yang diinginkan adalah antar konsep. Untuk pasangan kata relasi hipernim-hiponim yang bertipe konsep-konsep, lebih banyak dijumpai jika kedua kata merupakan \textit{single token}. Selain itu, pembentukan \textit{multi token} yang dilakukan belum sepenuhnya baik seperti banyaknya dijumpai kasus terbentuk kata yang kelebihan token. Eksperimen ini akan mencoba mengekstrak \textit{pair} yang kedua katanya adalah \textit{single token}. Nilai \textit{threshold} yang digunakan sama seperti eksperimen 2 yaitu 0.55.
 
 \begin{table}
   \centering
@@ -249,7 +252,7 @@ Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \te
   \hline
     Iterasi ke- & Total pattern & Pattern baru terpilih \\ \hline
     1 & 106 & Pattern utama \\ \hline
-    2 & 437 & <hyponym> adalah sebuah <hypernym> \\ \hline
+    2 & 437 & {\tagHyponym} adalah sebuah {\tagHypernym} \\ \hline
   \end{tabular} 
 \end{table}
 
@@ -265,7 +268,7 @@ Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \te
   \end{tabular} 
 \end{table}
 
-\noindent Untuk \textit{pair} yang hanya \textit{single word} sudah pasti jumlahnya jauh lebih sedikit. Jika dibandingkan dengan dua eksperimen sebelumnya, total \textit{pattern} yang dihasilkan juga jauh lebih sedikit. Hal ini memperlihatkan bahwa jumlah pasangan kata yang digunakan mempengaruhi jumlah \textit{pattern} yang dihasilkan, dimana semakin banyak jumlah pasangan kata relasi maka semakin banyak pula \textit{pattern} yang dihasilkan.
+Untuk \textit{pair} yang hanya \textit{single word} sudah pasti jumlahnya jauh lebih sedikit. Jika dibandingkan dengan dua eksperimen sebelumnya, total \textit{pattern} yang dihasilkan juga jauh lebih sedikit. Hal ini memperlihatkan bahwa jumlah pasangan kata yang digunakan mempengaruhi jumlah \textit{pattern} yang dihasilkan, dimana semakin banyak jumlah pasangan kata relasi maka semakin banyak pula \textit{pattern} yang dihasilkan.Tabel diatas juga memperlihatkan bahwa iterasi total yang dijalankan dalam eksperimen ini sangat sedikit yaitu hanya dua iterasi.
 %
 % \noindent Hasil perhitungan akurasi untuk eksperimen ini dapat dilihat pada tabel \ref{table:eksp3-akurasi}.
 % \begin{table}
@@ -286,11 +289,11 @@ Setelah menganalisis secara kualitatif \textit{pair} yang dihasilkan, banyak \te
 %-----------------------------------------------------------------------------%
 Dari ketiga eksperimen yang telah dilakukan, berikut adalah beberapa hal yang dapat dilihat.
 \begin{itemize}
-  \item \textit{Pair} yang diyakini benar tergolong sedikit jika dibandingkan dengan total \textit{pair} yang terkestraksi.
+  \item \textit{Pair} yang diyakini benar tergolong sedikit jika dibandingkan dengan total \textit{pair} yang terkestraksi. Hal ini dapat disebabkan oleh nilai \textit{threshold} yang didefinisikan, proses pembobotan, maupun \textit{stopping condition}.
   \item \textit{Pattern} yang sama akan menghasilkan total \textit{pair} yang terkestraksi sama. Pada eksperimen 1 dan 2, hingga iterasi 3, total \textit{pair} yang dihasilkan adalah sama akibat ektraksi menggunakan \textit{pattern} yang sama.
   \item Semakin banyak pasangan kata yang digunakan untuk membentuk \textit{pattern}, maka semakin banyak pula \textit{pattern} yang dihasilkan.
-  \item Menurunkan sedikit nilai \textit{threshold} dapat menambah banyak \textit{pair} yang lolos filterisasi. Pada eksperimen 2, menurunkan \textit{threshold} sebesar 0.05 meningkatkan jumlah \textit{pair} hinga dua kali lipat. Hal tersebut juga menunjukan bahwa banyak \textit{pair} yang nilai \textit{threshold}-nya berada di ambang batas. 
-  \item \textit{Stopping condition} dengan hanya menghitung jumlah \textit{pair} baru tidak menjamin bahwa sudah tidak ada \textit{pair} benar.   
+  \item Menurunkan sedikit nilai \textit{threshold} dapat menambah banyak \textit{pair} yang lolos filterisasi. Pada eksperimen 2, menurunkan \textit{threshold} sebesar 0.05 meningkatkan jumlah \textit{pair} hinga dua kali lipat. Hal tersebut dapat menunjukan bahwa banyak \textit{pair} yang nilai \textit{threshold}-nya berada di ambang batas. 
+  \item \textit{Stopping condition} dengan hanya menghitung jumlah \textit{pair} baru tidak menjamin bahwa sudah tidak ada lagi \textit{pair} benar. 
 \end{itemize}
 
 % 5.5
@@ -321,7 +324,7 @@ Data yang telah dianotasi digunakan untuk mengetahui akurasi korpus pasangan kat
 
 Dari data di atas, dapat dihitung akurasi kebenaran sampel. Data yang memiliki labelnya tidak sama untuk ketiga anotator seperti kolum `2 Benar' dan `1 Benar', nilai kebenaran diambil menggunakan sistem \textit{voting}. Akurasi total yang diadapatkan dari seluruh data sampel adalah 0.83.
 
-Selanjutnya, untuk mengevaluasi parameter \textit{semi-supervised} yang dimodifikasi, perlu dicari dihitung akurasi untuk setiap eksperimen sehingga dapat dibandingkan. Tabel \ref{table:akurasi-all} memperlihatkan akurasi \textit{pair} untuk setiap eksperimen.
+Selanjutnya, untuk mengevaluasi parameter \textit{semi-supervised} yang dimodifikasi, perlu dihitung akurasi untuk setiap eksperimen sehingga dapat dibandingkan. Tabel \ref{table:akurasi-all} memperlihatkan akurasi \textit{pair} untuk setiap eksperimen.
 
 \begin{table}
   \centering
@@ -339,7 +342,7 @@ Selanjutnya, untuk mengevaluasi parameter \textit{semi-supervised} yang dimodifi
 Data di atas menunjukan bahwa menurunkan nilai \textit{threshold} belum tentu memperburuk akurasi \textit{pair} yang dihasilkan. Hal ini berarti persebaran \textit{pair} yang salah belum secara jelas dapat diketahui dengan pembobotan yang saat ini digunakan. Selain itu dapat diketahui pula bahwa \textit{pair} yang hanya memperhatikan \textit{single token} memiliki kualitasi lebih baik dibanding \textit{pair} yang memperbolehkan \textit{multi token}.
 
 %-----------------------------------------------------------------------------%
-\subsection{Akurasi Pair berdasarkan Pattern}
+\subsection{Akurasi Pair Berdasarkan Pattern}
 %-----------------------------------------------------------------------------%
 Evaluasi \textit{pair} dapat dilihat berdasarkan \textit{pattern} yang membentuk \textit{pair} tersebut. Tabel \ref{table:akurasi-pair-patt} memperlihatkan total \textit{pair} yang dihasilkan dan akurasi untuk setiap \textit{pattern}. \textit{Pattern} yang dianalisis dalam tabel tersebut hanya \textit{pattern} yang digunakan untuk proses ekstraksi \textit{pair}. Total \textit{pair} menyatakan jumlah \textit{pair} yang terbentuk menggunakan \textit{pattern} dalam seluruh eksperimen yang telah dilakukan. \textit{Pair} diterima menyatakan total \textit{pair} yang masuk ke dalam korpus pasangan kata relasi untuk seluruh eksperimen.
 
@@ -350,20 +353,20 @@ Evaluasi \textit{pair} dapat dilihat berdasarkan \textit{pattern} yang membentuk
   \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|} 
   \hline
   \textit{Pattern} & Total \textit{pair} & \textit{Pair} diterima & Sampel & \textit{Pair} benar & Akurasi \\ \hline
-  <hypernym> atau <hyponym> & 164 & 8 & 5 & 2 & 0.4 \\ \hline
-  <hypernym> seperti <hyponym> dan & 136 & 38 & 7 & 7 & 1 \\ \hline
-  <hypernym> termasuk <hyponym> & 238 & 69 & 19 & 19 & 1 \\ \hline
-  <hyponym> adalah <hypernym> yang & 81892 & 2078 & 308 & 258 & 0.84 \\ \hline
-  <hyponym> adalah sebuah <hypernym> & 1910 & 36 & 7 & 5 & 0.71 \\ \hline
-  <hyponym> menjadi <hypernym> & 574 & 72 & 25 & 25 & 1 \\ \hline
-  <hyponym> merupakan <hypernym> & 27095 & 1508 & 237 & 202 & 0.85 \\ \hline
-  <hyponym> merupakan <hypernym> yang & 9715 & 754 & 132 & 114 & 0.86 \\ \hline
-  <start> <hyponym> adalah <hypernym> & 83319 & 2160 & 316 & 264 & 0.84 \\ \hline
-  <start> <hyponym> merupakan <hypernym> & 22618 & 1363 & 207 & 177 & 0.86 \\ \hline
+  {\tagHypernym} atau {\tagHyponym} & 164 & 8 & 5 & 2 & 0.4 \\ \hline
+  {\tagHypernym} seperti {\tagHyponym} dan & 136 & 38 & 7 & 7 & 1 \\ \hline
+  {\tagHypernym} termasuk {\tagHyponym} & 238 & 69 & 19 & 19 & 1 \\ \hline
+  {\tagHyponym} adalah {\tagHypernym} yang & 81892 & 2078 & 308 & 258 & 0.84 \\ \hline
+  {\tagHyponym} adalah sebuah {\tagHypernym} & 1910 & 36 & 7 & 5 & 0.71 \\ \hline
+  {\tagHyponym} menjadi {\tagHypernym} & 574 & 72 & 25 & 25 & 1 \\ \hline
+  {\tagHyponym} merupakan {\tagHypernym} & 27095 & 1508 & 237 & 202 & 0.85 \\ \hline
+  {\tagHyponym} merupakan {\tagHypernym} yang & 9715 & 754 & 132 & 114 & 0.86 \\ \hline
+  <start> {\tagHyponym} adalah {\tagHypernym} & 83319 & 2160 & 316 & 264 & 0.84 \\ \hline
+  <start> {\tagHyponym} merupakan {\tagHypernym} & 22618 & 1363 & 207 & 177 & 0.86 \\ \hline
   \end{tabular}}
 \end{table}
 
-Data di atas menunjukan sebagian besar \textit{pattern} yang terpilih untuk proses \textit{pattern matching} adalah \textit{pattern} yang baik karena menghasilkan kumpulan \textit{pair} dengan akurasi yang cukup tinggi. Namun, ada juga \textit{pattern} terpilih yang nilai akurasinya buruk yaitu \textit{pattern} `<hypernym> atau <hyponym>'.
+Data di atas menunjukan sebagian besar \textit{pattern} yang terpilih untuk proses \textit{pattern matching} adalah \textit{pattern} yang baik karena menghasilkan kumpulan \textit{pair} dengan akurasi yang cukup tinggi. Namun, ada juga \textit{pattern} terpilih yang nilai akurasinya buruk yaitu \textit{pattern} `{\tagHypernym} atau {\tagHyponym}'.
 
 %-----------------------------------------------------------------------------%
 \subsection{Tingkat Persetujuan Anotator Pair}
@@ -409,16 +412,15 @@ Dalam proses anotasi, tidak mungkin semua data dapat dianotasi ke dalam kategori
 %-----------------------------------------------------------------------------%
 \subsection{Analisis Pair yang Dihasilkan}
 %-----------------------------------------------------------------------------%
-Dari hasil anotasi terebut, beberapa hal yang diketahui adalah sebagai berikut.
-\begin{itemize}
-  \item Kenaikan atau penurunan akurasi setiap iterasi hanya tergantung dari data yang digunakan sebagai sampel. 
+Dari hasil anotasi tersebut serta analisis kualitatif terhadap \textit{pair} yang dihasilkan, berikut adalah beberapa hal yang didapatkan.
+\begin{itemize} 
   \item \textit{Pair} yang hanya terdiri dari \textit{single token} memiliki nilai akurasi yang relatif lebih tinggi dibanding \textit{multi token}.
-  \item Relasi semantik lain yang paling banyak dijumpai pada pair yang salah dengan kategori False Relation adalah relasi synonym. 
-  \item \textit{Pair} dengan kategori benar instance-class banyak yang merupakan \textit{multi token}, dengan kata hyponym merupakan Proper Noun. 
-  \item Beberapa pair masih dapat dianggap benar walau dihilangkan token katanya, seperti (ballantine's, merek wiski) lebih tepat ditulis sebagai (ballantine's,wiski)
-  \item Beberapa pair merupakan Noun Phrase seperti (rikard nordraak,komposer norwegia) dimana kata 'komposer' saja sebenarnya sudah cukup. Tambahan kata 'norwegia' dapat menambah informasi relasi antar kata seperti Rikard Nordraak berasal dari Norwegia.
-  \item Beberapa pair memiliki token berlebih yang tidak dibutuhkan, seperti 'pesepak bola asal' yang kelebihan kata 'asal' atau 'aslinya paralegal' yang kelebihan kata 'aslinya'. Hal ini terjadi akibat upaya pembentukan \textit{multi token}. 
-  \item Beberapa pair merupakan kata fiksi seperti nama karakter suatu cerita.
+  \item Dari evaluasi kualtiatif terhadap \textit{pair} yang dilabeli salah, tipe \textit{kesalahan} yang banyak dijumpai adalah \textit{false relation}. Sementara relasi semantik lain yang seharusnya merepresentasikan \textit{pair} tersebut adalah relasi sinonim.
+  \item \textit{Pair} dengan benar dengan kategori instance-konsep banyak dijumpai pada \textit{pair} yang mengandung \textit{multi token}, dengan kata hiponim merupakan \textit{Proper Noun}. 
+  \item Beberapa \textit{pair} masih dapat dianggap benar walau dihilangkan token katanya, seperti (ballantine's, merek wiski) lebih tepat ditulis sebagai (ballantine's,wiski)
+  \item Beberapa \textit{pair} merupakan \textit{Noun Phrase} seperti (rikard nordraak,komposer norwegia) dimana kata `komposer' saja sebenarnya sudah cukup. Tambahan kata `norwegia' dapat menambah informasi relasi antar kata seperti Rikard Nordraak berasal dari Norwegia.
+  \item Beberapa \textit{pair} memiliki token berlebih yang tidak dibutuhkan, seperti `pesepak bola asal' yang kelebihan kata `asal' atau `aslinya paralegal' yang kelebihan kata `aslinya'. Hal ini terjadi akibat upaya pembentukan \textit{multi token}. 
+  \item Beberapa \textit{pair} merupakan kata fiksi seperti nama karakter suatu cerita. Walau \textit{pair} tersebut tidak salah, sulit untuk mengetahui kebenarannya.
 \end{itemize}
 
 % 5.6
@@ -440,7 +442,7 @@ Selanjutnya, \textit{pattern} sistem dibandingkan dengan \textit{pattern} manual
   \label{table:psis-kategori}
   \begin{tabular}{|c|c|c|c|}
   \hline
-  Percobaan & Exact Match & Partial Match & No Match \\ \hline
+  Eksperimen & Exact Match & Partial Match & No Match \\ \hline
   1 & 10 & 114 & 301 \\ \hline
   2 & 10 & 367 & 465 \\ \hline
   3 & 8 & 132 & 297 \\ \hline 
@@ -448,6 +450,23 @@ Selanjutnya, \textit{pattern} sistem dibandingkan dengan \textit{pattern} manual
 \end{table}
 
 Jika dibandingkan dengan total \textit{pattern} yang dihasilkan sistem, jumlah \textit{pattern} buatan manual memang jauh lebih sedikit. Tabel diatas memperlihatkan bahwa \textit{pattern} yang tergolong \textit{exact match} masih sangat sedikit. Pada eksperimen 2 dan 3, walau total \textit{pattern} yang dihasilkan berbeda, jumlah \textit{pattern} yang merupakan \textit{exact match} adalah sama. Hal ini berarti semakin banyak \textit{pattern} yang dihasilkan belum tentu semakin baik. Kemudian, dari keseluruhan \textit{pattern}, yang tergolong ke dalam \textit{no match} hampir selalu mendominasi. Hal tersebut memperlihatkan bahwa  \textit{pattern} oleh sistem masih terlalu banyak yang hanya kebetulan terbentuk.
+
+Data di atas kemudian digunakan untuk menghitung \textit{precision} \textit{pattern} yang digunakan untuk mengekstraksi pasangan kata dalam setiap eksperimen. Tabel \ref{table:preceks} memeprlihatkan \textit{precision} untuk setiap eksperimen. Kolum `jumlah \textit{pattern}' menyatakan total \textit{pattern} yang digunakan untuk mengekstraksi \textit{pair} sementara kolum `\textit{pattern} benar' menyatakan jumlah \textit{pattern} yang tergolong \textit{exact match} atau \textit{partial match}. 
+
+\begin{table}
+  \centering
+  \caption{Kategori \textit{pattern} sistem dibandingkan dengan \textit{pattern} manual}
+  \label{table:preceks}
+  \begin{tabular}{|c|c|c|c|} 
+  \hline
+  eksperimen & jumlah pattern & pattern benar & precision \\ \hline
+  1 & 8 & 6 & 0.75 \\ \hline
+  2 & 8 & 7 & 0.875 \\ \hline
+  3 & 6 & 5 & 0.83 \\ \hline
+  \end{tabular} 
+\end{table}
+
+Walau \textit{pattern} yang digunakan untuk proses ekstraksi sangat sedikit, \textit{pattern} dapat dikatakan berkualitas baik karena banyak yang merupakan anggota dari \textit{pattern} yang dibentuk manual oleh anotator. Hal tersebut ditunjukan dari nilai \textit{precision} yang cukup tinggi.
 
 %-----------------------------------------------------------------------------%
 \subsection{Hasil Anotasi Pattern}
@@ -460,7 +479,7 @@ Dua anotator memberi penilaian terhadap 200 \textit{pattern} terbaik yang dihasi
   \label{table:p-anotasi-benar}
   \begin{tabular}{|c|c|c|c|}
   \hline
-  Jumlah Benar & \multicolumn{3}{c}{ anotator 1 } \\ \hline
+  Jumlah Benar & \multicolumn{3}{c|}{ anotator 1 } \\ \hline
   anotator 2 & kategori 1 & kategori 2 & kategori 3 \\ \hline
   kategori 1 & 83 & 5 & 3 \\ \hline
   kategori 2 & 17 & 4 & 27 \\ \hline
@@ -476,7 +495,7 @@ Dua anotator memberi penilaian terhadap 200 \textit{pattern} terbaik yang dihasi
   \label{table:p-anotasi-salah}
   \begin{tabular}{|c|c|c|c|}
   \hline
-  Jumlah Salah & \multicolumn{3}{c}{ anotator 1 } \\ \hline
+  Jumlah Salah & \multicolumn{3}{c|}{ anotator 1 } \\ \hline
   anotator 2 & kategori 1 & kategori 2 & kategori 3 \\ \hline
   kategori 1 & 57 & 1 & 2 \\ \hline
   kategori 2 & 33 & 1 & 8 \\ \hline
@@ -484,28 +503,30 @@ Dua anotator memberi penilaian terhadap 200 \textit{pattern} terbaik yang dihasi
   \end{tabular} 
 \end{table}
 
-Dari tabel \ref{table:p-anotasi-salah}, sangat banya ditemukan data dimana anotator pertama menganggap \textit{pattern} menghasilkan sedikit \textit{pair} salah (kategori 1) namun anotator dua menilai \textit{pattern} menghasilkan banyak \textit{pair} salah (kategori 3).
+Dari tabel \ref{table:p-anotasi-salah}, sangat banyak ditemukan data dimana anotator pertama menganggap \textit{pattern} menghasilkan sedikit \textit{pair} salah (kategori 1) namun anotator dua menilai \textit{pattern} menghasilkan banyak \textit{pair} salah (kategori 3).
 
-Selanjutnya tabel 
+Selanjutnya tabel \ref{table:anotasi-p-used} menampilkan secara rinci anotasi untuk \textit{pattern} yang digunakan pada seluruh eksperimen.
 \begin{table}
   \centering
   \caption{Hasil anotasi \textit{pattern} yang digunakan untuk ekstraksi \textit{pair}}
   \label{table:anotasi-p-used}
-  \begin{tabular}{ccccc} 
+  \begin{tabular}{|c|c|c|c|c|}
   \hline
-  \multirow{2}{*}{ Pattern } & \multicolumn{2}{c}{ anotator 1 } & \multicolumn{2}{c}{ anotator 2 } \\ \hline
-  & jumlah benar & jumlah salah & jumlah benar & jumlah salah \\ \hline
-  <hypernym> atau <hyponym> & 1 & 3 & 1 & 2 \\ \hline
-  <hypernym> seperti <hyponym> & 3 & 1 & 3 & 1 \\ \hline
-  <hypernym> termasuk <hyponym> & 3 & 1 & 1 & 3 \\ \hline
-  <hyponym> adalah <hypernym> yang & 3 & 1 & 3 & 1 \\ \hline
-  <hyponym> adalah sebuah <hypernym> & 3 & 1 & 3 & 1 \\ \hline
-  <hyponym> menjadi <hypernym> & 3 & 1 & 2 & 2 \\ \hline
-  <hyponym> merupakan <hypernym> & 3 & 1 & 3 & 1 \\ \hline
-  <hyponym> merupakan <hypernym> yang & 3 & 1 & 3 & 1 \\ \hline
-  <start> <hyponym> adalah <hypernym> & 3 & 1 & 3 & 1 \\ \hline
-  \end{tabular} 
+  \multirow{2}{*}{ Pattern } & \multicolumn{2}{c|}{ anotator 1 } & \multicolumn{2}{c|}{ anotator 2 } \\
+  & benar & salah & benar & salah \\ \hline
+  {\tagHypernym} atau {\tagHyponym} & 1 & 3 & 1 & 2 \\ \hline
+  {\tagHypernym} seperti {\tagHyponym} & 3 & 1 & 3 & 1 \\ \hline
+  {\tagHypernym} termasuk {\tagHyponym} & 3 & 1 & 1 & 3 \\ \hline
+  {\tagHyponym} adalah {\tagHypernym} yang & 3 & 1 & 3 & 1 \\ \hline
+  {\tagHyponym} adalah sebuah {\tagHypernym} & 3 & 1 & 3 & 1 \\ \hline
+  {\tagHyponym} menjadi {\tagHypernym} & 3 & 1 & 2 & 2 \\ \hline
+  {\tagHyponym} merupakan {\tagHypernym} & 3 & 1 & 3 & 1 \\ \hline
+  {\tagHyponym} merupakan {\tagHypernym} yang & 3 & 1 & 3 & 1 \\ \hline
+  <start> {\tagHyponym} adalah {\tagHypernym} & 3 & 1 & 3 & 1 \\ \hline
+  \end{tabular}  
 \end{table}
+
+Data diatas mendukung hasil yang ditampilkan pada tabel \ref{table:akurasi-pair-patt} dimana \textit{pattern} `{\tagHypernym} atau {\tagHyponym}' adalah yang terburuk dari seluruh \textit{pattern} yang digunakan untuk proses pembentukan \textit{pair}. \textit{Pattern} tersebut dianggap akan banyak menghasilkan \textit{pair} yang berlabel salah. Sementara sebagian besar \textit{pattern} lain yang digunakan untuk proses ekstraksi sudah cukup baik karena dianggap menghasilkan banyak \textit{pair} benar dan sedikit \textit{pair} salah.
 
 %-----------------------------------------------------------------------------%
 \subsection{Tingkat Persetujuan Anotator Pattern}
@@ -533,18 +554,18 @@ Jika dilihat dari jumlah \textit{pair} yang terbentuk benar, maka tingkat perset
 %-----------------------------------------------------------------------------%
 \subsection{Analisis Pattern}
 %-----------------------------------------------------------------------------%
-Ekstraksi \textit{pattern} dibatasi dengan beberapa aturan yang diharapkan dapat menghasilkan \textit{pattern} dengan kualitasi baik. Sistem sudah dapat secara otomatis menghasilkan \textit{pattern} yang tergolong baik untuk merepresentasikan relasi semantik hipernim-hiponim seperti \textit{<hyponym> adalah <hypernym>}, \textit{<hyponym> adalah <hypernym> yang}, \textit{<hyponym> merupakan <hypernym>} dan lainnya. Namun, masih banyak kekurangan dari \textit{pattern} yang dihasilkan. Berikut adalah beberapa kekurangan \textit{pattern} yang terbentuk serta analisa mengapa hal tersebut dapat terjadi.
+Ekstraksi \textit{pattern} dibatasi dengan beberapa aturan yang diharapkan dapat menghasilkan \textit{pattern} dengan kualitasi baik. Sistem sudah dapat secara otomatis menghasilkan \textit{pattern} yang tergolong baik untuk merepresentasikan relasi semantik hipernim-hiponim seperti `{\tagHyponym} adalah {\tagHypernym}', `{\tagHyponym} adalah {\tagHypernym} yang', `{\tagHyponym} merupakan {\tagHypernym}' dan lainnya. Namun, masih banyak kekurangan dari \textit{pattern} yang dihasilkan. Berikut adalah beberapa kekurangan \textit{pattern} yang terbentuk serta analisa mengapa hal tersebut dapat terjadi.
 
 \begin{itemize}
-  \item Belum dapat membentuk \textit{pattern} yang mengandung lebih dari satu \textit{tag hyponym}. \\
-  Banyak kalimat yang mengandung lebih dari satu kata \textit{hyponym}, namun saat ini \textit{pattern} yang terbentuk belum dapat membuatnya. Hal ini karena pada masa awal implementasi, ditemukan beberapa kalimat yang mengandung dua pasangan kata relasi berbeda dalam satu kalimat. Untuk mencegah ambiguitas dibatasi satu kalimat hanya akan di-\textit{tag} dengan satu pasang kata relasi. Kedepannya, hal ini dapat diatasi dengan mengubah batasan sehingga dalam satu kalimat boleh di-\textit{tag} dengan lebih dari satu pasang kata relasi asal kata hipernimnya sama. 
+  \item Belum dapat membentuk \textit{pattern} yang mengandung lebih dari satu \textit{tag hiponim}. \\
+  Banyak kalimat yang mengandung lebih dari satu kata \textit{hiponim}, namun saat ini \textit{pattern} yang terbentuk belum dapat membuatnya. Hal ini karena pada masa awal implementasi, ditemukan beberapa kalimat yang mengandung dua pasangan kata relasi berbeda dalam satu kalimat. Untuk mencegah ambiguitas dibatasi satu kalimat hanya akan di-\textit{tag} dengan satu pasang kata relasi. Kedepannya, hal ini dapat diatasi dengan mengubah batasan sehingga dalam satu kalimat boleh di-\textit{tag} dengan lebih dari satu pasang kata relasi asal kata hipernimnya sama. 
   \item Beberapa \textit{pattern} yang kurang baik secara semantik. \\
-  Beberapa \textit{pattern} yang dihasilkan sistem seperti \textit{<hypernym> dan <hyponym>} dan  \textit{<hypernym> atau <hyponym>} kurang cocok jika digunakan dalam \textit{pattern matching}. Hal ini disebabkan kata 'dan' dan 'atau' memuat relasi yang bersifat simetris. Sementara hipernim-hiponim merupakan relasi yang hanya memiliki sifat transitif.
+  Beberapa \textit{pattern} yang dihasilkan sistem seperti `{\tagHypernym} dan {\tagHyponym}' dan  `{\tagHypernym} atau {\tagHyponym}' kurang cocok jika digunakan dalam \textit{pattern matching}. Hal ini disebabkan kata `dan' dan `atau' memuat relasi yang bersifat simetris. Sementara hipernim-hiponim merupakan relasi yang hanya memiliki sifat transitif.
   \item \textit{Pattern} yang tergolong dalam lebih dari satu relasi. \\
   Dalam beberapa penelitian lain, satu \textit{pattern} bisa merepresentasikan beberapa relasi semantik. Terutama \textit{pattern} yang berukuran pendek seperti yang dihasilkan sistem. Penelitian ini hanya fokus pada relasi semantik hipernim-hiponim sehingga tidak adanya pembanding antar \textit{pattern} yang merepresentasikan relasi semantik lain. Hal ini menjadi hambatan dalam menentukan apakah \textit{pattern} dapat dikatakan baik.
   % TODO: tambahin referensi ttg ini !!
-  \item \textit{Pattern} yang tidak menghasilkan \textit{pair} apapun. \\
-  Penggunaan korpus yang sedikit berbeda antara proses pembentukan \textit{pattern} dan proses ekstraksi \textit{pair} serta upaya pembentukan \textit{multiword} membuat sedikit kejanggalan dari hasil \textit{pattern} yang terbentuk. Setiap \textit{pattern} yang terbentuk seharusnya dapat mengekstrak minimal \textit{pair} yang membentuk \textit{pattern} tersebut. Namun, beberapa \textit{pattern} hasil sistem seperti \textit{<hypernym> yunani <hyponym>} tidak mengekstrak \textit{pair} setelah dijalankan dalam proses \textit{pattern matching}. Hal ini disebabkan oleh upaya pembentukan \textit{multi word} yang memanfaatkan korpus Wikipedia dengan \textit{pos tag} membuat beberapa kata bergabung membentuk suatu \textit{multi word}, \textit{proper noun}, atau \textit{noun phrase}. Sementara pada pembentukan \textit{pattern}, batasan tersebut tidak diterapkan.
+  % \item \textit{Pattern} yang tidak menghasilkan \textit{pair} apapun. \\
+  % Penggunaan korpus yang sedikit berbeda antara proses pembentukan \textit{pattern} dan proses ekstraksi \textit{pair} serta upaya pembentukan \textit{multiword} membuat sedikit kejanggalan dari hasil \textit{pattern} yang terbentuk. Setiap \textit{pattern} yang terbentuk seharusnya dapat mengekstrak minimal \textit{pair} yang membentuk \textit{pattern} tersebut. Namun, beberapa \textit{pattern} hasil sistem seperti \textit{{\tagHypernym} yunani {\tagHyponym}} tidak mengekstrak \textit{pair} setelah dijalankan dalam proses \textit{pattern matching}. Hal ini disebabkan oleh upaya pembentukan \textit{multi word} yang memanfaatkan korpus Wikipedia dengan \textit{pos tag} membuat beberapa kata bergabung membentuk suatu \textit{multi word}, \textit{proper noun}, atau \textit{noun phrase}. Sementara pada pembentukan \textit{pattern}, batasan tersebut tidak diterapkan.
 \end{itemize}
 
 Cara membentuk \textit{pattern} leksikal yang baik masih perlu diteliti lebih lanjut. Proses lain seperti generalisasi \textit{pattern} perlu diimplementasi agar satu \textit{pattern} mengandung informasi yang lebih kaya.
@@ -553,8 +574,8 @@ Cara membentuk \textit{pattern} leksikal yang baik masih perlu diteliti lebih la
 %-----------------------------------------------------------------------------%
 \section{Evaluasi Skenario Eksperimen}
 %-----------------------------------------------------------------------------%
-Dari tiga eksperimen yang telah dilakukan, eksperimen 3 memberi nilai akurasi terbaik (Tabel \ref{table:akurasi-all}). Hal tersebut membuktikan bahwa \textit{pair} yang hanya \textit{single token} lebih tinggi kemunckinan benar dibanding \textit{pair} yang \textit{multi token}. Eksperimen tersebut juga memebuktikan bahwa metode pembentuk \textit{multi token} yang sangat ini digunakan masih perlu peningkatan.
+Dari tiga eksperimen yang telah dilakukan, eksperimen 3 memberi nilai akurasi terbaik (Tabel \ref{table:akurasi-all}). Hal tersebut membuktikan bahwa \textit{pair} yang hanya \textit{single token} lebih tinggi kemungkinan benar dibanding \textit{pair} yang \textit{multi token}. Eksperimen tersebut juga membuktikan bahwa metode pembentuk \textit{multi token} yang sangat ini digunakan masih perlu peningkatan. Namun skenario ini tidak dapat dikatakan yang terbaik karena jumlah \textit{pair} yang dihasilkan sangat sedikit.
 
-Kemudian, dari hasil perbandingan eksperimen ke-1 dan eksperimen ke-2, menurunkan nilai \textit{threshold} tidak selalu memperburuk kualitas \textit{pair} yang dihasilkan. Akurasi \textit{pair} tergantuk dari \textit{pattern} yang membentuk \textit{pair} tersebut. Jika banyak \textit{pattern} baik yang mengekstrak \textit{pair}, maka besar kemungkinan \textit{pair} tersebut juga berkualitas baik.
+Kemudian, dari hasil perbandingan eksperimen ke-1 dan eksperimen ke-2, menurunkan nilai \textit{threshold} tidak selalu memperburuk kualitas \textit{pair} yang dihasilkan. Pada ekseperimen 2, nilai akurasi meningkat dibanding eksperimen 1. Hal ini dapat disebabkan oleh pemilihan sampel yang digunakan untuk proses anotasi. Akurasi \textit{pair} tergantung dari \textit{pattern} yang membentuk \textit{pair} tersebut. Jika banyak \textit{pattern} baik yang mengekstrak \textit{pair}, maka besar kemungkinan \textit{pair} tersebut juga berkualitas baik. Pada eksperimen 1, \textit{pattern} terakhir yang digunakan yaitu `{\tagHypernym} atau {\tagHyponym}' dapat dikatakan buruk dan hal ini mempengaruhi akurasi total untuk eksperimen tersebut.
 
-Dalam penelitian ini, hasil masih sangat tergantung dengan pendefinisian segala parameter \textit{semi-supervised} yang digunakan. Dari proses pembentukan \textit{seed} dengan menerapkan sejumlah filterisasi, proses pengurutan \textit{pattern}, pemilihan banyak \textit{pattern} yang digunakan, pembentukan \textit{multi token}, pembobotan \textit{pair} yang terekstrak, filterisasi \textit{pair}, serta \textit{stopping condition} masih banyak yang didefinisikan secara manual berdasarkan hasil pengamatan kualitatif. Penelitian ini masih banyak memerlukan pengembangan lebih lanjut agar dapat memberikan hasil yang jauh lebih baik. 
+Dalam penelitian ini, hasil masih sangat tergantung dengan pendefinisian segala parameter \textit{semi-supervised} yang digunakan. Dari proses pembentukan \textit{seed} dengan menerapkan sejumlah filterisasi, proses pengurutan \textit{pattern}, pemilihan banyak \textit{pattern} yang digunakan, pembentukan \textit{multi token}, pembobotan \textit{pair} yang terekstrak, filterisasi \textit{pair}, serta \textit{stopping condition} masih banyak yang parameter yang didefinisikan secara manual berdasarkan hasil pengamatan kualitatif. Penelitian ini masih banyak memerlukan berbagai eksperimen lain dan pengembangan lebih lanjut agar dapat diketahui arsitektur \textit{semi-supervised} terbaik. 
