@@ -39,7 +39,7 @@ Charles Anthony Johnson (3 Juni 1829 - 17 Mei 1917), kemudian dikenal sebagai Ch
 \end{tabular}
 \end{center}
 
-\noindent Paragraf   di atas akan dimasukan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
+\noindent Paragraf   di atas akan dimasukkan ke program \textit{sentence splitter}. Berikut adalah hasil yang diberikan dari proses tersebut.
 
 \begin{center}
 \begin{tabular}{ | m{32em} | } 
@@ -232,11 +232,11 @@ Satu \textit{pattern} tidak hanya menyimpan informasi \textit{sequence} kata yan
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh kalimat diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah `{\tagHyponym}singa{\tagHyponym} adalah {\tagHypernym}kucing{\tagHypernym} yang'
 \end{enumerate}
 
-Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode \ref{code:pembentukan-ptree} menunjukan secara rinci proses penambahan suatu \textit{pattern} ke dalam \textit{pattern tree}.
+Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukkan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode \ref{code:pembentukan-ptree} menunjukan secara rinci proses penambahan suatu \textit{pattern} ke dalam \textit{pattern tree}.
 
 % --- kode pattern extraction: createPatternTree ---  
 \begin{lstlisting}[caption={Penambahan \textit{pattern} ke dalam \textit{pattern tree}}, language=bash, label={code:pembentukan-ptree}]
-sentence = #kalimat baru yang akan dimasukan
+sentence = #kalimat baru yang akan dimasukkan
 type = #pendekatan yang dipilih
 ptree = #pattern tree yang sudah terbentuk
 
@@ -271,6 +271,20 @@ getIndexToken(sentence_arr, type):
 \subsection{Vektor Pattern}
 %-----------------------------------------------------------------------------%
 Suatu \textit{pattern} dapat direpresentasikan menjadi vektor berdasarkan nilai-nilai yang dimilikinya. Vektor ini dimanfaatkan untuk melakukan pengurutan terhadap seluruh \textit{pattern} yang dihasilkan. Selain itu, nilai-nilai pada vektor \textit{pattern} juga digunakan untuk melakukan filterisasi. Fitur utama pada vektor \textit{pattern} diambil dari informasi yang disimpan \textit{pattern}, yaitu total kemunculan \textit{pattern}, jumlah \textit{seed} unik, dan jumlah kalimat unik yang membentuk \textit{pattern} tersebut. Fitur lainnya adalah hasil kombinasi perbandingan antar nilai-nilai utama, yaitu nilai perbandingan antara jumlah \textit{seed} unik dibagi jumlah kalimat unik, nilai perbandingan antara jumlah \textit{seed} untuk dibagi total kemunculan, dan nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan.
+
+Berikut adalah contoh vektor \textit{pattern} yang dihasilkan.
+\begin{equation}
+<start>\,\,<hyponym>\,\,adalah\,\,<hypernym>\,\,;\,\,96\,\,87\,\,95\,\,0.92\,\,0.91\,\,0.99
+\end{equation}
+\begin{itemize}
+  \item \textit{pattern} leksikal yang dihasilkan = \[<start>\,\,<hyponym>\,\,adalah\,\,<hypernym>\]
+  \item jumlah total kemunculan \textit{pattern} = 96
+  \item jumlah pasangan kata relasi unik yang membentuk \textit{pattern} = 87
+  \item jumlah kalimat unik yang membentuk \textit{pattern} = 95
+  \item perbandingan nilai pasangan kata unik dengan kalimat unik = 0.92
+  \item perbandingan nilai pasangan kata unik dengan total kemunculan = 0.91
+  \item perbandingan nilai kalimat unik dengan total kemunculan = 0.99
+\end{itemize}
 
 %-----------------------------------------------------------------------------%
 \subsection{Validasi Pattern}
@@ -445,7 +459,7 @@ Suatu \textit{pair} dapat direpresentasikan ke dalam bentuk vektor berdasarkan n
 %-----------------------------------------------------------------------------%
 \textit{Pair} baru yang dihasilkan untuk proses ini berjumlah sangat banyak, namun tidak semua \textit{pair} yang dihasilkan adalah benar merupakan pasangan kata yang memiliki relasi semantik hipernim-hiponim. Beberapa \textit{pair} kebetulan terekstrak akibat memenuhi \textit{pattern} leksikal yang sama dengan salah satu \textit{pattern} yang digunakan. Untuk mengeliminasi data yang tidak diyakini benar, dilakukan proses filterisasi sederhana terhadap setiap \textit{pair} yang dihasilkan. \textit{Pair} diyakini tidak terbentuk secara kebetulan jika terdapat lebih dari satu \textit{pattern} yang mengekstrak \textit{pair} tersebut. 
 
-Setelah mengeliminasi \textit{pair} yang hanya terbentuk dari satu \textit{pattern}, selanjutnya dilakukan pembobotan menggunakan rumus \ref{eq:bobot-pair}. Jika nilai bobot melebihi \textit{threshold}, maka \textit{pair} dimasukan ke dalam korpus pasangan kata relasi. Nilai \textit{threshold} sendiri menjadi salah satu masukan dalam parameter eksperimen.
+Setelah mengeliminasi \textit{pair} yang hanya terbentuk dari satu \textit{pattern}, selanjutnya dilakukan pembobotan menggunakan rumus \ref{eq:bobot-pair}. Jika nilai bobot melebihi \textit{threshold}, maka \textit{pair} dimasukkan ke dalam korpus pasangan kata relasi. Nilai \textit{threshold} sendiri menjadi salah satu masukan dalam parameter eksperimen.
 
 \begin{equation}
 \label{eq:bobot-pair}
