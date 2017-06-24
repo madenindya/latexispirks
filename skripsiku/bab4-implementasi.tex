@@ -95,19 +95,30 @@ Proses \textit{part-of-speech tagging} dilakukan pada korpus Wikipedia yang tela
 Proses pengumpulan \textit{seed} dibantu dengan \textit{resource} yang dimiliki WordNet Bahasa menggunakan \textit{tools} nltk. Proses pengumpulan diawali dengan mengambil seluruh lema Bahasa Indonesia yang dimiliki oleh korpus nltk. Setelah itu, ambil seluruh \textit{synset} yang mengandung lemma tersebut. Dari setiap \textit{synset}, ambil relasi hipernimnya. Dari setiap \textit{synset} hipernim, ambil lema Bahasa Indonesianya. Dilakukan pula filterisasi \textit{synset} ataupun lema untuk mengurangi ambiguitas. Untuk setiap \textit{synset} maupun lema yang diambil pada setiap tahapan, hanya boleh berasal dari kelas kata kerja (\textit{noun}). Setelah didapatkan, bentuk ke dalam pasangan \textit{tuple} biner. Berikut adalah
 
 %--- kode seed builder ----- %
-\begin{lstlisting}[caption={Algoritme pembentukan \textit{seed}}, language=bash]
-buildSeed:
-  ls = get_all_indonesian_lemma()
-  for l in ls:
-    syns = get_all_synsets(l)
-    for s in syns:
-      hs = get_all_hypernyms(s)
-      for h in hs: 
-        hls = get_lemmas(h)
-        for hl in hls:
-          filter(hl)
-          print_seed(l, hl)
-\end{lstlisting}
+\begin{kode}\label{(seed_builder)}
+  \SetKwInOut{Output}{Output}
+  
+  \SetKwProg{Fn}{Function}{ is}{end}
+  \Fn{buildSeed()}{
+    \Output{korpus seed \textit{(hyponym,hypernym)}}
+    \BlankLine
+    
+    lemmas = getAllIndonesianLemma()\;
+    \For{l in lemmas}{
+      synsets = getAllSynsets(l)\;
+      \For{s in synsets}{
+       hypernymSynsets = getAllHypernyms(s)\;
+       \For{h in hypernymSynsets}{
+        hypernymLemmas = getLemmas(h)\;
+        filter(hypernymLemmas)\;
+        printSeed(l,hypernymLemmas)\;
+       }
+      }
+     }
+  }
+  \label{code:seedbuilder}  
+  \caption{\textit{Pseudocode} pembentukan \textit{seed}}  
+\end{kode}
 
 % Filterisasi Seed
 Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha mendapatkan \textit{seed} sebanyak mungkin. Filterasisasi juga dilakukan untuk mendapatkan \textit{seed} awal yang diyakini benar dan berkualitas baik. Salah satu bagian terpenting proses ini adalah memasangkan hanya lema yang merupakan \textit{noun} ke lema yang juga adalah \textit{noun}. Jika kemungkinan lema tersebut tergolong ke dalam kelas kata bukan \textit{noun}, lema tidak diikutsertakan sebagai \textit{seed} awal.
