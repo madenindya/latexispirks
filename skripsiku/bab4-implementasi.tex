@@ -243,39 +243,70 @@ Satu \textit{pattern} tidak hanya menyimpan informasi \textit{sequence} kata yan
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh kalimat diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah `{\tagHyponym}singa{\tagHyponym} adalah {\tagHypernym}kucing{\tagHypernym} yang'
 \end{enumerate}
 
-Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukkan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode \ref{code:pembentukan-ptree} menunjukan secara rinci proses penambahan suatu \textit{pattern} ke dalam \textit{pattern tree}.
+Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukkan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode 4.2 menunjukan secara rinci proses pembentukan \textit{sequence} kata berdasarkan kalimat berdasarkan pendekataan yang dipilih. \textit{Sequence} kata tersebut kemudian dimasukkan ke dalam \textit{pattern tree}. 
+%penambahan suatu \textit{pattern} ke dalam \textit{pattern tree}.
+%\begin{kode}\label{(pemebentukanptree)} 
+%  
+%  \SetKwProg{Fn}{Function}{ is}{end}
+%  
+%  sentence = kalimat baru yang akan dimasukkan\;
+%  type = pendekatan yang dipilih\;
+%  ptree = \textit{pattern tree} yang sudah terbentuk\;
+%  \BlankLine
+%  
+%  \Fn{addNewPattern(sentence, type, ptree)} { 
+%	sentenceArr = tokenizeSentence(sentence)\;
+%    index = getIndexToken(sentence, type)\;
+%    addPattern(ptree, sentenceArr, index)\;
+%  }
+%  \BlankLine
+%  \label{code:pembentukan-ptree}  
+%  \caption{\textit{Pseudocode} penambahan \textit{pattern} %ke dalam \textit{pattern tree}}  
+%\end{kode} 
+%
+\begin{kode} 
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
 
+  \SetKwProg{Fn}{Function}{ is}{end}
+  \Fn{getIndexToken(sentence, type)} {
+    \Input{kalimat masukkan, tipe pendekatan}
+    \Output{index kata dalam kalimat yang digunakan}
+    
+    \BlankLine
+    sentenceArr = tokenizeSentence(sentence)\;
+    index = (start,end)\;
+    \If{type == inbetween} {
+      \For{i = 0..sentenceArr.length} {
+        \If{token == relation} {
+          \If{!start} {
+            start = i\;
+          } \Else {
+            end = i\;
+          }
+        }
+      }
+    } \ElseIf{tyep == n before} {
+      index = getIndexToken(sentence, inbetween)\;
+      \If{index.start - n > 0} {
+        index.start -= n\;
+      } \Else {
+        index.start = 0\;
+      }
+    } \ElseIf{type == n after} {
+      index = getIndexToken(sentence, inbetween)\;
+      \If{index.end + n < sentenceArr.length} {
+        index.end += n\;
+      } \Else {
+        index.end = sentenceArr.length\;
+      }
+    }
+    return index\;
+  }
+  \label{code:pembentukan-ptree}  
+  \caption{\textit{Pseudocode} penentuan \textit{sequence} kata berdasarkan 3 pendekatan}  
+\end{kode}
 % --- kode pattern extraction: createPatternTree ---  
-\begin{lstlisting}[caption={Penambahan \textit{pattern} ke dalam \textit{pattern tree}}, language=bash, label={code:pembentukan-ptree}]
-sentence = #kalimat baru yang akan dimasukkan
-type = #pendekatan yang dipilih
-ptree = #pattern tree yang sudah terbentuk
-
-addNewPattern(sentence, type, ptree):
-  sentence_arr = split(sentence, `` '')
-  index = getIndexToken(sentence_arr, type)
-  addPattern(ptree, sentence_arr, index)
-
-getIndexToken(sentence_arr, type):
-  sentence_arr = tokenize_sentence(sentence)
-  index = (start, end)
-  if (type == inbetween):
-    for(i = 0..sentence_arr.size()):
-      if (token == relation):
-        if (!start) start = i
-        else end = i
-  else if (type == n before):
-    index = getIndexToken(sentence_arr, inbetween)
-    if (index.start - n >= 0)
-      index.start -= n
-    else index.start = 0
-  else if (type == n after):
-    index = getIndexToken(sentence_arr, inbetween)
-    if (index.end + n < sentence_arr.size())
-      index.end += n
-    else index.end = sentence_arr.size()
-  return index
-\end{lstlisting}
 % -------------------------------------------------- %
 
 %-----------------------------------------------------------------------------%
@@ -394,25 +425,37 @@ Pada masa awal pengembangan, masalah pertama yang ditemukan adalah banyaknya \te
 Masalah lain yang ditemukan adalah jika kata yang ingin diekstrak merupakan \textit{multi token}. \textit{Pair} kurang baik yang dihasilkan sebelum mengatasi masalah ini diantaranya adalah $(bola;olahraga)$ yang seharusnya $(sepak\,\,bola;olahraga)$, $(Serikat;negara)$ yang seharusnya $(Amerika\,\,Serikat;negara)$, dan $(Monterrey,ibu)$ yang seharusnya $(Monterrey;ibu\,\,kota)$. Solusi yang digunakan untuk mengatasi masalah ini adalah dengan mengasumsikan kata-kata berurutan yang tergolong dalam kelas kata yang sama dalam suatu kalimat merupakan \textit{multi token}. \textit{Multi token} disimpan dalam satu \textit{node} pada pembentukan \textit{suffix tree}.
 
 % pembentukan multi token (parsing kalimat)
-Untuk dapat mengidentifikasi \textit{multi token}, penyesuaian dilakukan pada tahap \textit{parsing} kalimat menjadi \textit{array}. Satu token akan bergabung dengan token sebelumnya jika memiliki \textit{pos tag} yang sama. Proses ini menghasilkan satu \textit{array} yang merepresentasik kalimat dimana setiap elemen dalam \textit{array} dapat merupakan \textit{single token} maupun \textit{multi token}. Kode \ref{code:pembentukan-stree} memaparkan proses pembentukan \textit{array} yang digunakan untuk membangun \textit{suffix tree}.
+Untuk dapat mengidentifikasi \textit{multi token}, penyesuaian dilakukan pada tahap \textit{parsing} kalimat menjadi \textit{array}. Satu token akan bergabung dengan token sebelumnya jika memiliki \textit{pos tag} yang sama. Proses ini menghasilkan satu \textit{array} yang merepresentasik kalimat dimana setiap elemen dalam \textit{array} dapat merupakan \textit{single token} maupun \textit{multi token}. Kode \ref{code:pembentukan-stree} memaparkan proses pembentukan \textit{array} yang digunakan untuk membangun \textit{suffix tree}. Suatu elemen dalam \textit{array} yang dihasilkan dapat merupakan sebuah kata yang bertipe \textit{multi token}.
 
-\begin{lstlisting}[caption={Proses \textit{parsing} kalimat menjadi \textit{array}}, language=bash, label={code:pembentukan-stree}]
-sentence = #kalimat yang akan dievaluasi
-
-getSentenceArray(sentence):
-  tmp_arr = split(sentence, `` '')
-  sentence_arr = []
-  prev = null
-  i = 0
-  for s in sentence_arr:
-    if (sentence.tag == prev.tag):
-      sentence_arr[i-1] += `` '' + s
-    else
-      sentence_arr[i].add(s)
-      i++
-    prev = s
-  return sentence_arr
-\end{lstlisting}
+\begin{kode}
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+  
+  \SetKwProg{Fn}{Function}{ is}{end}
+  \Fn{getSentenceArray(sentence)}{
+    \Input{kalimat yang dievaluasi}
+    \Output{array of sentence}
+    \BlankLine
+    
+    tmpArr = split(sentence, `` '')\;
+    sentenceArr = []\;
+    prev = null\;
+    i = 0\;
+    \ForEach{s in sentenceArr} {
+      \If{sentence.tag == prev.tag} {
+        sentenceArr[i-1] += `` '' + s\;
+      } \Else {
+        sentenceArr.add(s)\;
+        i++\;
+      }
+      prev = s\;
+    }
+    \Return sentenceArr\;
+  }
+  
+  \caption{\textit{Pseudocode} tokenisasi kalimat menjadi \textit{array}}
+  \label{code:pembentukan-stree}
+\end{kode}
 %
 % % --- kode pattern matching --- %
 % \begin{lstlisting}[caption={Algoritme ekstraksi \textit{pair}}, language=bash]
@@ -421,12 +464,12 @@ getSentenceArray(sentence):
 %   openFiles()
 %   for sentence in sentences:
 %     matchAllPattern(sentence, patterns)
-
+%
 % matchAllPattern(sentence, patterns):
 %   suffix_tree = buildTree(sentence)
 %   foreach pattern in patterns:
 %     matchTree(suffix_tree, pattern)
-  
+% 
 % buildTree(sentence):
 %   tokens = buildSequence(sentence)
 %   suffix_tree;
@@ -439,7 +482,7 @@ getSentenceArray(sentence):
 %     if (!node.childs.contains(tokens[j])):
 %       node = node.childs.add(tokens[j])
 %     node = node.childs.get(tokens[j])
-
+%
 % matchTree(stree, pattern):
 %   foreach child in stree.root.childs:
 %     recursiveMatch(pattern, 0, child, ``'', ``'')
@@ -495,17 +538,20 @@ Untuk menambah fitur pada vektor \textit{pair} yang dapat menunjang proses evalu
 
 Model dibuat memanfaatkan korpus Wikipedia yang telah melalui proses POS Tagging. Korpus tersebut diolah sedemikian sehingga kata-kata yang dianggap \textit{multi word}, memiliki kelas kata sama berurutan, digabung dengan simbol garis  awah ('\_'). Hal ini dilatarbelakangi atas hasil \textit{pair} yang banyak merupakan\textit{multi word}. Jika hal ini tidak dilakukan, maka akan banyak kata yang tidak ditemukan dalam \textit{dictionary} yang dihasilkan model \textit{word embedding}. Kode \ref{code:model-we} menunjukan proses pembuatan model \textit{word embedding}.
 
-\begin{lstlisting}[caption={Kode pembangunan model \textit{word embedding}}, language=bash, label={code:model-we}]
-sentences = #kumpulan kalimat yang menjadi model
+\begin{kode}
+  \SetKwComment{Comment}{\#}{}
 
-import gensim
+  import gensim\;
+  \BlankLine
 
-min_count = 1 #jumlah minimum kata
-size = 123 #panjang vektor
-window = 5 #ukuran window
-model = gensim.models.Word2Vec(sentences, min_count=1, size=123, window=5);
-
-model.save(nama_berkas)
-\end{lstlisting}
+  min\_count = 1; \Comment{jumlah minimum kata}
+  size = 123;     \Comment{panjang vektor}
+  window = 5;     \Comment{ukuran window}
+  model = gensim.models.Word2Vec(sentences, min\_count=1, size=123, window=5)\;
+  model.save(nama\_berkas)\;
+  
+  \caption{Kode pembangunan model \textit{word embedding}}
+  \label{code:model-we}
+\end{kode}
 
 Model yang terbentuk, digunakan untuk memberi nilai \textit{similarity} antara kata hipernim-hiponim dalam satu \textit{pair}. Proses pencarian nilai \textit{similarity} dilakukan secara kolektif untuk setiap iterasi. Model yang terbentuk dibaca kemudian dicari \textit{similarity} untuk setiap pasang kata relasi hipernim-hiponim. Hal ini diharapkan dapat memberi informasi lebih terhadap kualitas \textit{pair} yang dihasilkan.
