@@ -125,21 +125,18 @@ Filterisasi dilakukan dengan tujuan mengurangi ambiguitas, namun tetap berusaha 
 
 Tantangan dalam proses ini adalah banyak ditemukan kasus dimana satu lema dikandung oleh lebih dari satu \textit{synset} atau satu \textit{synset} memiliki lebih dari satu \textit{synset} hipernim. Ambiguitas dalam kasus tersebut dapat mengurangi kualitas \textit{seed} yang dihasilkan. Mengatahui hal tersebut, dibuatlah dua pendekatan berbeda untuk proses filterisasi \textit{seed}.
 
-Pendekatan pertama adalah tetap mengambil lemma yang sama pada \textit{synset} hipernim yang berbeda. Hal ini dilatarbelakangi adanya lema yang berasal dari \textit{synset} berbeda namun memiliki lema hipernim yang sama. Pada contoh (i), satu lema yang sama dimiliki oleh dua \textit{synset} yang berbeda namun kedua \textit{synset} tersebut memiliki \textit{synset} hipernim yang sama. Lema untuk kedua \textit{synset} hipernim juga sama sehingga tetap diikutsertakan sebagai \textit{seed}. Pada contoh (ii), satu lema berasal dari dua \textit{synset} yang berbeda dan dua \textit{synset} hipernim berbeda, namun ada lema yang sama yaitu 'laluan'. Sehingga pasangan `(pintu\_masuk;laluan)' tetap diikutsertakan sebagai \textit{seed}.
+Pendekatan pertama adalah tetap mengambil lemma yang sama pada \textit{synset} hipernim yang berbeda. Hal ini dilatarbelakangi adanya lema yang berasal dari \textit{synset} berbeda namun memiliki lema hipernim yang sama. Pada table \ref{table:contohlema}, dapat dilihat contoh dimana satu lema memiliki dua \textit{synset} hipernim yang berbeda. Namun, terdapat lema yang sama dalam kedua \textit{synset} hipernim tersebut. Dengan pendekatan ini, akan dihasilkan sebuah \textit{seed} yaitu `(pintu\_masuk;laluan)'.
 
-Pendekatan lainnya adalah dengan metode filterisasi yang \textit{strict}. Jika satu lema memiliki lebih dari satu \textit{synset} hipernim, maka lema tersebut dianggap ambigu dan langsung tidak diikutsertakan ke dalam \textit{seed} awal. Berdasarkan tabel contoh lema, \textit{synset}, dan hipernimnya, hanya contoh (i) yang diterima sebagai \textit{seed} karena \textit{synset} hipernim untuk lema tersebut sama. Sementara (ii) ditolak karena \textit{synset} hipernim berbeda.
-
-\begin{center}
-\begin{tabular}{ |c|m{30em}| } 
+Pendekatan lainnya adalah dengan metode filterisasi yang \textit{strict}. Jika satu lema memiliki lebih dari satu \textit{synset} hipernim, maka lema tersebut dianggap ambigu dan langsung tidak diikutsertakan ke dalam \textit{seed} awal. Berdasarkan contoh di bawah, tidak akan dihasilkan \textit{seed} apapun.
+\begin{table}
+\caption{Contoh lema dengan lebih dari satu \textit{synset} hipernim}
+\label{table:contohlema}
+\resizebox{\textwidth}{!}{\begin{tabular}{|c|} 
   \hline
-  \multirow{2}{*}{i.} 
-  & (paruh, Synset(beak.n.02)) => ([bibir, kuala, muara], Synset(mouth.n.02)) \\ 
-  & (paruh, Synset(beak.n.01)) => ([bibir, kuala, muara], Synset(mouth.n.02)) \\ \hline
-\multirow{2}{*}{ii.} 
-  & (pintu\_masuk, Synset(entrance.n.01)) => ([akses, capaian, laluan], Synset(access.n.03)) \\ 
-  & (pintu\_masuk, Synset(orifice.n.01)) => ([koridor, laluan, lorong], Synset(passage.n.07)) \\ \hline
-\end{tabular}
-\end{center}
+  (pintu\_masuk, Synset(entrance.n.01)) => ([akses, capaian, laluan], Synset(access.n.03)) \\ \hline
+  (pintu\_masuk, Synset(orifice.n.01)) => ([koridor, laluan, lorong], Synset(passage.n.07)) \\ \hline
+\end{tabular}}
+\end{table}
 
 \noindent Format penulisan $(l_1, S_1) => (ls_2, S_2)$ dibaca $l_1$ adalah lema hiponim, $S_1$ adalah \textit{synset} hiponim, $ls_2$ adalah himpunan lema hipernim, dan $S_2$ adalah \textit{synset} hipernim. 
 %
@@ -169,13 +166,14 @@ Pada gambar \ref{fig:pattern-extraction} diperlihatkan bahwa tahap awal pembentu
 \begin{enumerate}
   \item Dibaca seluruh pasangan kata relasi hipernim-hiponim.
   \item Untuk setiap kalimat pada korpus Wikipedia, di cek apakah kalimat tersebut mengandung kedua kata dalam pasangan kata relasi.
+  \item Jika kalimat mengandung kedua kata, maka kata-kata tersebut diberi \textit{tag} sesuai relasinya. Kemudian disimpan ke dalam korpus berisi kalimat yang sudah memiliki \textit{tag} hiponim dan hipernim.
   \item Pengecekan dilakukan secara berulang untuk seluruh pasangan kata relasi karena terdapat kemungkinan satu kalimat mengandung lebih dari satu pasang kata relasi.
-  \item Kata-kata yang merupakan bagian dari pasangan kata relasi kemudian diberi \textit{tag} sesuai relasinya dan disimpan ke dalam korpus berisi kalimat yang sudah memiliki \textit{tag} hiponim dan hipernim.
+  \item 
 \end{enumerate}
 
-Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari suatu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah $(ikan\,\,gurame;ikan)$ dimana kata 'ikan' terkandung dalam kedua kata relasi.
+Pada penelitian ini, satu kalimat yang telah di-\textit{tag} hanya mengandung tepat satu pasangan kata relasi. Untuk kasus khusus dimana suatu pasangan kata relasi terdiri dari suatu kata yang merupakan sub kata pasangannya, maka pasangan kata tersebut tidak diikutsertakan untuk menghindari ambiguitas. Contoh pasangan kata yang tidak diikutsertakan adalah `(ikan\,\,gurame;ikan)' dimana kata `ikan' terkandung dalam kedua kata relasi.
 
-Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence tagging}. Diberikan pasangan kata relasi hipernim-hiponim $(fermion;partikel)$ dan $(boson;partikel)$ serta kalimat  '{\tagStart} seluruh partikel dasar adalah boson atau fermion . {\tagEnd}'. Hasil proses \textit{sentence tagging} adalah sebagai berikut.
+Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence tagging}. Diberikan pasangan kata relasi hipernim-hiponim `(fermion;partikel)' dan `(boson;partikel)' serta kalimat  `{\tagStart} seluruh partikel dasar adalah boson atau fermion . {\tagEnd}'. Hasil proses \textit{sentence tagging} adalah sebagai berikut.
 \begin{itemize}
   \item {\tagStart} seluruh {\tagHypernym}partikel{\tagHypernym} dasar adalah boson atau {\tagHyponym}fermion{\tagHyponym} . {\tagEnd}
   \item {\tagStart} seluruh {\tagHypernym}partikel{\tagHypernym} dasar adalah {\tagHyponym}boson{\tagHyponym} atau fermion . {\tagEnd}
@@ -201,15 +199,15 @@ Berikut adalah contoh kalimat yang terbentuk dari proses \textit{sentence taggin
 %-----------------------------------------------------------------------------%
 \section{Pattern Extraction}
 %-----------------------------------------------------------------------------%
-Setelah mendapatkan kalimat-kalimat yang telah di-\textit{tag} dengan kata relasi, ingin dicari \textit{pattern} yang dapat digunakan untuk menambah jumlah relasi kata. Gambar \ref{fig:pattern-extraction} menunjukan bahwa kalimat-kalimat tersebut selanjutnya masuk ke dalam proses \textit{pattern extraction}. Pada penelitian ini, diusulkan pembuatan \textit{pattern} menggunakan \textit{standard tree} dengan beberapa modifikasi. Proses ini diimplementasi secara mandiri menggunakan program Java dengan mengikuti algoritma pemebentukkan \textit{tree} sederhana.
+Setelah mendapatkan kalimat-kalimat yang telah di-\textit{tag} dengan kata relasi, ingin dicari \textit{pattern} yang dapat digunakan untuk menambah jumlah relasi kata. Gambar \ref{fig:pattern-extraction} menunjukan bahwa kalimat-kalimat tersebut selanjutnya masuk ke dalam proses \textit{pattern extraction} sehingga dihasilan \textit{pattern} leksikal. Pada penelitian ini, diusulkan pembuatan \textit{pattern} menggunakan \textit{standard tree} dengan beberapa modifikasi. Proses ini diimplementasi secara mandiri menggunakan program Java dengan mengikuti algoritma pembentukkan \textit{tree} sederhana. \textit{Tree} yang terbentuk disebut \textit{pattern tree} dan merepresentasikan seluruh \textit{pattern} leksikal yang ada.
 
-Suatu \textit{\textit{node}} merepresentasikan kata dalam kalimat dan dari satu kalimat terbentuk sebuah cabang dalam \textit{tree}. \textit{Node} menyimpan beberapa informasi seperti nama \textit{\textit{node}}, \textit{parent}, \textit{childs}, dan informasi identitas tambahan seperti apakah \textit{\textit{node}} tersebut merupakan relasi (hipernim atau \textit{hyponym}) dan apakah \textit{\textit{node}} tersebut merupakan \textit{leaf}. Untuk kata yang merupakan kata relasi, \textit{\textit{node}} menyimpan informasi jenis relasi beserta \textit{list} dari kata yang merupakan bagian dari relasi tersebut. 
+Suatu \textit{node} dalam \textit{tree} merepresentasikan kata dalam kalimat dan dari satu kalimat terbentuk sebuah cabang dalam \textit{tree}. \textit{Node} menyimpan beberapa informasi seperti nama \textit{\textit{node}}, \textit{parent}, \textit{childs}, dan informasi identitas tambahan seperti apakah \textit{\textit{node}} tersebut merupakan relasi (hipernim atau \textit{hyponym}) dan apakah \textit{\textit{node}} tersebut merupakan \textit{leaf}. Untuk kata yang merupakan kata relasi, \textit{\textit{node}} menyimpan informasi jenis relasi beserta \textit{list} dari kata yang merupakan bagian dari relasi tersebut. 
 
 Sebagai contoh jika terdapat beberapa \textit{sequnce} kalimat yang akan dibentuk ke dalam \textit{tree} sebagai berikut menghasilkan \textit{tree} seperti yang dapat dilihat pada gambar \ref{fig:contoh-ptree}.
 
-K1: {\tagHyponym}piano{\tagHyponym} adalah {\tagHypernym}alat musik{\tagHypernym}.
+K1: {\tagHyponym}piano{\tagHyponym} adalah sebuah {\tagHypernym}alat musik{\tagHypernym}.
 
-K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah seorang {\tagHypernym} pelukis{\tagHypernym}.
+K2: {\tagHyponym}Van Gogh{\tagHyponym} adalah {\tagHypernym} pelukis{\tagHypernym}.
 
 K3: {\tagHyponym}kucing{\tagHyponym} adalah {\tagHypernym}binatang{\tagHypernym}.
 
@@ -232,7 +230,7 @@ Satu \textit{pattern} tidak hanya menyimpan informasi \textit{sequence} kata yan
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Tree}
 %-----------------------------------------------------------------------------%
-\textit{Pattern Tree} adalah sebuah \textit{tree} yang menyimpan seluruh \textit{pattern} yang dihasilkan dari korpus, seperti yang telah dipaparkan pada gambar \ref{fig:contoh-ptree}. Dalam pembuatan \textit{pattern tree}, tidak perlu menyimpan seluruh kata dalam kalimat. Hanya \textit{sequence} kata tertentu saja yang dianggap dapat menghasilkan \textit{pattern} yang baik untuk diikutsertakan. Maka dari itu, perlu diketahui \textit{sequence} kata dalam kalimat yang cocok digunakan sebagai \textit{pattern}. Berikut adalah tiga pendekatan yang digunakan dalam penelitian ini dengan contoh kalimat dasarnya yaitu `{\tagStart} {\tagHyponym}singa{\tagHyponym} adalah {\tagHypernym}kucing{\tagHypernym} yang berukuran besar . {\tagEnd}'.
+\textit{Pattern Tree} adalah sebuah \textit{tree} yang menyimpan seluruh \textit{pattern} yang dihasilkan dari korpus, seperti yang telah dipaparkan pada gambar \ref{fig:contoh-ptree}. Dalam pembuatan \textit{pattern tree}, tidak perlu menyimpan seluruh kata dalam kalimat. Hanya \textit{sequence} kata tertentu saja yang dianggap dapat menghasilkan \textit{pattern} yang baik untuk diikutsertakan. \textit{Tree} dibentuk dengan memasukkan \textit{sequence} kata menjadi sebuah \textit{path}. Maka dari itu, perlu diketahui \textit{sequence} kata dalam kalimat yang cocok digunakan untuk merepresentasikan suatu \textit{pattern}. Berikut adalah tiga pendekatan yang digunakan dalam penelitian ini berdasarkan pengamatan kualitatif kalimat yang telah diberi \textit{tag}. Kalimat yang digunakan sebagi contoh dasar adalah `{\tagStart} {\tagHyponym}singa{\tagHyponym} adalah {\tagHypernym}kucing{\tagHypernym} yang berukuran besar . {\tagEnd}'.
 
 \begin{enumerate}
   \item Hanya memperhatikan kata yang berada diantara pasangan kata relasi. \\
@@ -243,7 +241,8 @@ Satu \textit{pattern} tidak hanya menyimpan informasi \textit{sequence} kata yan
   Tipe ini sama dengan sebelumnya, namun dilihat pengaruh kata-kata yang mengikuti kata relasi. Pada contoh kalimat diatas dengan $(n=1)$, \textit{sequence} kata yang dihasilkan adalah `{\tagHyponym}singa{\tagHyponym} adalah {\tagHypernym}kucing{\tagHypernym} yang'
 \end{enumerate}
 
-Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukkan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode 4.2 menunjukan secara rinci proses pembentukan \textit{sequence} kata berdasarkan kalimat berdasarkan pendekataan yang dipilih. \textit{Sequence} kata tersebut kemudian dimasukkan ke dalam \textit{pattern tree}. 
+Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemennya merepresentasikan kata dalam kalimat. Proses \textit{parsing} dilakukan berdasarkan spasi antar kata. Dari \textit{array} yang terbentuk, dicari bagian-bagian yang akan dimasukkan ke dalam \textit{pattern tree} sesuai dengan pendekatan yang dipilih. Jika hanya memperhatikan kata diantara pasangan kata relasi maka bagian-bagian lain tidak masuk ke dalam \textit{pattern tree}. Begitu jika dipilih pendekatan dengan $n$ kata sebelum atau setelah pasangan kata. Dari \textit{pattern tree} yang terbentuk, dapat didaftarkan seluruh \textit{pattern} serta bobot untuk \textit{pattern} tersebut. Kode 4.2 menunjukan secara rinci proses pembentukan \textit{sequence} kata berdasarkan kalimat berdasarkan pendekataan yang dipilih. 
+% --- kode pattern extraction: createPatternTree --- 
 %penambahan suatu \textit{pattern} ke dalam \textit{pattern tree}.
 %\begin{kode}\label{(pemebentukanptree)} 
 %  
@@ -305,39 +304,40 @@ Suatu kalimat akan di-\textit{parse} ke dalam bentuk \textit{array} yang elemenn
   }
   \label{code:pembentukan-ptree}  
   \caption{\textit{Pseudocode} penentuan \textit{sequence} kata berdasarkan 3 pendekatan}  
-\end{kode}
-% --- kode pattern extraction: createPatternTree ---  
+\end{kode} 
 % -------------------------------------------------- %
+
+\noindent Jika telah didapatkan index awal dan akhir, dapat dengan mudah diambil bagian dalam kalimat yang selanjutnya dibentuk menjadi \textit{sequence} kata yang dimasukkan ke dalam \textit{pattern tree}
 
 %-----------------------------------------------------------------------------%
 \subsection{Vektor Pattern}
 %-----------------------------------------------------------------------------%
 Suatu \textit{pattern} dapat direpresentasikan menjadi vektor berdasarkan nilai-nilai yang dimilikinya. Vektor ini dimanfaatkan untuk melakukan pengurutan terhadap seluruh \textit{pattern} yang dihasilkan. Selain itu, nilai-nilai pada vektor \textit{pattern} juga digunakan untuk melakukan filterisasi. Fitur utama pada vektor \textit{pattern} diambil dari informasi yang disimpan \textit{pattern}, yaitu total kemunculan \textit{pattern}, jumlah \textit{seed} unik, dan jumlah kalimat unik yang membentuk \textit{pattern} tersebut. Fitur lainnya adalah hasil kombinasi perbandingan antar nilai-nilai utama, yaitu nilai perbandingan antara jumlah \textit{seed} unik dibagi jumlah kalimat unik, nilai perbandingan antara jumlah \textit{seed} untuk dibagi total kemunculan, dan nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan.
 
-Berikut adalah contoh vektor \textit{pattern} yang dihasilkan.
+Berikut adalah contoh \textit{pattern} dan vektor \textit{pattern} yang dihasilkan.
 \begin{equation}
 <start>\,\,<hyponym>\,\,adalah\,\,<hypernym>\,\,;\,\,96\,\,87\,\,95\,\,0.92\,\,0.91\,\,0.99
 \end{equation}
 \begin{itemize}
-  \item \textit{pattern} leksikal yang dihasilkan = \[<start>\,\,<hyponym>\,\,adalah\,\,<hypernym>\]
-  \item jumlah total kemunculan \textit{pattern} = 96
-  \item jumlah pasangan kata relasi unik yang membentuk \textit{pattern} = 87
-  \item jumlah kalimat unik yang membentuk \textit{pattern} = 95
-  \item perbandingan nilai pasangan kata unik dengan kalimat unik = 0.92
-  \item perbandingan nilai pasangan kata unik dengan total kemunculan = 0.91
-  \item perbandingan nilai kalimat unik dengan total kemunculan = 0.99
+  \item \textit{pattern} leksikal yang dihasilkan adalah `{\tagStart} {\tagHyponym} adalah {\tagHypernym}'
+  \item jumlah total kemunculan \textit{pattern} adalah 96
+  \item jumlah pasangan kata relasi unik yang membentuk \textit{pattern} adalah 87
+  \item jumlah kalimat unik yang membentuk \textit{pattern} adalah 95
+  \item perbandingan nilai pasangan kata unik dengan kalimat unik adalah 0.92
+  \item perbandingan nilai pasangan kata unik dengan total kemunculan adalah 0.91
+  \item perbandingan nilai kalimat unik dengan total kemunculan adalah 0.99
 \end{itemize}
 
 %-----------------------------------------------------------------------------%
 \subsection{Validasi Pattern}
 %-----------------------------------------------------------------------------%
-Setelah terbentuk \textit{pattern tree}, perlu didaftar seluruh \textit{pattern} yang dihasilkan. Proses pembentukan \textit{pattern} cukup dengan menelusuri \textit{path} dari \textit{node leaf} hingga \textit{root}. \textit{Pattern} yang dihasilkan berjumlah banyak, sayangnya tidak seluruh \textit{pattern} yang dihasilkan berkualitas baik. Untuk mengurangi jumlah \textit{pattern} yang kurang baik, dilakukan proses filterisasi. Beberapa aturan yang harus dipenuhi agar suatu \textit{pattern} diterima adalah sebagai berikut.
+Setelah terbentuk \textit{pattern tree}, didaftarkan seluruh \textit{pattern} yang dihasilkan. Proses pembentukan \textit{pattern} cukup dengan menelusuri \textit{path} dari \textit{node leaf} hingga \textit{root}. \textit{Pattern} yang dihasilkan berjumlah banyak, sayangnya tidak seluruh \textit{pattern} yang dihasilkan berkualitas baik. Untuk mengurangi jumlah \textit{pattern} yang kurang baik, dilakukan proses filterisasi. Beberapa aturan yang harus dipenuhi agar suatu \textit{pattern} diterima adalah sebagai berikut.
 
 \begin{itemize}
   \item Harus ada minimal satu kata diantara dua kata relasi. \\
   Banyak kasus dimana dua kata relasi hanya dipisahkan oleh spasi. \textit{Pattern} yang hanya mengandung spasi tidak memberikan informasi apapun karena simbol spasi dalam Bahasa Indonesia digunakan sebagai pemisah antar kata. Sebagai contoh kalimat hasil \textit{tagging} `{\tagStart} semua jenis {\tagHypernym}ular{\tagHypernym} {\tagHyponym}beludak{\tagHyponym} memiliki taring yang panjang {\tagEnd}' tidak akan menghasilkan \textit{pattern} yang \textit{valid}.
   \item Nilai dalam vektor \textit{pattern} harus memenuhi nilai \textit{threshold} yang didefinisikan. \\
-  Nilai perbandingan antara jumlah \textit{seed} unik dibagi jumlah kalimat unik lebih dari 0.5. Nilai perbandingan antara jumlah \textit{seed} unik dibagi total kemunculan lebih dari 0.2. Nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan harus lebih dari 0.7. Ketiga nilai \textit{threshold} tersebut didefinisikan mandiri berdasarkan pengamatan dari nilai-nilai pada vektor \textit{pattern}. Nilai tersebut mengeliminasi sejumlah \textit{pattern} yang terbentuk dari banyak kalimat namun variasi \textit{seed} yang menghasilkannya sedikit.
+  Berdasarkan pengamatan kualitatif dari \textit{pattern} yang dihasilkan dan vektor \textit{pattern}-nya, terdapat beberapa nilai yang nilainya perlu melebihi \textit{threshold}. Nilai perbandingan antara jumlah \textit{seed} unik dibagi jumlah kalimat unik lebih dari 0.5. Nilai perbandingan antara jumlah \textit{seed} unik dibagi total kemunculan lebih dari 0.2. Nilai perbandingan antara jumlah kalimat unik dibagi total kemunculan harus lebih dari 0.7. Ketiga nilai tersebut berhasil mengeliminasi sejumlah \textit{pattern} kurang baik yang terbentuk, seperti \textit{pattern} yang terbentuk dari banyak kalimat namun variasi \textit{seed} yang menghasilkannya sedikit.
 \end{itemize}
 
 %-----------------------------------------------------------------------------%
@@ -349,9 +349,13 @@ Strategi yang diusulkan dalam penelitian ini untuk mengatasi masalah ambiguitas 
 
 \begin{enumerate}
   \item Dicari \textit{pattern} dengan pendekatan hanya memperhatikan kata-kata diantara pasangan kata relasi.
-  \item \textit{Pattern} yang dihasilkan, dibandingkan satu dengan yang lain. Jika terdapat \textit{pattern} mengandung \textit{tag} hipernim-hiponim yang saling terbalik, \textit{pattern} yang bersangkutan dikeluarkan dari daftar \textit{pattern} unik untuk kemudian dievaluasi ulang.
-  \item Proses evaluasi ulang dilakukan menggunakan pendekatan pembuatan \textit{pattern} lainnya yaitu dengan memperhatikan $n$ kata sebelum dan setelah kata hipernim-hiponim. Hasil dari kedua pendekatan digabung dan dicek apakah \textit{pattern} tersebut dibutuhkan. Suatu \textit{pattern} dinyatakan dibutuhkan jika \textit{substring} dari \textit{pattern} tersebut termasuk dalam \textit{list pattern} yang membutuhkan evaluasi ulang.
-  \item Proses evaluasi dilakukan secara berulang dari hingga iterasi ke-$n$.
+  \item \textit{Pattern} yang dihasilkan, dibandingkan satu dengan yang lain. Jika terdapat \textit{pattern} mengandung \textit{tag} hipernim-hiponim yang saling terbalik, \textit{pattern} yang bersangkutan dikeluarkan dari daftar \textit{pattern} unik untuk kemudian dievaluasi ulang. \textit{Pattern} yang ambigu disimpan dalam daftar terpisah.
+  \item Proses pembandingan dilakukan dengan mengganti \textit{tag} {\tagHypernym} dan {\tagHypernym} dengan {\tagRelation}. Jika terdapat \textit{pattern} yang posisi \textit{tag} hipernim-hiponim saling terbalik maka akan diidentifikasi dua \textit{pattern} sama terbentuk.
+  \item Jika daftar \textit{pattern} ambigu tidak kosong, maka proses pembentukkan \textit{pattern} diulang dengan menggunakan pendekatan  terdapat $n$ kata sebelum dan setelah kata hipernim-hiponim dengan $n=1$.
+  \item Hasil dari kedua pendekatan digabung dan dicek apakah \textit{pattern} tersebut dibutuhkan. Suatu \textit{pattern} dinyatakan dibutuhkan jika \textit{substring} dari \textit{pattern} tersebut termasuk dalam daftar \textit{pattern} yang membutuhkan evaluasi ulang.
+  \item Daftar \textit{pattern} baru dievaluasi ulang. \textit{Pattern-pattern} yang sudah tidak ambigu digabungkan ke dalam daftar \textit{pattern} unik, sementara \textit{pattern} ambigu masuk ke daftar \textit{pattern} baru yang memerlukan evaluasi ulang.
+  \item Proses evaluasi dilakukan secara berulang dengan menambah nilai $n$ untuk setiap iterasi.
+  \item Proses iterasi berhenti jika sudah tidak ada lagi \textit{pattern} dalam daftar \textit{pattern} ambigu atau mencapai nilai $n$ yang didefinisikan.
 \end{enumerate}
 
 \noindent Setelah melakukan tahapan di atas, tidak ada lagi kasus posisi relasi saling tertukar dari \textit{pattern} yang dihasilkan. Daftar \textit{pattern} unik yang dihasilkan kemudian diurutkan berdasarkan bobot sebelum ditampilkan.
@@ -400,7 +404,7 @@ Setelah terbentuk \textit{pattern} yang sesuai, dilakukan proses pengurutan (\te
 %-----------------------------------------------------------------------------%
 \section{Pattern Matching}
 %-----------------------------------------------------------------------------%
-Proses ekstraksi \textit{pair} baru dilakukan dengan menggunakan metode \textit{pattern matching} seperti yang dapat dilihat pada gambar \ref{fig:pattern-matching}. \textit{Pattern} yang terbentuk dari proses \textit{pattern extraction} digunakan untuk menambah jumlah pasangan kata relasi dengan dilakukan proses \textit{pattern matching} terhadap korpus Wikipedia. Proses \textit{pattern matching} dilakukan menggunakan algoritma \textit{Suffix Tree} dengan modifikasi. Implementasi dilakukan secara mandiri menggunakan program berbasis Java.
+Proses ekstraksi \textit{pair} baru dilakukan dengan menggunakan metode \textit{pattern matching} seperti yang dapat dilihat pada gambar \ref{fig:pattern-matching}. \textit{Pattern} yang terbentuk dari proses \textit{pattern extraction} digunakan untuk menambah jumlah pasangan kata relasi dengan dilakukan proses \textit{pattern matching} terhadap korpus Wikipedia. Proses \textit{pattern matching} dilakukan menggunakan \textit{suffix tree} dengan modifikasi. Implementasi dilakukan secara mandiri menggunakan program berbasis Java.
 
 \begin{figure}
     \centering
@@ -412,7 +416,8 @@ Proses ekstraksi \textit{pair} baru dilakukan dengan menggunakan metode \textit{
 Pembentukan \textit{suffix tree} mirip seperti pembentukan \textit{pattern tree} yaitu diawali dengan melakukan \textit{parsing} sehingga satu kalimat terepresentasi dalam bentuk \textit{array}. Dari \textit{array} yang dihasilkan, dibentuk sebuah \textit{suffix tree} yang merepresentasikan kalimat tersebut. Sebuah \textit{node} dalam \textit{tree} merepresentasikan satu kata dalam kalimat. \textit{Suffix tree} selanjutnya dicocokan dengan \textit{pattern} yang diberikan. Jika terdapat \textit{path} dalam \textit{tree} yang sesuai dengan \textit{pattern}, dibentuk \textit{pair} yang merepresentasikan pasangan kata relasi hipernim-hiponim yang dihasilkan. Selain kata hipernim-hiponim, \textit{pair} juga menyimpan informasi lain seperti total total dokumen unik, daftar kalimat unik, dan daftar \textit{pattern} unik yang menghasilkan \textit{pair} tersebut. Berikut adalah tahapan yang dilakukan program jika diberikan satu kalimat dan satu \textit{pattern}.
 
 \begin{enumerate}
-  \item Kalimat masukan dibentuk menjadi suatu \textit{suffix tree}.
+  \item Kalimat masukan di-\textit{parse} ke dalam bentuk \textit{array}.
+  \item \textit{Array} yang dihasilkan dibentuk menjadi sebuah \textit{suffix tree}.
   \item \textit{Pattern} masukan ditokenisasi ke dalam bentuk \textit{list} 
   kata. \textit{Pattern} pasti mengandung token {\tagHypernym} dan {\tagHyponym}, selanjutnya disebut token relasi.
   \item Jika ditemukan token relasi pada daftar token \textit{pattern} yang sedang dievaluasi, maka \textit{node} yang dikunjungi disimpan sementara sesuai dengan relasinya.
@@ -521,6 +526,8 @@ Bobot = (\frac{jumlah\,\,pattern\,\,pembentuk\,\,pair}{jumlah\,\,pattern\,\,digu
 \end{equation}
 
 \noindent \textit{Pair} yang lolos filterisasi akan bergabung ke dalam korpus pasangan kata relasi semantik hipernim-hiponim.
+
+Pembentukan rumus bobot di atas dilakukan dari hasil pengamatan kualitatif dan beberapa percobaan yang dilakukan. Pada awal, seluruh nilai dalam vektor \textit{pair} adalah data statistik yang dapat diambil dari informasi menggunakan pendekatan dalam penelitian ini. Karena metode yang dilakukan adalah usulan untuk penelitian ini, ingin ada suatu informasi eksternal yang mungkin dapat memberi pengetahuan lebih mengenai apakah pasangan kata benar berelasi hipernim-hiponim. Untuk itu, digunakan nilai \textit{similarity} yang diambil dari pemodelan \textit{word embedding}. Jika hanya menggunakan nilai \textit{similarity}, beberapa \textit{pair} yang baik mendapat nilai \textit{similarity} yang rendah. Sehingga diputuskan untuk mengkombinasikan nilai \textit{similarity} dengan salah satu informasi yang paling merepresentasikan kebaikkan \textit{pair} yaitu jumlah \textit{pattern} yang membentuknya. 
 %
 % %-----------------------------------------------------------------------------%
 % %\subsection{Pengurutan Pair}
