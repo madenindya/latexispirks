@@ -66,7 +66,7 @@ Relasi semantik hiponim-hipernim memiliki dua tipe yang lebih spesifik yaitu rel
 %-----------------------------------------------------------------------------%
 \section{Resource Leksikal Semantik}
 %-----------------------------------------------------------------------------%
-Leksikal semantik \textit{resource} adalah suatu korpus yang menyimpan informasi mengenai kata, makna kata, serta relasi antar kata. Leksikal semantik \textit{resource} yang terkenal diantaranya adalah kamus, tesaurus, ensiklopedia, dan WordNet. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris sudah memiliki leksikal semantik \textit{resource} yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya. Sayangnya masih ditemukan beberapa kekurangan dari WordNet Bahasa Indonesia yang sudah ada. 
+Leksikal semantik \textit{resource} adalah suatu korpus yang menyimpan informasi mengenai kata, makna kata, serta relasi antar kata. Leksikal semantik \textit{resource} yang terkenal di antaranya adalah kamus, tesaurus, ensiklopedia, dan WordNet. Informasi tersebut juga perlu disimpan sedemikian sehingga dapat dapat dibaca mesin dan digunakan untuk proses komputasi. Bahasa Inggris sudah memiliki leksikal semantik \textit{resource} yaitu WordNet yang banyak digunakan untuk berbagai penelitian. Sementara untuk Bahasa Indonesia, penelitian yang berusaha membangun WordNet telah dilakukan sebelumnya. Sayangnya masih ditemukan beberapa kekurangan dari WordNet Bahasa Indonesia yang sudah ada. 
 % TODO: tambahin disini apakek 
 
 %-----------------------------------------------------------------------------%
@@ -119,7 +119,7 @@ Korpus relasi semantik yang ingin dibuat menyimpan informasi dalam bentuk pasang
 Penelitian yang dilakukan oleh \cite{hearst1992automatic} merupakan salah satu penelitian awal ekstraksi relasi semantik yang menggunakan metode \textit{pattern extraction} dan \textit{matching}. Hearst menggunakan \textit{lexico-syntactic pattern} untuk mendapatkan pasangan kata relasi tanpa membutuhkan pengetahuan sebelumnya dan dapat diaplikasikan dalam teks apapun. Pada awal pengembangan, Hearst mendifiniskan manual dua \textit{pattern} berdasarkan hasil observasi dari teks. Selanjutnya, \textit{pattern} baru didapat menggunakan langkah berikut. 
 \begin{enumerate}
   \item Tentukan relasi yang akan diamati dan kumpulkan entitas yang menggambarkan relasi tersebut.
-  \item Dalam teks dokumen, cari lokasi dimana entitas-entitas tersebut berada dan simpan kata-kata diantaranya (lingkungan).
+  \item Dalam teks dokumen, cari lokasi dimana entitas-entitas tersebut berada dan simpan kata-kata di antaranya (lingkungan).
   \item Cari kesamaan dari teks yang terekstraksi dan bentuk suatu \textit{pattern} baru.
   \item Jika \textit{pattern} baru telah terbukti benar, gunakan \textit{pattern} tersebut untuk mendapatkan entitas baru.
 \end{enumerate}
@@ -146,7 +146,7 @@ Penelitian yang dilakukan \cite{arnold2014extracting} juga memanfaatkan korpus W
 %-----------------------------------------------------------------------------%
 \subsection{Textual Pattern}
 %-----------------------------------------------------------------------------%
-\textit{Pattern} yang akan dibentuk adalah \textit{pattern} tekstual yang hanya terdiri dari kata-kata. Sebuah \textit{pattern} mengandung tiga bagian penting, yaitu \textit{tag} hiponim, \textit{tag} hipernim, dan kata lainnya. \textit{Tag} hiponim-hipernim merepresentasikan letak kata yang merupakan kata hiponim-hipernim berada. Sementara kata lainnya adalah kata-kata yang harus sama saat dibandingkan dalam proses \textit{pattern matching}. Sebagai contoh terdapat tekstual \textit{pattern} `{\tagHyponym} adalah {\tagHypernym} yang'. \textit{Pattern} tersebut akan membuat kata yang terletak sebelum kata `adalah' dikenali sebagai kata hiponim. Selain itu, kata yang posisinya setelah kata `adalah' dan sebelum kata `yang' dikenali sebagai kata hipernim. Jika terdapat kalimat `harimau adalah kucing yang berukuran besar', maka `harimau' merupakan hiponim dan `kucing' merupakan hipernim. Di dalam kata lainnya, terdapat \textit{tag} khusus yang digunakan dalam penelitian ini yaitu {\tagStart} dan {\tagEnd}. Kedua \textit{tag} tersebut membantu mengetahui kata-kata yang terletak pada awal dan akhir kalimat.
+\textit{Pattern} yang dibentuk adalah \textit{pattern} tekstual yang hanya terdiri dari kata-kata. Sebuah \textit{pattern} mengandung tiga bagian penting, yaitu \textit{tag} hiponim, \textit{tag} hipernim, dan kata lainnya. \textit{Tag} hiponim-hipernim merepresentasikan letak kata yang merupakan kata hiponim-hipernim berada. Sementara kata lainnya adalah kata-kata yang harus sama saat dibandingkan dalam proses \textit{pattern matching}. Sebagai contoh terdapat tekstual \textit{pattern} `{\tagHyponym} adalah {\tagHypernym} yang'. \textit{Pattern} tersebut akan membuat kata yang terletak sebelum kata `adalah' dikenali sebagai kata hiponim. Selain itu, kata yang posisinya setelah kata `adalah' dan sebelum kata `yang' dikenali sebagai kata hipernim. Diberikan kalimat `harimau adalah kucing yang berukuran besar', maka `harimau' merupakan hiponim dan `kucing' merupakan hipernim. Di dalam kata lainnya, terdapat \textit{tag} khusus yang digunakan dalam penelitian ini yaitu {\tagStart} dan {\tagEnd}. Kedua \textit{tag} tersebut membantu mengetahui kata-kata yang terletak pada awal dan akhir kalimat.
 
 %-----------------------------------------------------------------------------%
 \subsection{Pattern Extraction}
@@ -203,7 +203,7 @@ Sebagai contoh \textit{string} 'babaa' menghasilkan \textit{suffix tree} yang da
 
 %
 %-----------------------------------------------------------------------------%
-\section{Semi-Supervised}
+\section{Semi-Supervised Learning}
 %-----------------------------------------------------------------------------%
 Dalam \textit{machine learning} terdapat dua tipe pendekatan yang umum digunakan yaitu \textit{supervised} dan \textit{unsupervised learning}. \textit{Supervised} menggunakan data berlabel sebagai data \textit{training} maupun \textit{testing}. Dari kedua data tersebut, dibentuk suatu \textit{classifier} yang dapat memenuhi segala kasus yang mungkin terjadi. Data \textit{testing} digunakan untuk menguji \textit{classifier} yang terbentuk. \textit{Unsupervised} menggunakan data yang tidak diberi label sama sekali dan berusaha untuk menemukan pola yang sama untuk suatu kumpulan data tertentu \citep{prakash2014survey}. Pendekatan lain yang merupakan kombinasi antara \textit{supervised} dan \textit{unsupervised learning} adalah \textit{semi-supervised learning}. 
 
@@ -215,7 +215,7 @@ Dalam \textit{machine learning} terdapat dua tipe pendekatan yang umum digunakan
 %-----------------------------------------------------------------------------% 
 Model \textit{bootstrapping} merupakan salah satu model \textit{semi-supervised learning} yang paling umum digunakan. \textit{Bootstrapping} menggunakan data berlabel berukuran kecil dan data tidak berlabel berukuran jauh lebih besar. Proses anotasi data tidak berlabel dilakukan secara bertahap melalui sejumlah iterasi. Dari data \textit{training} berlabel, dibentuk suatu \textit{classifier} yang kemudian digunakan untuk menganotasi data tidak berlabel. Sejumlah $k$ data baru yang merupakan hasil pelabelan tersebut, dimasukkan ke dalam kelompok data berlabel. Proses tersebut dilakukan secara berulang, sehingga semakin lama iterasi jumlah data berlabel akan bertambah. 
 
-Terdapat dua algoritma \textit{bootstrapping} yang pernah digunakan untuk proses berbasis \textit{pattern} yaitu \textit{Meta-Bootstrapping} dan \textit{Basilisk} \citep{riloff2003learning}. Keduanya digunakan untuk mengelompokan kata ke dalam suatu kategori semantik jika diberikan korpus teks yang belum dianotasi dan sejumlah \textit{seed}. \textit{Seed} didefinisikan sebagai korpus kata yang sudah diketahui kategori semantiknya. Secara umum, proses ini akan mencari \textit{pattern} berdasarkan \textit{seed} yang diberikan. Dari \textit{pattern} yang dihasilkan dan teks yang belum dianotasi, diekstrak entitas baru dan dikelompokan berdasarkan kategori semantiknya. Kata-kata tersebut akan digabungkan ke dalam korpus pasangan kata berelasi.
+Terdapat dua algoritma \textit{bootstrapping} yang pernah digunakan untuk proses berbasis \textit{pattern} yaitu \textit{Meta-Bootstrapping} dan \textit{Basilisk} \citep{riloff2003learning}. Keduanya digunakan untuk mengelompokkan kata ke dalam suatu kategori semantik jika diberikan korpus teks yang belum dianotasi dan sejumlah \textit{seed}. \textit{Seed} didefinisikan sebagai korpus kata yang sudah diketahui kategori semantiknya. Secara umum, proses ini akan mencari \textit{pattern} berdasarkan \textit{seed} yang diberikan. Dari \textit{pattern} yang dihasilkan dan teks yang belum dianotasi, diekstrak entitas baru dan dikelompokan berdasarkan kategori semantiknya. Kata-kata tersebut akan digabungkan ke dalam korpus pasangan kata berelasi.
 
 %-----------------------------------------------------------------------------%
 \subsection{Meta-Bootstrapping}
@@ -259,7 +259,7 @@ Terdapat dua kategori utama dalam \textit{sampling} yaitu \textit{probability} d
 \begin{itemize}
   \item \textit{Simple random sampling} perlu mengetahui seluruh data yang ada dan dari data tersebut dipilih secara acak. Hal ini membuat seluruh data memiliki nilai probabilitas terpilih yang sama. 
   \item \textit{Systematic sampling} memilih setiap data ke-n untuk dijadikan \textit{sample}. 
-  \item \textit{Stratified random sampling} akan mengelompokan data ke dalam kategori berdasarkan karakteristik tertentu (strata), kemudian data diambil secara acak dari kategori yang ada. Hal ini menyebabkan hasil lebih representatif. 
+  \item \textit{Stratified random sampling} akan mengelompokkan data ke dalam kategori berdasarkan karakteristik tertentu (strata), kemudian data diambil secara acak dari kategori yang ada. Hal ini menyebabkan hasil lebih representatif. 
   \item \textit{Cluster} sampling mirip seperti \textit{stratified sampling} namun dilakukan jika data kelompok yang ingin di-\textit{sampling} sulit berada di lokasi yang terpisah jauh.
 \end{itemize}
 
@@ -353,4 +353,4 @@ r_s = 1-\frac{6 \Sigma d_i^2}{n(n^2-1)}
 % %-----------------------------------------------------------------------------%
 % \subsection{Skip PMI}
 % %-----------------------------------------------------------------------------% 
-% PMI umumnya hanya menggunakan model \textit{bigram} atau \textit{trigram}. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk \textit{bigram} 'hong kong', 'sepak bola', dan 'amerika serikat'. Pada penelitian ini dilakukan modifikasi yaitu membuat model \textit{skip-gram} PMI. Kita menghitung nilai PMI antar dua kata yang dipisahkan dengan $n$ diantaranya. 
+% PMI umumnya hanya menggunakan model \textit{bigram} atau \textit{trigram}. Model ini hanya melihat hubungan kata yang berdampingan. Sebagai contoh ingin diketahui PMI untuk \textit{bigram} 'hong kong', 'sepak bola', dan 'amerika serikat'. Pada penelitian ini dilakukan modifikasi yaitu membuat model \textit{skip-gram} PMI. Kita menghitung nilai PMI antar dua kata yang dipisahkan dengan $n$ di antaranya. 
